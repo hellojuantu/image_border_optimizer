@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Border Optimizer</title>
+    <style>
+        img {
+            -moz-box-shadow: 2px 2px 5px #333333;
+            -webkit-box-shadow: 2px 2px 5px #333333;
+            box-shadow: 2px 2px 5px #333333;
+            border: 1px black solid;
+        }
+
+        #id-canvas {
+            border: 1px red solid;
+        }
+
+        #id-main {
+            margin: 15px;
+        }
+
+        .gen-controller {
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="id-main">
+        <div>
+            <h1>Image Border Optimizer</h1>
+        </div>
+        <div>
+            <h2>Step One</h2>
+            <span>number of files</span>
+            <br>    
+            <input id="id-input-number-files" type="number" value="0" placeholder="number of files">
+            <button id="id-load-reset">load and reset</button>
+        </div>
+        <h2>Step Two</h2>
+        <div>
+            <button id="id-save-pre">pre</button>
+            <button id="id-save-next">next</button>
+            <button id="id-save-center">center</button>
+        </div>
+        <br>
+        <div class="gen-controls">
+            <div class="">
+                <label>
+                    <!-- <input class='gen-auto-slider' type="range"
+                        value=""
+                        max = 30
+                        data-value="config.player_speed"
+                        >
+                    玩家速度: <span class="gen-label"></span> -->
+                </label>
+            </div>
+        </div>
+        <br>
+        <canvas id="id-canvas" width="600" height="400"></canvas>    
+    </div>
+    
+    
+    <script>
+        var config = {
+            index: {
+                _comment: "image index",
+                value: 0,
+                valueType: 'number',
+                min: 0,
+                max: 30,
+                type: "range",
+            },
+            offset: {
+                _comment: "canvas offset",
+                value: 2,
+                valueType: 'number',
+                min: 2,
+                max: 30,
+                type: "range",
+            },
+            imageOffset: {
+                _comment: "image offset",
+                value: 20,
+                valueType: 'number',
+                min: -100,
+                max: 100,
+                type: "range",
+            },
+            shadowOffset: {
+                _comment: "shadow offset",
+                value: 3,
+                valueType: 'number',
+                min: -50,
+                max: 50,
+                type: "range",
+            },
+            shadowBlur: {
+                _comment: "shadow blur level",
+                value: 5,
+                valueType: 'number',
+                min: 0,
+                max: 30,
+                type: "range",
+            },
+            shadowColorAlpha: {
+                _comment: "shadow color alpha",
+                value: 4,
+                valueType: 'number',
+                min: 0,
+                max: 10,
+                type: "range",
+            },
+            shadowColor: {
+                _comment: "shadow color",
+                value: 'black',
+                valueType: 'string',
+                type: "input",
+            },
+            borderLength: {
+                _comment: "border length:",
+                value: 1,
+                valueType: 'number',
+                min: 0,
+                max: 30,
+                type: "range",
+            },
+            borderColor: {
+                _comment: "border color",
+                value: 'grey',
+                valueType: 'string',
+                type: "input",
+            },
+        }
+
+        var e = sel => document.querySelector(sel)
+
+        var log = console.log.bind(console)
+
+        var es = sel => document.querySelectorAll(sel)
+
+        var bindAll = function(sel, eventName, callback) {
+            var l = es(sel)
+            // log(l.length)
+            for (var i = 0; i < l.length; i++ ) {
+                var input = l[i]
+                input.addEventListener(eventName, function(event) {
+                    callback(event)
+                })
+            }
+        }
+
+        var templateControls = function(key, item){
+            var minAndMax = `
+                max = ${item.max}
+                min = ${item.min}
+            `
+            var t = `
+                <div class="gen-controller">
+                    <label>
+                        <input class='gen-auto-slider' type="${item.type}"
+                            value="${item.value}"
+                            ${item.type == 'range' ? minAndMax : ''}
+                            data-value="config.${key}"
+                            >
+                        ${item._comment}: <span class="gen-label">${item.value}</span>
+                    </label>
+                </div>
+            `
+            return t
+        }
+
+        var insertControls = function() {
+            var div = e(".gen-controls")
+            var keys = Object.keys(config)
+            for (var k of keys) {
+                var item = config[k]
+                var html = templateControls(k, item)
+                div.insertAdjacentHTML('beforeend', html)
+            }
+        }
+
+        function fillImage(canvas, img) {
+            var context = canvas.getContext('2d')
+            // get config
+            var offset = config.offset.value
+            var io = config.imageOffset.value
+            var shadowOffset = config.shadowOffset.value
+            // 
+            canvas.width = img.width + offset * 20
+            canvas.height = img.height + offset * 20
+
+            // clear canvas
+            context.clearRect(0, 0, canvas.width, canvas.height)
+
+            // shadow
+            context.save()
+            context.globalAlpha = config.shadowColorAlpha.value / 10
+            context.shadowOffsetX = shadowOffset
+            context.shadowOffsetY = shadowOffset
+            context.shadowColor = config.shadowColor.value
+            context.shadowBlur = config.shadowBlur.value
+            context.fillRect(io, io, img.width, img.height)
+            context.restore()
+
+            // draw main image
+            context.drawImage(img, io, io)
+
+            // draw shadow and border
+            context.save()
+            context.lineWidth = config.borderLength.value
+            context.strokeStyle = config.borderColor.value
+            context.beginPath()
+            context.moveTo(io, io)
+            context.lineTo(io, io + img.height)
+            context.lineTo(io + img.width, io + img.height)
+            context.lineTo(io + img.width, io)
+            context.lineTo(io, io)
+            context.closePath()
+            context.stroke()
+            context.restore()
+        }
+
+        function initImages(convertImage) {
+            let imagePaths = []
+            let numberOfImages = parseInt(e("#id-input-number-files").value || 0)
+            updateControls("config.index.max", numberOfImages - 1)
+            for (let i = 1; i <= numberOfImages; i++) {
+                let url = `./图片${i}.png`
+                imagePaths.push(url)
+            }
+            // load image data
+            var loads = []
+            var images = []
+            for (let i = 0; i < imagePaths.length; i++) {
+                let path = imagePaths[i]
+                let img = new Image()
+                img.src = path
+                img.onload = function() {
+                    // 存入 g.images 中
+                    images[i] = img
+                    // 所有图片都成功载入之后, 调用 run
+                    loads.push(1)
+                    log('load images', loads.length, imagePaths.length)
+                    if (loads.length == imagePaths.length) {
+                        log('load images', images)
+                        convertImage(images)
+                    }
+                }
+            }
+        }
+
+        function bindEvents(images) {
+            var canvas = document.querySelector("#id-canvas")
+            e("#id-save-pre").addEventListener('click', function(event) {
+                if (config.index.value > 0) {
+                    var v = --config.index.value
+                    updateControls("config.index.value", v)
+                }
+                fillImage(canvas, images[config.index.value])
+            })
+
+            e("#id-save-next").addEventListener('click', function(event) {
+                if (config.index.value < images.length - 1) {
+                    var v = ++config.index.value
+                    updateControls("config.index.value", v)
+                }
+                fillImage(canvas, images[config.index.value])
+            })
+
+            e("#id-save-center").addEventListener("click", function(event) {
+                var w = canvas.width
+                var img = images[config.index.value]
+                var imgW = img.width
+                                
+                updateControls('config.imageOffset.value', (w - imgW) / 2)
+                fillImage(canvas, img)
+            })
+
+            bindAll('.gen-auto-slider', 'input', function(event) {
+                var target = event.target
+                var bindVar = target.dataset.value
+                var v = target.value
+                updateControls(bindVar + '.value', v)
+                var label = target.closest('label').querySelector('.gen-label')
+                label.innerText = v
+                fillImage(canvas, images[config.index.value])
+            })
+        }
+
+        // config.xxx.prop = 
+        function updateControls(bindVarStr, updateValue) {
+            var list = bindVarStr.split(".")
+            var bind = list[1]
+            var prop = list[2]
+            var sliders = es('.gen-auto-slider')
+            for (let i = 0; i < sliders.length; i++) {
+                let slide = sliders[i]
+                let bindVar = slide.dataset.value
+                if (bindVar == `config.${bind}`) {
+                    if (config[bind]['valueType'] == 'number') {
+                        updateValue = parseInt(updateValue)
+                    } else if (config[bind]['valueType'] == 'string') {
+                        updateValue = String(updateValue)
+                    }
+                    config[bind][prop] = updateValue
+                    // eval(`config.${bind}.${prop} = ${updateValue}`)
+                    slide[prop] = updateValue
+                    if (prop == 'value') {
+                        var label = slide.closest('label').querySelector('.gen-label')
+                        label.innerText = updateValue
+                    }
+                    break
+                }
+            }
+        }
+
+        function bindOuterEvents() {
+            e("#id-load-reset").addEventListener("click", function(event) {
+                initImages(function(images) {
+                    log("begin")
+                    let len = images.length
+                    var canvas = document.querySelector("#id-canvas")
+                    var context = canvas.getContext('2d')
+                    fillImage(canvas, images[config.index.value])
+                    bindEvents(images)
+                }) 
+            })
+
+            e('#id-input-number-files').addEventListener('input', function(event) {
+                let v = parseInt(event.target.value)
+                updateControls("config.index.max", v)
+            })
+        }
+
+        function __main() {   
+            // 从配置文件生成 html 
+            insertControls()
+            // 绑定外部的事件
+            bindOuterEvents()
+        }
+
+        __main()
+    </script>
+</body>
+</html>
