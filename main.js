@@ -56,6 +56,9 @@ function updateControls(bindVarStr, updateValue) {
 }
 
 function fillImage(canvas, img) {
+    // update image index
+    updateControls("config.index.max", images.length - 1)
+    //
     var context = canvas.getContext('2d')
     // get config
     var offset = config.offset.value
@@ -96,10 +99,23 @@ function fillImage(canvas, img) {
     context.restore()
 }
 
-function loadImages(convertImage) {
+var loadDefaultConfig = function(callback) {
+    var url = "https://artisanbox.github.io/js/default_config.json"
+    var r = new XMLHttpRequest()
+    r.open('get', url)
+    r.send(null)
+    r.onload = function() {
+        if (r.status == 200) {
+            config = JSON.parse(r.responseText)
+            log("load default config", config)
+            callback()
+        }
+    }
+}
+
+function loadImages(handler) {
     let imagePaths = []
     let numberOfImages = parseInt(e("#id-input-number-files").value || 0)
-    updateControls("config.index.max", numberOfImages - 1)
     for (let i = 1; i <= numberOfImages; i++) {
         let url = `./图片${i}.png`
         imagePaths.push(url)
@@ -119,7 +135,8 @@ function loadImages(convertImage) {
             log('load images', loads.length, imagePaths.length)
             if (loads.length == imagePaths.length) {
                 log('load images', images)
-                convertImage(images)
+                window.images = images
+                handler(images)
             }
         }
     }
@@ -163,13 +180,21 @@ function bindImageEvents(images) {
     })
 }
 
+function handler(images) {
+    fillImage(window.canvas, images[config.index.value])
+    bindImageEvents(images)
+}
+
 function bindEvents() {
     e("#id-load-reset").addEventListener("click", function(event) {
-        loadImages(function(images) {
-            var canvas = document.querySelector("#id-canvas")
-            fillImage(canvas, images[config.index.value])
-            bindImageEvents(images)
-        }) 
+        loadDefaultConfig(function() {
+            es(".gen-controller").forEach(e => e.remove())
+            insertControls()
+            if (window.inited) {
+                return
+            }
+            loadImages(handler)
+        })
     })
 
     e('#id-input-number-files').addEventListener('input', function(event) {
@@ -179,6 +204,9 @@ function bindEvents() {
 }
 
 function __main() {   
+    window.inited = false
+    window.images = []
+    window.canvas = document.querySelector("#id-canvas")
     // 从配置文件生成 html 
     insertControls()
     // 绑定外部的事件

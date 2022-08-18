@@ -28,30 +28,29 @@ button {
 }
 
 #id-config-area {
-    height: 700px;
+    height: 1000px;
     background-color: #fff;
     position: relative;
     float: left;
 }
 
 #id-canvas-area {
-    /* height: 400px; */
     padding: 16px;
-    /* background-color: #eee; */
-    /* box-sizing: border-box; */
+    background-color: #fff;
+    box-sizing: border-box;
     overflow: scroll;
 }
 
 .resize-save {
     position: absolute;
-    top: 0; right: 5px; bottom: 0; left: 0;
-    padding: 16px;
+    top: 0; right: 15px; bottom: 0; left: 0;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .resize-bar {
     width: 500px; height: inherit;
-    min-width: 500px;
+    /* min-width: 10px; */
     max-width: 800px;
     resize: horizontal;
     cursor: ew-resize;
