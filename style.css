@@ -39,7 +39,7 @@ button {
     padding: 16px;
     /* background-color: #eee; */
     /* box-sizing: border-box; */
-    overflow: hidden;
+    overflow: scroll;
 }
 
 .resize-save {
