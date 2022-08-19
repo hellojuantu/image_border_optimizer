@@ -14,15 +14,14 @@
             <div class="resize-line"></div>
             <div class="resize-save">
                 <div class="gen-info">
-                    <h1>Image Border Optimizer</h1>
-                    <h2>Step One</h2>
-                    <span style="display: block;">number of files</span>
-                    <input id="id-input-number-files" type="number" value="0" placeholder="number of files">
-                    <button id="id-load-reset">load and reset</button>
-                    <h2>Step Two</h2>
-                    <button id="id-save-pre">pre</button>
-                    <button id="id-save-next">next</button>
-                    <button id="id-save-center">center</button>
+                    <div id="id-step-one">
+                        <h1>Image Border Optimizer</h1>
+                        <div id="id-div-uploader" class="uploader">drag to upload images</div>
+                    </div>
+                    
+                    <div id="id-step-two">
+                        
+                    </div>
                 </div>
                 <div class="gen-controls">
                     <div class="">
@@ -44,6 +43,8 @@
     </div>
     <script src="./config.js"></script>
     <script src="./utils.js"></script>
+    <script src="./gen_image_optimizer.js"></script>
+    <script src="./gen_controls.js"></script>
     <script src="./main.js"></script>
 </body>
 </html>

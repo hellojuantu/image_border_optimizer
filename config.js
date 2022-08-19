@@ -1,4 +1,20 @@
 var config = {
+    preButton: {
+        _comment: "pre image",
+        type: "button",
+    },
+    nextButton: {
+        _comment: "next image",
+        type: "button",
+    },
+    centerButton: {
+        _comment: "center image",
+        type: "button",
+    },
+    preButton: {
+        _comment: "image index",
+        type: "button",
+    },
     index: {
         _comment: "image index",
         value: 0,

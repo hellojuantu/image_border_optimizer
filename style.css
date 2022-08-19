@@ -92,3 +92,13 @@ button {
         background-size: 100% 100%;
     }
 }
+
+.uploader {
+    height: 250px;
+    text-align: center;
+    line-height: 250px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, .3);
+    margin: 10px 0px;
+}
