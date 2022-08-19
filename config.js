@@ -83,4 +83,18 @@ var config = {
         valueType: 'string',
         type: "input",
     },
+    penWeight: {
+        _comment: "pen weight:",
+        value: 2,
+        valueType: 'number',
+        min: 0,
+        max: 10,
+        type: "range",
+    },
+    penColor: {
+        _comment: "pen color",
+        value: "black",
+        valueType: "string",
+        type: "input",
+    }
 }

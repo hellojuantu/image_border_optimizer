@@ -3,6 +3,7 @@ class GenControls {
         this.canvas = optimizer.canvas
         this.context = optimizer.context
         this.images = optimizer.images
+        this.pen = GenPen.new(optimizer)
     }
 
     static new (...args) {
@@ -88,20 +89,20 @@ class GenControls {
         var self = this
   
         var events = {
-            "config.preButton": function() {
+            "config.preButton": function(target) {
                 log("preButton")
                 if (config.index.value > 0) {
                     var v = config.index.value - 1
                     self.updateControls("config.index.value", v)
                 }
             },
-            "config.nextButton": function() {
+            "config.nextButton": function(target) {
                 if (config.index.value < self.images.length - 1) {
                     var v = config.index.value + 1
                     self.updateControls("config.index.value", v)
                 }
             },
-            "config.centerButton": function() {
+            "config.centerButton": function(target) {
                 var w = self.canvas.width
                 var img = self.images[config.index.value]
                 var imgW = img.width
@@ -112,8 +113,7 @@ class GenControls {
         bindAll('.gen-auto-button', 'click', function(event) {
             var target = event.target
             var bindVar = target.dataset.value
-            log("click", bindVar)
-            events[bindVar] && events[bindVar]()
+            events[bindVar] && events[bindVar](target)
             self.drawImage()
         })
     
@@ -156,7 +156,6 @@ class GenControls {
         this.context.restore()
     
         // draw main image
-        log("io", io)
         this.context.drawImage(img, io, io)
     
         // draw shadow and border

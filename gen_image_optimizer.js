@@ -12,16 +12,54 @@ class GenOptimizer {
         // canvas
         this.canvas = document.querySelector("#id-canvas")
         this.context = this.canvas.getContext('2d')
+        // 
+        this.controls = null
         // image and upload
         this.images = []
         this.bindUploadEvents()
+        //
+        this.mouseActions = []
+        this.setupMouse()
+    }
+    
+    setupMouse() {
+        let self = this
+        let moving = false
+        this.canvas.addEventListener('mousedown', event => {
+            moving = true
+            for (const a of self.mouseActions) {
+                a(event, 'down')
+            }
+        })
+        this.canvas.addEventListener('mousemove', event => {
+            if (moving) {
+                for (const a of self.mouseActions) {
+                    a(event, 'move')
+                }
+            }
+        })
+        this.canvas.addEventListener('mouseup', event => {
+            moving = false
+            for (const a of self.mouseActions) {
+                a(event, 'up')
+            }
+        })
+    }
+    
+    resgisterMouse(callback) {
+        this.mouseActions.push(callback)
     }
 
     runWithControls(controls) {
-        controls.init()
-        controls.drawImage()
+        this.controls = controls
+        this.run()
     }
-    
+
+    run() {
+        this.controls.init()
+        this.controls.drawImage()
+    }
+
     __start() {
         this.runCallback(this)
     }
