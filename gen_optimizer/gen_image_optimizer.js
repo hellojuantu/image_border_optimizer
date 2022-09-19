@@ -1,11 +1,13 @@
 class GenOptimizer {
     constructor(runCallback) {
         this.runCallback = runCallback
+        window.fps = 10
         this.setup()
     }
 
-    static instance (...args) {
-        return new this(...args)
+    static instance(...args) {
+        this.i = this.i || new this(...args)
+        return this.i
     }
 
     setup() {
@@ -13,7 +15,7 @@ class GenOptimizer {
         this.canvas = document.querySelector("#id-canvas")
         this.context = this.canvas.getContext('2d')
         // 
-        this.controls = null
+        this.scene = null
         // image and upload
         this.images = []
         this.bindUploadEvents()
@@ -44,20 +46,56 @@ class GenOptimizer {
                 a(event, 'up')
             }
         })
+        this.canvas.addEventListener('mouseout', event => {
+            moving = false
+            for (const a of self.mouseActions) {
+                a(event, 'out')
+            }
+        })
+        this.canvas.addEventListener('mouseleave', event => {
+            moving = false
+            for (const a of self.mouseActions) {
+                a(event, 'leave')
+            }
+        })
     }
     
     resgisterMouse(callback) {
         this.mouseActions.push(callback)
     }
 
-    runWithControls(controls) {
-        this.controls = controls
-        this.run()
+    runWithScene(scene) {
+        var self = this
+        this.scene = scene
+        // log("runwitdh", this)
+        // 开始运行程序
+        setTimeout(function(){
+            self.runloop()
+        }, 1000 / window.fps)
     }
 
-    run() {
-        this.controls.init()
-        this.controls.drawImage()
+    draw() {
+        this.scene.draw()
+    }
+
+    update() {
+        this.scene.update()
+    }
+
+    runloop() {
+        // log(window.fps)
+        // events
+        var g = this
+        // update
+        g.update()
+        // clear
+        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)
+        // draw
+        g.draw()
+        // next run loop
+        setTimeout(function(){
+            g.runloop()
+        }, 1000 / window.fps)
     }
 
     __start() {

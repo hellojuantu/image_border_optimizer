@@ -11,8 +11,8 @@ var config = {
         _comment: "center image",
         type: "button",
     },
-    preButton: {
-        _comment: "image index",
+    penClearButton: {
+        _comment: "pen clear",
         type: "button",
     },
     index: {
@@ -65,9 +65,9 @@ var config = {
     },
     shadowColor: {
         _comment: "shadow color",
-        value: 'black',
+        value: '#000000',
         valueType: 'string',
-        type: "input",
+        type: "color",
     },
     borderLength: {
         _comment: "border length:",
@@ -79,9 +79,15 @@ var config = {
     },
     borderColor: {
         _comment: "border color",
-        value: 'grey',
+        value: '#000000',
         valueType: 'string',
-        type: "input",
+        type: "color",
+    },
+    penEnabled: {
+        _comment: "pen enabled",
+        value: 'false',
+        valueType: 'boolean',
+        type: "checkbox",
     },
     penWeight: {
         _comment: "pen weight:",
@@ -93,8 +99,26 @@ var config = {
     },
     penColor: {
         _comment: "pen color",
-        value: "black",
+        value: "#000000",
         valueType: "string",
-        type: "input",
+        type: "color",
+    },
+    textInputEnabled: {
+        _comment: "text input enabled",
+        value: 'false',
+        valueType: 'boolean',
+        type: "checkbox",
+    },
+    textFont: {
+        _comment: "text font",
+        value: "20px Arial",
+        valueType: "string",
+        type: "text",
+    },
+    textFontColor: {
+        _comment: "text font color",
+        value: "#000000",
+        valueType: "string",
+        type: "color",
     }
 }

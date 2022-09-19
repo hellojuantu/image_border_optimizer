@@ -7,6 +7,18 @@ img {
 
 #id-canvas {
     border: 1px red solid;
+    float: left;
+    position: absolute;
+    z-index: 5;
+}
+
+.float-input-text {
+    float: left;
+    position: absolute;
+    word-break: break-all;
+    background-color: transparent;
+    resize: none;
+    z-index: 6;
 }
 
 #id-main {
@@ -15,7 +27,7 @@ img {
 }
 
 .gen-controls {
-    padding: 20px 0;
+    /* padding: 20px 0; */
 }
 
 .gen-controller {
@@ -28,7 +40,7 @@ button {
 }
 
 #id-config-area {
-    height: 1000px;
+    height: 1200px;
     background-color: #fff;
     position: relative;
     float: left;
@@ -94,10 +106,10 @@ button {
 }
 
 .uploader {
-    height: 250px;
+    height: 320px;
     text-align: center;
-    line-height: 250px;
-    font-size: 18px;
+    line-height: 300px;
+    font-size: 24px;
     border-radius: 5px;
     border: 2px solid rgba(0, 0, 0, .3);
     margin: 10px 0px;

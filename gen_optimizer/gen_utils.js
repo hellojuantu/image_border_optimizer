@@ -14,3 +14,11 @@ var bindAll = function(sel, eventName, callback) {
         })
     }
 }
+
+var parseBoolean = function(booleanString) {
+    return JSON.parse(booleanString)
+}
+
+var appendHtml = function(div, html) {
+    div.insertAdjacentHTML('beforeend', html)
+}

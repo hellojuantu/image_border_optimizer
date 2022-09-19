@@ -15,37 +15,41 @@
             <div class="resize-save">
                 <div class="gen-info">
                     <div id="id-step-one">
-                        <!-- <h1>Image Border Optimizer</h1> -->
+                        <div style="width: fit-content;margin: 0 auto;"><h1>Image Border Optimizer</h1></div>
                         <div id="id-div-uploader" class="uploader">drag to upload images</div>
-                    </div>
-                    
-                    <div id="id-step-two">
-                        
                     </div>
                 </div>
                 <div class="gen-controls">
                     <div class="">
                         <label>
-                            <!-- <input class='gen-auto-slider' type="range"
-                                value=""
-                                max = 30
-                                data-value="config.player_speed"
-                                >
-                            玩家速度: <span class="gen-label"></span> -->
+                            
                         </label>
                     </div>
                 </div>
             </div>
         </div>
         <div id="id-canvas-area">
-            <canvas id="id-canvas" width="600" height="400"></canvas>    
+            <canvas id="id-canvas" width="600" height="400"></canvas>  
+            <!-- <input hidden autofocus="autofocus" cols="30" value="" type="text" id="id-text" class="float-input-text"> -->
         </div>
     </div>
-    <script src="./config.js"></script>
-    <script src="./utils.js"></script>
-    <script src="./gen_image_optimizer.js"></script>
-    <script src="./gen_controls.js"></script>
-    <script src="./gen_pen.js"></script>
+    <!-- 配置文件 -->
+    <script src="./config/config.js"></script>
+    <!-- optimizer 框架 -->
+    <script src="./gen_optimizer/gen_utils.js"></script>
+    <script src="./gen_optimizer/gen_image_optimizer.js"></script>
+    <script src="./gen_optimizer/gen_controls.js"></script>
+    <script src="./gen_optimizer/gen_point.js"></script>
+    <script src="./gen_optimizer/gen_scene.js"></script>
+    <script src="./gen_optimizer/gen_text.js"></script>
+    <!-- 控制器 -->
+    <script src="./controls/pen_controls.js"></script>
+    <script src="./controls/image_controls.js"></script>
+    <script src="./controls/config_controls.js"></script>
+    <script src="./controls/text_controls.js"></script>
+    <!-- 场景 -->
+    <script src="./scene/main_scene.js"></script>
+    <!-- 程序入口 -->
     <script src="./main.js"></script>
 </body>
 </html>
