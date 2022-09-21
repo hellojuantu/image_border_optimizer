@@ -7,9 +7,6 @@ class GenScene {
         this.elements = []
         this.events = {}
         this.pageClass = {}
-        //
-        // this.insertControls()
-        // this.updateControls("config.index.max", this.images.length - 1)
     }
 
     static new(...args) {
@@ -53,6 +50,10 @@ class GenScene {
         }
     }
 
+    refreshConfig() {
+        
+    }
+
     registerPageClass(prop) {
         for (let c of Object.keys(prop)) {
             this.pageClass[c] = prop[c]
@@ -68,7 +69,6 @@ class GenScene {
             var html = template(this, k, item)
             appendHtml(div, html)
         }
-        this.updateControls("config.index.max", this.images.length - 1)
     }
 
     registerSceneEvents(sceneEvents) {
@@ -116,45 +116,4 @@ class GenScene {
             e.update()
         }
     }
-
-    // insertControls() {
-    //     var div = e(".gen-controls")
-    //     var keys = Object.keys(config)
-    //     for (var k of keys) {
-    //         var item = config[k]
-    //         var html = this.templateControls(k, item)
-    //         appendHtml(div, html)
-    //     }
-    // }
-
-    // templateControls(key, item) {
-    //     var minAndMax = `
-    //         max = ${item.max}
-    //         min = ${item.min}
-    //     `
-    //     var inputAndRange = `
-    //         <input class='gen-auto-slider' type="${item.type}"
-    //             value="${item.value}"
-    //             ${item.type == 'range' ? minAndMax : ''}
-    //             data-value="config.${key}"
-    //             data-type="${item.type}"
-    //             >
-    //         ${item._comment}: <span class="gen-label">${item.value}</span>
-    //     `
-    //     var button = `
-    //         <div class="gen-controller">
-    //             <label>
-    //                 <button class='gen-auto-button' data-type="${item.type}" data-value="config.${key}">${item._comment}</button>
-    //             </label>
-    //         </div>
-    //     `
-    //     var t = `
-    //         <div class="gen-controller">
-    //             <label>
-    //                 ${item.type == 'button' ? button : inputAndRange}
-    //             </label>
-    //         </div>
-    //     `
-    //     return t
-    // }
 }

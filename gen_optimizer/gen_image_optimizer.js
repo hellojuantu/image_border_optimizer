@@ -12,7 +12,7 @@ class GenOptimizer {
 
     setup() {
         // canvas
-        this.canvas = document.querySelector("#id-canvas")
+        this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
         this.setupNotice()
         // 
@@ -113,7 +113,7 @@ class GenOptimizer {
 
     bindUploadEvents() {
         var self = this
-        var dp = e('#id-canvas')
+        var dp = this.canvas
     
         dp.addEventListener('dragover', function (e) {
             e.stopPropagation()
@@ -135,6 +135,9 @@ class GenOptimizer {
                     img.src = e.target.result
                     img.onload = function() { 
                         self.images.push(img)
+                        log("images len, file len", self.images.length, files.length)
+                        // 上传图片, 刷新配置
+                        self.scene && self.scene.refreshConfig()
                         if (self.images.length == files.length) {
                             log("__start")
                             self.__start()

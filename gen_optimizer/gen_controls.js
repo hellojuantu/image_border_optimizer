@@ -7,7 +7,7 @@ class GenControls {
         this.scene = scene
     }
 
-    static new (...args) {
+    static new(...args) {
         return new this(...args)
     }
 

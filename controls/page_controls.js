@@ -82,6 +82,13 @@ class PageControls extends GenControls {
                 },
             },
         })
+
+        // 上传图片需要刷新的配置
+        sc.refreshConfig = function() {
+            // log("refreshConfig", this.images.length)
+            sc.updateControls("config.index.max", this.images.length - 1)
+        }
+
     }
 
     // 保存图片的修改
