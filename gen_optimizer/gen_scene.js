@@ -6,10 +6,10 @@ class GenScene {
         this.images = optimizer.images
         this.elements = []
         this.events = {}
+        this.pageClass = {}
         //
-        this.insertControls()
-        this.bindControlsEvents()
-        this.updateControls("config.index.max", this.images.length - 1)
+        // this.insertControls()
+        // this.updateControls("config.index.max", this.images.length - 1)
     }
 
     static new(...args) {
@@ -53,25 +53,50 @@ class GenScene {
         }
     }
 
-    bindControlsEvents() {
-        var self = this
-
-        bindAll('.gen-auto-button', 'click', function(event) {
-            var target = event.target
-            var bindVar = target.dataset.value
-            self.events[bindVar] && self.events[bindVar](target)
-        })
-    
-        bindAll('.gen-auto-slider', 'input', function(event) {
-            var target = event.target
-            var bindVar = target.dataset.value
-            var v = target.value
-            self.updateControls(bindVar + '.value', v)
-        })
+    registerPageClass(prop) {
+        for (let c of Object.keys(prop)) {
+            this.pageClass[c] = prop[c]
+        }
+        return this
     }
 
-    addEvent(eventName, callback) {
-        this.events[eventName] = callback
+    bindTemplate(template) {
+        var div = e("." + this.pageClass.controls)
+        var keys = Object.keys(config)
+        for (var k of keys) {
+            var item = config[k]
+            var html = template(this, k, item)
+            appendHtml(div, html)
+        }
+        this.updateControls("config.index.max", this.images.length - 1)
+    }
+
+    registerSceneEvents(sceneEvents) {
+        let self = this
+        for (let eventName of Object.keys(sceneEvents)) {
+            let selector = "." + sceneEvents[eventName].pageClass
+            let callback = sceneEvents[eventName].callback
+            bindAll(selector, eventName, function(event) {
+                var target = event.target
+                var bindVar = target.dataset.value
+                // log("eventName, events, bindVar", eventName, self.events, bindVar)
+                var clickEvents = self.events[eventName]
+                clickEvents[bindVar] && clickEvents[bindVar](target)
+                callback && callback(bindVar, target)
+            })
+        }        
+    }
+
+    bindEvent(eventName, configToCallback) {
+        this.events[eventName] = configToCallback
+    }
+
+    bindEvents(configEvents) {
+        // 遍历 configEvents 绑定事件
+        for (let eventName in configEvents) {
+            let configToCallback = configEvents[eventName]
+            this.bindEvent(eventName, configToCallback)
+        } 
     }
 
     addElement(controller) {
@@ -92,44 +117,44 @@ class GenScene {
         }
     }
 
-    insertControls() {
-        var div = e(".gen-controls")
-        var keys = Object.keys(config)
-        for (var k of keys) {
-            var item = config[k]
-            var html = this.templateControls(k, item)
-            appendHtml(div, html)
-        }
-    }
+    // insertControls() {
+    //     var div = e(".gen-controls")
+    //     var keys = Object.keys(config)
+    //     for (var k of keys) {
+    //         var item = config[k]
+    //         var html = this.templateControls(k, item)
+    //         appendHtml(div, html)
+    //     }
+    // }
 
-    templateControls(key, item) {
-        var minAndMax = `
-            max = ${item.max}
-            min = ${item.min}
-        `
-        var inputAndRange = `
-            <input class='gen-auto-slider' type="${item.type}"
-                value="${item.value}"
-                ${item.type == 'range' ? minAndMax : ''}
-                data-value="config.${key}"
-                data-type="${item.type}"
-                >
-            ${item._comment}: <span class="gen-label">${item.value}</span>
-        `
-        var button = `
-            <div class="gen-controller">
-                <label>
-                    <button class='gen-auto-button' data-type="${item.type}" data-value="config.${key}">${item._comment}</button>
-                </label>
-            </div>
-        `
-        var t = `
-            <div class="gen-controller">
-                <label>
-                    ${item.type == 'button' ? button : inputAndRange}
-                </label>
-            </div>
-        `
-        return t
-    }
+    // templateControls(key, item) {
+    //     var minAndMax = `
+    //         max = ${item.max}
+    //         min = ${item.min}
+    //     `
+    //     var inputAndRange = `
+    //         <input class='gen-auto-slider' type="${item.type}"
+    //             value="${item.value}"
+    //             ${item.type == 'range' ? minAndMax : ''}
+    //             data-value="config.${key}"
+    //             data-type="${item.type}"
+    //             >
+    //         ${item._comment}: <span class="gen-label">${item.value}</span>
+    //     `
+    //     var button = `
+    //         <div class="gen-controller">
+    //             <label>
+    //                 <button class='gen-auto-button' data-type="${item.type}" data-value="config.${key}">${item._comment}</button>
+    //             </label>
+    //         </div>
+    //     `
+    //     var t = `
+    //         <div class="gen-controller">
+    //             <label>
+    //                 ${item.type == 'button' ? button : inputAndRange}
+    //             </label>
+    //         </div>
+    //     `
+    //     return t
+    // }
 }

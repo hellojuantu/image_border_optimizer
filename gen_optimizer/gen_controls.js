@@ -11,10 +11,6 @@ class GenControls {
         return new this(...args)
     }
 
-    addEvent(eventName, callback) {
-        this.scene.events[eventName] = callback
-    }
-
     addElement() {
         this.scene.elements.push(this)
         return this

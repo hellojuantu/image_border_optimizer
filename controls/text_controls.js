@@ -1,6 +1,7 @@
 class TextControls extends GenControls {
     constructor(scene) {
         super(scene)
+        this.scene = scene
         this.setup()
     }
 
@@ -20,46 +21,31 @@ class TextControls extends GenControls {
 
     setupMove() {
         let self = this
-        let startDrag = false
         let ox = 0
         let oy = 0
-
-        // 全局拖拽文字的 uuid, 避免多个文字同时拖拽
-        this.textUUID = null
-
+        let draggedText = null
         self.optimizer.resgisterMouse(function(event, action) {
             if (parseBoolean(config.penEnabled.value)) {
                 return
             }
             let x = event.offsetX
             let y = event.offsetY
-            let targetText = self.pointInText(x, y).filter(function(e) {
-                if (self.textUUID == null) {
-                    return true
-                } else {
-                    return e.id == self.textUUID
-                }
-            }).pop()
+            let targetText = self.pointInText(x, y).pop()
             if (action == 'down') {
                 if (targetText != null && self.textUUID == null) {
-                    startDrag = true
                     ox = targetText.x - x
                     oy = targetText.y - y
-                    self.textUUID = targetText.id
+                    draggedText = targetText
                 }
             } else if (action == 'move') {
-                if (startDrag && targetText != null && targetText.id == self.textUUID) {
-                    targetText.x = x + ox
-                    targetText.y = y + oy   
-                    targetText.dragged = true 
-                    self.textUUID = targetText.id
-                }   
-            } else if (action == 'up') {
-                startDrag = false
-                if (targetText != null && targetText.id == self.textUUID) {
-                    targetText.dragged = false
-                    self.textUUID = null
+                if (draggedText != null) {
+                    draggedText.x = x + ox
+                    draggedText.y = y + oy
                 }
+            } else if (action == 'up') {
+                if (draggedText != null) {
+                    draggedText = null
+                }                
             }
         })
     }
@@ -84,20 +70,16 @@ class TextControls extends GenControls {
             if (targetText != null) {
                 return
             }
+            log("action", action)
             // add edit text
             if (action == 'down') {
                 if (self.inputOpen) {
                     // close input
-                    let closeInput = self.closeInput()
-                    let textContent = closeInput.value
-                    if (textContent.trim().length <= 0) {
-                        return
-                    }
-                    self.addText(textContent, self.textX, self.textY)
+                    self.closeInputAndAddText()
                 } else {
                     // open input
                     let p = self.canvasToPage(x, y)
-                    self.insertInput(p.x, p.y , config.textFont.value, config.textFontColor.value)
+                    self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
                     // update offset
                     self.textX = x
                     self.textY = y
@@ -119,11 +101,7 @@ class TextControls extends GenControls {
             // input open annd click text
             if (targetText != null && self.inputOpen) {
                 // close input
-                let textContent = self.closeInput().value
-                if (textContent.trim().length <= 0) {
-                    return
-                }
-                self.addText(textContent, self.textX, self.textY)
+                self.closeInputAndAddText()
                 return
             }
             // 双击编辑文字
@@ -136,6 +114,10 @@ class TextControls extends GenControls {
                 // 打开 input
                 let p = self.canvasToPage(self.textX, self.textY)
                 self.insertInput(p.x, p.y, targetText.font, targetText.color, targetText.text)
+                // 设置字体属性到配置栏
+                log("targetText.color", targetText.color)
+                self.scene.updateControls("config.textFont.value", targetText.font)
+                self.scene.updateControls("config.textColor.value", targetText.color)
                 // 删除文字
                 targetText.deleted = true
                 return
@@ -144,9 +126,10 @@ class TextControls extends GenControls {
     }
 
     insertInput(gx, gy, font, color, value='') {
-        this.inputOpen = true
+        let self = this
+        self.inputOpen = true
         //
-        let selector = "#" + this.inputId
+        let selector = "#" + self.inputId
         if (e(selector) != null) {
             return
         }
@@ -161,6 +144,24 @@ class TextControls extends GenControls {
         input.style.font = font
         input.style.color = color
         input.focus()
+        // input blur 时, 关闭 input
+        // bind(selector, 'blur', function(event) {
+        //     // log("blur", self.inputOpen)
+        //     if (self.inputOpen) {
+        //         // close input
+        //         self.closeInputAndAddText()
+        //     }
+        // })
+    }
+
+    closeInputAndAddText() {
+        let self = this
+        let closeInput = self.closeInput()
+        let textContent = closeInput.value
+        if (textContent.trim().length <= 0) {
+            return
+        }
+        self.addText(textContent, self.textX, self.textY, closeInput.style.font, closeInput.style.color)
     }
 
     closeInput() {
@@ -184,8 +185,12 @@ class TextControls extends GenControls {
         return clickedTexts
     }
 
-    addText(content, x, y) {
-        this.texts.push(GenText.new(this.scene, content, x, y))
+    addText(content, x, y, prop={}) {
+        this.texts.push(GenText.new(this.scene, content, x, y, prop))
+    }
+
+    resetAndUpdate(texts) {
+        this.texts = texts
     }
 
     draw() {

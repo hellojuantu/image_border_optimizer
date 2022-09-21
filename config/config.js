@@ -25,7 +25,7 @@ var config = {
     },
     offset: {
         _comment: "canvas offset",
-        value: 2,
+        value: 6,
         valueType: 'number',
         min: 2,
         max: 30,
@@ -33,7 +33,7 @@ var config = {
     },
     imageOffset: {
         _comment: "image offset",
-        value: 20,
+        value: 60,
         valueType: 'number',
         min: -100,
         max: 100,
@@ -41,7 +41,7 @@ var config = {
     },
     shadowOffset: {
         _comment: "shadow offset",
-        value: 3,
+        value: 10,
         valueType: 'number',
         min: -50,
         max: 50,
@@ -49,7 +49,7 @@ var config = {
     },
     shadowBlur: {
         _comment: "shadow blur level",
-        value: 5,
+        value: 14,
         valueType: 'number',
         min: 0,
         max: 30,
@@ -57,7 +57,7 @@ var config = {
     },
     shadowColorAlpha: {
         _comment: "shadow color alpha",
-        value: 4,
+        value: 5,
         valueType: 'number',
         min: 0,
         max: 10,
@@ -71,7 +71,7 @@ var config = {
     },
     borderLength: {
         _comment: "border length:",
-        value: 1,
+        value: 2.5,
         valueType: 'number',
         min: 0,
         max: 30,
@@ -115,7 +115,7 @@ var config = {
         valueType: "string",
         type: "text",
     },
-    textFontColor: {
+    textColor: {
         _comment: "text font color",
         value: "#000000",
         valueType: "string",

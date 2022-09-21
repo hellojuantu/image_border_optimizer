@@ -1,14 +1,13 @@
 class GenText extends GenControls {
-    constructor(scene, text, x, y) {
+    constructor(scene, text, x, y, prop={}) {
         super(scene)
         this.text = text
-        this.dragged = false
-        this.id = uuid()
         this.x = x
         this.y = y
         this.font = config.textFont.value
-        this.color = config.textFontColor.value
+        this.color = config.textColor.value
         this.deleted = false
+        this.fillProp(prop)
     }
     
     static new (...args) {

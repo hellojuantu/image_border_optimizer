@@ -15,6 +15,12 @@ var bindAll = function(sel, eventName, callback) {
     }
 }
 
+var bind = function(sel, eventName, callback) {
+    e(sel).addEventListener(eventName, function(event) {
+        callback(event)
+    })
+}
+
 var parseBoolean = function(booleanString) {
     return JSON.parse(booleanString)
 }

@@ -8,14 +8,14 @@ class MainScene extends GenScene {
         return new this(...args)
     }
 
-    setup() {
+    setup() {        
         // 图片控制器
-        ImageControls.new(this).addElement()
+        let imageControl = ImageControls.new(this).addElement()
         // 画笔控制器
         let pen = PenControls.new(this).addElement()
-        // 配置控制器
-        ConfigControls.new(this, pen).addElement()
         // 文字控制器
-        TextControls.new(this).addElement()
+        let textControl = TextControls.new(this).addElement()
+        // 页面控制器
+        PageControls.new(this, imageControl, pen, textControl)
     }
 }

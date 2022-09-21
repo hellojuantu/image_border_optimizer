@@ -61,18 +61,6 @@ class GenOptimizer {
                 a(event, 'up')
             }
         })
-        this.canvas.addEventListener('mouseout', event => {
-            moving = false
-            for (const a of self.mouseActions) {
-                a(event, 'out')
-            }
-        })
-        this.canvas.addEventListener('mouseleave', event => {
-            moving = false
-            for (const a of self.mouseActions) {
-                a(event, 'leave')
-            }
-        })
         this.canvas.addEventListener('dblclick', event => {
             moving = false
             for (const a of self.mouseActions) {

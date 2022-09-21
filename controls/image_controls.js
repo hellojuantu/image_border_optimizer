@@ -1,6 +1,24 @@
 class ImageControls extends GenControls {
     constructor(scene) {
         super(scene)
+        this.setupImageChanges()
+    }
+
+    setupImageChanges() {
+        this.imageChanges = []
+        for (let i = 0; i <= config.index.max; i++) {
+            this.imageChanges.push({
+                points: [],
+                texts: [],
+            })
+        }
+    }
+
+    saveImage(points, texts) {
+        this.imageChanges[config.index.value] = {
+            points: points,
+            texts: texts,
+        }
     }
 
     draw() {

@@ -81,7 +81,7 @@ class PenControls extends GenControls {
         this.points.push(GenPoint.new(x, y, status))
     }
 
-    reset() {
-        this.points = []
+    resetAndUpdate(points) {
+        this.points = points
     }
 }
