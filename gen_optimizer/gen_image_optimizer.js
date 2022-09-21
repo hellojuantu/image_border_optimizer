@@ -14,6 +14,7 @@ class GenOptimizer {
         // canvas
         this.canvas = document.querySelector("#id-canvas")
         this.context = this.canvas.getContext('2d')
+        this.setupNotice()
         // 
         this.scene = null
         // image and upload
@@ -22,6 +23,20 @@ class GenOptimizer {
         //
         this.mouseActions = []
         this.setupMouse()
+    }
+
+    setupNotice() {
+        let notice = "Drag images here to start !!!"
+        this.context.save()
+        this.context.textBaseline = "top"
+        this.context.font = '24px arial'
+        let metrics = this.context.measureText(notice)
+        let w = metrics.width
+        let h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+
+        this.context.fillStyle = "red"
+        this.context.fillText(notice, (this.canvas.width - w) / 2, (this.canvas.height - h) / 2)        
+        this.context.restore()
     }
     
     setupMouse() {
@@ -56,6 +71,12 @@ class GenOptimizer {
             moving = false
             for (const a of self.mouseActions) {
                 a(event, 'leave')
+            }
+        })
+        this.canvas.addEventListener('dblclick', event => {
+            moving = false
+            for (const a of self.mouseActions) {
+                a(event, 'dblclick')
             }
         })
     }
@@ -104,7 +125,7 @@ class GenOptimizer {
 
     bindUploadEvents() {
         var self = this
-        var dp = e('#id-div-uploader')
+        var dp = e('#id-canvas')
     
         dp.addEventListener('dragover', function (e) {
             e.stopPropagation()

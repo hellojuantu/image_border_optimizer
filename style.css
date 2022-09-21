@@ -1,3 +1,7 @@
+body {
+    margin: 0px;
+}
+
 img {
     -moz-box-shadow: 2px 2px 5px #333333;
     -webkit-box-shadow: 2px 2px 5px #333333;
@@ -22,12 +26,14 @@ img {
 }
 
 #id-main {
-    margin: 10px;
+    border-top: 1px #bbb solid;
     overflow: hidden;
 }
 
 .gen-controls {
-    /* padding: 20px 0; */
+    position: relative;
+    left: 10px;
+    float: left;
 }
 
 .gen-controller {
@@ -56,14 +62,15 @@ button {
 .resize-save {
     position: absolute;
     top: 0; right: 15px; bottom: 0; left: 0;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 .resize-bar {
-    width: 500px; height: inherit;
-    /* min-width: 10px; */
-    max-width: 800px;
+    width: 650px; 
+    height: inherit;
+    min-width: 650px;
+    max-width: 1000px;
     resize: horizontal;
     cursor: ew-resize;
     cursor: col-resize;

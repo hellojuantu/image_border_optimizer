@@ -8,29 +8,19 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <div style="width: fit-content;margin: 0 auto;"><h1>Image Border Optimizer</h1></div>
     <div id="id-main">
         <div id="id-config-area">
             <div class="resize-bar"></div>
             <div class="resize-line"></div>
             <div class="resize-save">
-                <div class="gen-info">
-                    <div id="id-step-one">
-                        <div style="width: fit-content;margin: 0 auto;"><h1>Image Border Optimizer</h1></div>
-                        <div id="id-div-uploader" class="uploader">drag to upload images</div>
-                    </div>
-                </div>
-                <div class="gen-controls">
-                    <div class="">
-                        <label>
-                            
-                        </label>
-                    </div>
+                <div id="id-canvas-area">
+                    <canvas id="id-canvas" width="600" height="400"></canvas>  
                 </div>
             </div>
         </div>
-        <div id="id-canvas-area">
-            <canvas id="id-canvas" width="600" height="400"></canvas>  
-            <!-- <input hidden autofocus="autofocus" cols="30" value="" type="text" id="id-text" class="float-input-text"> -->
+        <!-- 工具 动态插入 -->
+        <div class="gen-controls">
         </div>
     </div>
     <!-- 配置文件 -->

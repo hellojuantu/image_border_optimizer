@@ -26,6 +26,38 @@ class GenControls {
         return xIn && yIn
     }
     
+    coordinateToCanvas(x, y) {
+        let canvasBound = this.canvas.getBoundingClientRect()
+        return {
+            "x": x - canvasBound.left,
+            "y": y - canvasBound.top,
+        }
+    }
+
+    canvasToCoordinate(x, y) {
+        let canvasBound = this.canvas.getBoundingClientRect()
+        return {
+            "x": x + canvasBound.left,
+            "y": y + canvasBound.top,
+        }
+    }
+
+    pageToCanvas(x, y) {
+        let self = this
+        return {
+            "x": x - self.canvas.offsetLeft,
+            "y": y - self.canvas.offsetTop,
+        }
+    }
+
+    canvasToPage(x, y) {
+        let self = this
+        return {
+            "x": x + self.canvas.offsetLeft,
+            "y": y + self.canvas.offsetTop,
+        }
+    }
+
     draw() {
     }
 
