@@ -7,7 +7,7 @@
     <title>Image Border Optimizer</title>
     <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="body-area">
     <div style="width: fit-content;margin: 0 auto;"><h1>Image Border Optimizer</h1></div>
     <div id="id-main">
         <div id="id-config-area">
@@ -15,7 +15,7 @@
             <div class="resize-line"></div>
             <div class="resize-save">
                 <div id="id-canvas-area">
-                    <canvas id="id-canvas" width="600" height="400"></canvas>  
+                    <canvas id="id-canvas" class="canvas-area" width="600" height="400"></canvas>  
                 </div>
             </div>
         </div>
@@ -31,8 +31,12 @@
     <script src="./gen_optimizer/gen_controls.js"></script>
     <script src="./gen_optimizer/gen_point.js"></script>
     <script src="./gen_optimizer/gen_scene.js"></script>
+    <script src="./gen_optimizer/gen_shape.js"></script>
     <script src="./gen_optimizer/gen_text.js"></script>
+    <script src="./gen_optimizer/gen_rect.js"></script>
+    <script src="./gen_optimizer/gen_arrow.js"></script>
     <!-- 控制器 -->
+    <script src="./controls/shape_controls.js"></script>
     <script src="./controls/pen_controls.js"></script>
     <script src="./controls/image_controls.js"></script>
     <script src="./controls/page_config_controls.js"></script>

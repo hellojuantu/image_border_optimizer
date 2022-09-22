@@ -1,4 +1,4 @@
-class GenText extends GenControls {
+class GenText extends GenShape {
     constructor(scene, text, x, y, prop={}) {
         super(scene)
         this.text = text

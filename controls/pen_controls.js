@@ -4,10 +4,6 @@ class PenControls extends GenControls {
         this.setup()
     }
 
-    static new (...args) {
-        return new this(...args)
-    }
-
     drawLine(beginPoint, controlPoint, endPoint) {
         var context = this.context
         context.beginPath()

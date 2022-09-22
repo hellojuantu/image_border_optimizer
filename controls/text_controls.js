@@ -5,10 +5,6 @@ class TextControls extends GenControls {
         this.setup()
     }
 
-    static new(...args) {
-        return new this(...args)
-    }
-
     setup() {
         this.texts = []
         // 字体拖拽

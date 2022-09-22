@@ -10,14 +10,16 @@ class ImageControls extends GenControls {
             this.imageChanges.push({
                 points: [],
                 texts: [],
+                shapes: [],
             })
         }
     }
 
-    saveImage(points, texts) {
+    saveImage(points, texts, shapes) {
         this.imageChanges[config.index.value] = {
             points: points,
             texts: texts,
+            shapes: shapes,
         }
     }
 

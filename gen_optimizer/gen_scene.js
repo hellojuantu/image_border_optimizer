@@ -29,38 +29,53 @@ class GenScene {
         insertHtml && insertHtml()
     }
 
-    registerSceneEvents(sceneEvents) {
+    registerGlobalEvents(sceneEvents) {
         let self = this
-        this.sceneEvents = sceneEvents
-        for (let className of Object.keys(sceneEvents)) {
+        log("scene", sceneEvents)
+        for (let event of sceneEvents) {
+            let eventName = event.eventName
+            let className = event.className
             let selector = sel(className)
-            let eventName = sceneEvents[className].eventName
-            let callback = sceneEvents[className].callback
-            // log("selector, eventName", selector, eventName)
+            let callback = event.callback
+            let configToEvents = event.configToEvents || {}
+            self.bindConfigEvents(eventName, configToEvents)
+            log("selector, eventName", selector, eventName)
             bindAll(selector, eventName, function(event) {
-                var target = event.target
-                var bindVar = target.dataset.value
+                let target = event.target
+                let bindVar = target.dataset.value
                 // log("eventName, events, bindVar", eventName, self.events, bindVar)
-                var configEvents = self.events[eventName]
-                // log("configEvents", configEvents)
-                configEvents[bindVar] && configEvents[bindVar](target)
-                // 
+                let eventId = self.eventId(eventName, bindVar)
+                let eventFunc = self.events[eventId]
+                // 某个配置区域独有的事件
+                eventFunc && eventFunc(target)
+                // 全局的事件
                 callback && callback(bindVar, target)
             })
         }        
     }
 
-    bindConfigEvents(configEvents) {
-        // 遍历 configEvents 绑定事件
-        for (let className in configEvents) {
-            let eventName =  this.sceneEvents[className].eventName
-            let configToCallback = configEvents[className]
-            this.bindEvent(eventName, configToCallback)
-        } 
+    bindConfigEvents(eventName, configToEvents) {
+        /**
+            eventName -> "input",
+            configToEvents -> {
+                "config.textFont": function(target) {},
+                "config.textColor": function(target) {},
+            }
+        */
+        let self = this
+        for (let bindVar of Object.keys(configToEvents)) {
+            let eventFun = configToEvents[bindVar]
+            let eventId = self.eventId(eventName, bindVar)
+            self.bindEvent(eventId, eventFun)
+        }
     }
 
-    bindEvent(eventName, configToCallback) {
-        this.events[eventName] = configToCallback
+    eventId(eventName, bindVar) {
+        return eventName + "->" + bindVar
+    }
+
+    bindEvent(eventName, events) {
+        this.events[eventName] = events
     }
 
     addElement(controller) {

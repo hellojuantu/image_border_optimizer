@@ -120,5 +120,39 @@ var config = {
         value: "#000000",
         valueType: "string",
         type: "color",
+    },
+    shapeEnabled: {
+        _comment: "shape enabled",
+        value: 'false',
+        valueType: 'boolean',
+        type: "checkbox",
+    },
+    shapeSelect: {
+        _comment: "shape select",
+        value: 'rect',
+        valueType: 'string',
+        type: "text",
+        list: {
+            name: "shape_list",
+            options: [
+                'rect', 
+                'arrow',
+                // 'circle',
+            ],
+        }
+    },
+    shapeColor: {
+        _comment: "shape color",
+        value: "#000000",
+        valueType: "string",
+        type: "color",
+    },
+    shapeBorder: {
+        _comment: "shape border",
+        value: 5,
+        valueType: 'number',
+        min: 5,
+        max: 20,
+        type: "range",
     }
 }
