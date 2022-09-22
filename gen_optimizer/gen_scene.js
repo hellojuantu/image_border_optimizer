@@ -13,6 +13,7 @@ class GenScene {
         return new this(...args)
     }
 
+    // 上传图片需要刷新的配置
     refreshConfig() {
         
     }
@@ -31,16 +32,19 @@ class GenScene {
     registerSceneEvents(sceneEvents) {
         let self = this
         this.sceneEvents = sceneEvents
-        for (let pageClass of Object.keys(sceneEvents)) {
-            let selector = "." + pageClass
-            var eventName = sceneEvents[pageClass].eventName
-            let callback = sceneEvents[pageClass].callback
+        for (let className of Object.keys(sceneEvents)) {
+            let selector = sel(className)
+            let eventName = sceneEvents[className].eventName
+            let callback = sceneEvents[className].callback
+            // log("selector, eventName", selector, eventName)
             bindAll(selector, eventName, function(event) {
                 var target = event.target
                 var bindVar = target.dataset.value
                 // log("eventName, events, bindVar", eventName, self.events, bindVar)
-                var clickEvents = self.events[eventName]
-                clickEvents[bindVar] && clickEvents[bindVar](target)
+                var configEvents = self.events[eventName]
+                // log("configEvents", configEvents)
+                configEvents[bindVar] && configEvents[bindVar](target)
+                // 
                 callback && callback(bindVar, target)
             })
         }        
@@ -48,10 +52,9 @@ class GenScene {
 
     bindConfigEvents(configEvents) {
         // 遍历 configEvents 绑定事件
-        for (let pageClass in configEvents) {
-            let eventName =  this.sceneEvents[pageClass].eventName
-            let configToCallback = configEvents[pageClass]
-            log("event", eventName)
+        for (let className in configEvents) {
+            let eventName =  this.sceneEvents[className].eventName
+            let configToCallback = configEvents[className]
             this.bindEvent(eventName, configToCallback)
         } 
     }

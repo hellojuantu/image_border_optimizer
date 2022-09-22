@@ -86,7 +86,6 @@ class PageConfigControls extends GenControls {
 
         // 上传图片需要刷新的配置
         sc.refreshConfig = function() {
-            // log("refreshConfig", this.images.length)
             self.updateControls("config.index.max", this.images.length - 1)
         }
     }
@@ -101,7 +100,7 @@ class PageConfigControls extends GenControls {
     insertControls() {
         let self = this
         let sc = self.scene
-        var div = e("." + sc.pageClass.controls)
+        var div = e(sel(sc.pageClass.controls))
         var keys = Object.keys(config)
         for (var k of keys) {
             var item = config[k]
@@ -143,43 +142,6 @@ class PageConfigControls extends GenControls {
             </div>
         `
         return t
-    }
-
-    // config.xxx.prop = updateValue
-    updateControls(bindVarStr, updateValue) {
-        var list = bindVarStr.split(".")
-        var bind = list[1]
-        var prop = list[2]
-        var sliders = es('.' + this.scene.pageClass.slider)
-        for (let i = 0; i < sliders.length; i++) {
-            let slide = sliders[i]
-            let bindVar = slide.dataset.value
-            if (bindVar == `config.${bind}`) {
-                let parsedValue = this.parseValueWithType(updateValue, config[bind]['valueType'])
-                // update config
-                config[bind][prop] = parsedValue
-                // update html slide
-                slide[prop] = parsedValue
-                if (prop == 'value') {
-                    let label = slide.closest('label').querySelector('.' + this.scene.pageClass.lable)
-                    label.innerText = parsedValue
-                }
-                return
-            }
-        }
-    }
-
-    parseValueWithType(value, type) {
-        switch (type) {
-            case 'number':
-                return parseInt(value)
-            case 'string':
-                return String(value)
-            case 'boolean':
-                return !parseBoolean(value)
-            default:
-                return value
-        }
     }
 
 }

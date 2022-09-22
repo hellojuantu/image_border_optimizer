@@ -116,8 +116,8 @@ class TextControls extends GenControls {
                 self.insertInput(p.x, p.y, targetText.font, targetText.color, targetText.text)
                 // 设置字体属性到配置栏
                 log("targetText.color", targetText.color)
-                self.scene.updateControls("config.textFont.value", targetText.font)
-                self.scene.updateControls("config.textColor.value", targetText.color)
+                self.updateControls("config.textFont.value", targetText.font)
+                self.updateControls("config.textColor.value", targetText.color)
                 // 删除文字
                 targetText.deleted = true
                 return
@@ -134,16 +134,17 @@ class TextControls extends GenControls {
             return
         }
         let div = document.createElement('div');
-        div.innerHTML = `<input autofocus="autofocus" cols="30" value="${value}" type="text" id="${this.inputId}" class="float-input-text">`
+        div.innerHTML = `<input cols="30" value="${value}" type="text" id="${this.inputId}" class="float-input-text">`
         e("#id-canvas-area").append(div)
         // 添加样式
         let input = e(selector)
         input.style.display = "block"
-        input.style.left = gx + "px"
-        input.style.top = gy + "px"
+        input.style.left = (gx - 1) + "px"
+        input.style.top = (gy - 3) + "px"
         input.style.font = font
         input.style.color = color
         input.focus()
+        input.select()
         // input blur 时, 关闭 input
         // bind(selector, 'blur', function(event) {
         //     // log("blur", self.inputOpen)

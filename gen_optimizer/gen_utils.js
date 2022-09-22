@@ -37,3 +37,6 @@ var uuid = function() {
 	});
 }
 
+var sel = function(className) {
+    return '.' + className
+}
