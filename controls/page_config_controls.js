@@ -1,8 +1,8 @@
-class PageControls extends GenControls {
-    constructor(scene, imageControl, pen, textControl) {
+class PageConfigControls extends GenControls {
+    constructor(scene, imageControl, penControl, textControl) {
         super(scene)
         this.imageControl = imageControl
-        this.pen = pen
+        this.penControl = penControl
         this.textControl = textControl
         this.setup()
     }
@@ -11,30 +11,31 @@ class PageControls extends GenControls {
         let self = this
         let sc = self.scene
         
-        // 添加页面 class, 并绑定模板生成页面
+        // 注册页面 class 并构建页面
         sc.registerPageClass({
             "controls": 'gen-controls',
             "slider": 'gen-auto-slider',
             "button": 'gen-auto-button',
-        }).bindTemplate(self.templateControls)
+            "lable": 'gen-label',
+        }).buildPage(self.insertControls())
 
         // 注册场景事件
         sc.registerSceneEvents({
-            input: {
-                pageClass: sc.pageClass.slider,
+            [sc.pageClass.slider]: {
+                eventName: "input",
                 callback: function(bindVar, target) {
                     var v = target.value
-                    sc.updateControls(bindVar + '.value', v)
+                    self.updateControls(bindVar + '.value', v)
                 },
             },
-            click: {
-                pageClass: sc.pageClass.button,
+            [sc.pageClass.button]: {
+                eventName: "click",
             }
         })
-        
-        // 绑定事件
-        sc.bindEvents({
-            input: {
+       
+        // 给场景绑定 配置事件
+        sc.bindConfigEvents({
+            [sc.pageClass.slider]: {
                 "config.textFont": function(target) {
                     if (self.textControl.inputOpen) {
                         let sel = "#" + self.textControl.inputId
@@ -50,13 +51,13 @@ class PageControls extends GenControls {
                     }
                 },
             },
-            click: {
+            [sc.pageClass.button]: {
                 "config.preButton": function(target) {
                     if (config.index.value > 0) {
                         self.saveImage()
                         var v = config.index.value - 1
-                        sc.updateControls("config.index.value", v)
-                        self.pen.resetAndUpdate(self.imageControl.imageChanges[v].points)
+                        self.updateControls("config.index.value", v)
+                        self.penControl.resetAndUpdate(self.imageControl.imageChanges[v].points)
                         self.textControl.resetAndUpdate(self.imageControl.imageChanges[v].texts)
                     }
                 },
@@ -65,9 +66,9 @@ class PageControls extends GenControls {
                         // 保存当前图片的修改
                         self.saveImage()
                         var v = config.index.value + 1
-                        sc.updateControls("config.index.value", v)
+                        self.updateControls("config.index.value", v)
                         // 更新画笔和文字
-                        self.pen.resetAndUpdate(self.imageControl.imageChanges[v].points)
+                        self.penControl.resetAndUpdate(self.imageControl.imageChanges[v].points)
                         self.textControl.resetAndUpdate(self.imageControl.imageChanges[v].texts)
                     }
                 },
@@ -75,10 +76,10 @@ class PageControls extends GenControls {
                     var w = self.canvas.width
                     var img = self.images[config.index.value]
                     var imgW = img.width
-                    sc.updateControls('config.imageOffset.value', (w - imgW) / 2)
+                    self.updateControls('config.imageOffset.value', (w - imgW) / 2)
                 },
                 "config.penClearButton": function(target) {
-                    self.pen.resetAndUpdate([])
+                    self.penControl.resetAndUpdate([])
                 },
             },
         })
@@ -86,21 +87,34 @@ class PageControls extends GenControls {
         // 上传图片需要刷新的配置
         sc.refreshConfig = function() {
             // log("refreshConfig", this.images.length)
-            sc.updateControls("config.index.max", this.images.length - 1)
+            self.updateControls("config.index.max", this.images.length - 1)
         }
-
     }
 
     // 保存图片的修改
     saveImage() {
-        let points = this.pen.points
+        let points = this.penControl.points
         let texts = this.textControl.texts
         this.imageControl.saveImage(points, texts)
     }
 
-    templateControls(scene, key, item) {
-        let sliderClass = scene.pageClass.slider
-        let buttonClass = scene.pageClass.button
+    insertControls() {
+        let self = this
+        let sc = self.scene
+        var div = e("." + sc.pageClass.controls)
+        var keys = Object.keys(config)
+        for (var k of keys) {
+            var item = config[k]
+            var html = self.templateControls(k, item)
+            appendHtml(div, html)
+        }
+    }
+
+    templateControls(key, item) {
+        let self = this
+        let sc = self.scene
+        let sliderClass = sc.pageClass.slider
+        let buttonClass = sc.pageClass.button
         var minAndMax = `
             max = ${item.max}
             min = ${item.min}
@@ -130,4 +144,42 @@ class PageControls extends GenControls {
         `
         return t
     }
+
+    // config.xxx.prop = updateValue
+    updateControls(bindVarStr, updateValue) {
+        var list = bindVarStr.split(".")
+        var bind = list[1]
+        var prop = list[2]
+        var sliders = es('.' + this.scene.pageClass.slider)
+        for (let i = 0; i < sliders.length; i++) {
+            let slide = sliders[i]
+            let bindVar = slide.dataset.value
+            if (bindVar == `config.${bind}`) {
+                let parsedValue = this.parseValueWithType(updateValue, config[bind]['valueType'])
+                // update config
+                config[bind][prop] = parsedValue
+                // update html slide
+                slide[prop] = parsedValue
+                if (prop == 'value') {
+                    let label = slide.closest('label').querySelector('.' + this.scene.pageClass.lable)
+                    label.innerText = parsedValue
+                }
+                return
+            }
+        }
+    }
+
+    parseValueWithType(value, type) {
+        switch (type) {
+            case 'number':
+                return parseInt(value)
+            case 'string':
+                return String(value)
+            case 'boolean':
+                return !parseBoolean(value)
+            default:
+                return value
+        }
+    }
+
 }

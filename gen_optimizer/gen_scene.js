@@ -12,43 +12,6 @@ class GenScene {
     static new(...args) {
         return new this(...args)
     }
-    
-    // config.xxx.prop = updateValue
-    updateControls(bindVarStr, updateValue) {
-        var list = bindVarStr.split(".")
-        var bind = list[1]
-        var prop = list[2]
-        var sliders = es('.gen-auto-slider')
-        for (let i = 0; i < sliders.length; i++) {
-            let slide = sliders[i]
-            let bindVar = slide.dataset.value
-            if (bindVar == `config.${bind}`) {
-                let parsedValue = this.parseValueWithType(updateValue, config[bind]['valueType'])
-                // update config
-                config[bind][prop] = parsedValue
-                // update html slide
-                slide[prop] = parsedValue
-                if (prop == 'value') {
-                    let label = slide.closest('label').querySelector('.gen-label')
-                    label.innerText = parsedValue
-                }
-                return
-            }
-        }
-    }
-
-    parseValueWithType(value, type) {
-        switch (type) {
-            case 'number':
-                return parseInt(value)
-            case 'string':
-                return String(value)
-            case 'boolean':
-                return !parseBoolean(value)
-            default:
-                return value
-        }
-    }
 
     refreshConfig() {
         
@@ -61,21 +24,17 @@ class GenScene {
         return this
     }
 
-    bindTemplate(template) {
-        var div = e("." + this.pageClass.controls)
-        var keys = Object.keys(config)
-        for (var k of keys) {
-            var item = config[k]
-            var html = template(this, k, item)
-            appendHtml(div, html)
-        }
+    buildPage(insertHtml) {
+        insertHtml && insertHtml()
     }
 
     registerSceneEvents(sceneEvents) {
         let self = this
-        for (let eventName of Object.keys(sceneEvents)) {
-            let selector = "." + sceneEvents[eventName].pageClass
-            let callback = sceneEvents[eventName].callback
+        this.sceneEvents = sceneEvents
+        for (let pageClass of Object.keys(sceneEvents)) {
+            let selector = "." + pageClass
+            var eventName = sceneEvents[pageClass].eventName
+            let callback = sceneEvents[pageClass].callback
             bindAll(selector, eventName, function(event) {
                 var target = event.target
                 var bindVar = target.dataset.value
@@ -87,16 +46,18 @@ class GenScene {
         }        
     }
 
-    bindEvent(eventName, configToCallback) {
-        this.events[eventName] = configToCallback
-    }
-
-    bindEvents(configEvents) {
+    bindConfigEvents(configEvents) {
         // 遍历 configEvents 绑定事件
-        for (let eventName in configEvents) {
-            let configToCallback = configEvents[eventName]
+        for (let pageClass in configEvents) {
+            let eventName =  this.sceneEvents[pageClass].eventName
+            let configToCallback = configEvents[pageClass]
+            log("event", eventName)
             this.bindEvent(eventName, configToCallback)
         } 
+    }
+
+    bindEvent(eventName, configToCallback) {
+        this.events[eventName] = configToCallback
     }
 
     addElement(controller) {
