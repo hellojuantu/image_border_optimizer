@@ -8,6 +8,7 @@ class PageConfigControls extends GenControls {
         this.setup()
         this.setupCorsorEevnt()
         this.setupMove()
+        this.setupDrawShape()
     }
 
     setup() {
@@ -156,15 +157,16 @@ class PageConfigControls extends GenControls {
             let x = event.offsetX
             let y = event.offsetY
             let element = self.pointInElement(x, y)
-            log("element", element)
+            // log("element", element)      
             if (action == 'overmove') {
                 if (element != null && element.status != element.enumStatus.creating) {
                     self.optimizer.setCursor('move')
                 } else {
                     self.optimizer.setCursor('default')
                 }
-            } else if (action == 'up') {
-                if (element != null && element.isDeleted) {
+            } else if (action == 'down') {
+                // element 创建的不符合要求会被删除
+                if (element != null && element.isDeleted()) {
                     element == null
                 }
                 // 点击到空白的地方
@@ -177,17 +179,57 @@ class PageConfigControls extends GenControls {
                 }
             }
         })
+
+        // self.optimizer.resgisterMouse(function(event, action) {
+        //     if (parseBoolean(config.penEnabled.value)) {
+        //         return
+        //     }
+        //     let x = event.offsetX
+        //     let y = event.offsetY
+        //     let element = self.pointInDraggers(x, y)
+        //     if (action == 'overmove') {
+        //         if (element != null) {
+        //             self.optimizer.setCursor(element.cursor)
+        //         } else {
+        //             self.optimizer.setCursor('default')
+        //         }
+        //     }
+        // })
+    }
+
+    pointInDraggers(x, y) {
+        for (let dragger of this.shapeControl.allDraggers()) {
+            if (dragger.pointInFrame(x, y)) {
+                return dragger
+            }
+        }
+        return null
+    }
+
+    setupDrawShape() {
+        let self = this
+        self.optimizer.resgisterMouse(function(event, action) {
+            let x = event.offsetX
+            let y = event.offsetY            
+            let targetShape = self.pointInElement(x, y)
+            self.shapeControl.handleShapeEvent(action, x, y, targetShape)
+        })
     }
 
     pointInElement(x, y) {
         let inText = this.textControl.pointInText(x, y)
         let inShape = this.shapeControl.pointInShape(x, y)
+        // let dragger = this.pointInDraggers(x, y)
+        // if (dragger != null) {
+        //     return dragger
+        // }
         if (inText != null) {
             return inText
         }
         if (inShape != null) {
             return inShape
         }
+        
         return null
     }
 

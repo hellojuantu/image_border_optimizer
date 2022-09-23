@@ -8,7 +8,7 @@ class GenRect extends GenShape {
         this.border = config.shapeBorder.value
         this.color = config.shapeColor.value    
         this.status = this.enumStatus.creating
-        this.draggers = []
+        this.numberOfDraggers = 4
     }
 
     creating(x, y) {
@@ -17,7 +17,19 @@ class GenRect extends GenShape {
         this.h = y - this.y
     }
 
-    idle() {                
+    checkStatus() {        
+        // 无效图形直接删除
+        if (this.w == 0 || this.h == 0) {
+            super.deleted()
+            return
+        }
+    }
+
+    makeSpecial() {
+        this.w = this.h
+    }
+
+    idle() {   
         if (this.w < 0 || this.h < 0) {
             let offsetX = this.w < 0 ? this.w : 0
             let offsetY = this.h < 0 ? this.h : 0
@@ -26,18 +38,12 @@ class GenRect extends GenShape {
             this.w = Math.abs(this.w)
             this.h = Math.abs(this.h)
         }      
+
+        this.addDragger(GenDragger.new(this.scene, 0, 0, 0 ,'nw-resize'))
+        this.addDragger(GenDragger.new(this.scene, this.w, 0, 0, 'ne-resize'))
+        this.addDragger(GenDragger.new(this.scene, this.w, this.h, 0, 'se-resize'))
+        this.addDragger(GenDragger.new(this.scene, 0, this.h, 0, 'sw-resize'))
         
-         // 无效图形直接删除
-         if (this.w == 0 || this.h == 0) {
-            super.deleted()
-            return
-        }
-
-        this.draggers.push(GenDragger.new(this.scene, 0, 0))
-        this.draggers.push(GenDragger.new(this.scene, this.w, 0))
-        this.draggers.push(GenDragger.new(this.scene, this.w, this.h))
-        this.draggers.push(GenDragger.new(this.scene, 0, this.h))
-
         // 创建成功, 处于闲置状态
         super.idle()
     }

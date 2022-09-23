@@ -1,6 +1,6 @@
-class GenDragger extends GenControls {
+class GenDragger extends GenShape {
     // dragger 的坐标是相对于 shape x, y 
-    constructor(scene, offsetX, offsetY, rotate=0) {
+    constructor(scene, offsetX, offsetY, rotate=0, cursor='move') {
         super(scene)        
         this.w = 10
         this.h = 10
@@ -10,13 +10,15 @@ class GenDragger extends GenControls {
         this.y = offsetY
         this.active = false
         this.rotate = rotate
+        this.cursor = cursor
+        this.status = this.enumStatus.idle
+        // this.cursorEnum = {
+        //     northWest: 'nw-resize',
+        //     northEast: 'ne-resize',
+        //     southWest: 'sw-resize',
+        //     southEast: 'se-resize',
+        // }
         this.setupMove()
-    }
-
-    setPosition(x, y) {
-        let drag = this
-        drag.x = drag.offsetX + x - this.w / 2
-        drag.y = drag.offsetY + y - this.h / 2
     }
 
     setupMove() {
@@ -24,15 +26,21 @@ class GenDragger extends GenControls {
         // self.optimizer.resgisterMouse(function(event, action) {
         //     let x = event.offsetX
         //     let y = event.offsetY
-        //     let targetDragger = self.pointInFrame(x, y)
-        //     log("dragger", action, targetDragger)
-        //     // if (action == 'down') {
-        //     // } else if (action == 'move' && targetDragger) {
-        //     //     self.canvas.style.cursor = 'e-resize'
-        //     // } else if (action == 'up' && targetDragger) {
-        //     //     self.canvas.style.cursor = ''
-        //     // }
+        //     let dragger = self.pointInFrame(x, y)
+        //     // log("drag", dragger)
+        //     if (action == 'overmove') {
+        //         if (dragger != null) {
+        //             // log("overmove", dragger)
+        //             self.optimizer.setCursor(dragger.cursor)
+        //         }
+        //     }
         // })
+    }
+
+    setPosition(x, y) {
+        let drag = this
+        drag.x = drag.offsetX + x - this.w / 2
+        drag.y = drag.offsetY + y - this.h / 2
     }
 
     draw() {

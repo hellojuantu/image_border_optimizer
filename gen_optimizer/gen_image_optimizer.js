@@ -28,7 +28,7 @@ class GenOptimizer {
         this.actions = {}
         this.keydowns = {}
         window.addEventListener('keydown', event => {
-            // log("keydown", event.key)
+            log("keydown", event.key)
             this.keydowns[event.key] = 'down'
         })
         window.addEventListener('keyup', event => {

@@ -9,80 +9,57 @@ class ShapeControls extends GenControls {
         }
     }
 
+    allDraggers() {
+        let allDraggers = []
+        for (let shape of this.shapes) {
+            allDraggers.push(...shape.draggers)
+        }
+        return allDraggers
+    }
+
     shapeChoosed() {
         return Object.keys(this.shapeTypes).includes(config.shapeSelect.value)
     }
 
     setup() {
-        this.setupDraw()
+        this.buildingShape = null
         this.setupKey()
     }
 
-    setupDraw() {
+    handleShapeEvent(action, x, y, targetShape) {
         let self = this
         let sc = self.scene
-        let buildingShape = null
-        self.optimizer.resgisterMouse(function(event, action) {
-            if (!parseBoolean(config.shapeEnabled.value)) {
-                return
-            }
-            let x = event.offsetX
-            let y = event.offsetY
-            if (!self.shapeChoosed()) {
-                return
-            }
-            let targetShape = self.pointInShape(x, y)
+        if (!parseBoolean(config.shapeEnabled.value)) {
+            return
+        }
+        if (!self.shapeChoosed()) {
+            return
+        }
+        if (action == 'down') {
             log("shape", action, self.shapes, targetShape)
-            if (action == 'down') {
-                // 鼠标没有点到其他 shape
-                if (targetShape == null) {
-                    buildingShape = self.shapeTypes[config.shapeSelect.value].new(sc, x, y)
-                    self.shapes.push(buildingShape)
-                }
-            } else if (action == 'move') {
-                if (buildingShape != null) {
-                    buildingShape.creating(x, y)
-                }
-            } else if (action == 'up') {
-                if (buildingShape != null) {
-                    buildingShape.idle()
-                    self.removeDraggers()
-                    buildingShape.activateDraggers()
-                    buildingShape = null
-                }
+            // 鼠标没有点到其他 shape
+            if (targetShape == null) {
+                self.buildingShape = null
+                targetShape = self.shapeTypes[config.shapeSelect.value].new(sc, x, y)
+                self.shapes.push(targetShape)
+                self.buildingShape = targetShape
             }
-        })
+        } else if (action == 'move') {
+            log("shape", action, self.shapes, self.buildingShape)
+            if (self.buildingShape != null) {
+                self.buildingShape.creating(x, y)
+            }
+        } else if (action == 'up') {
+            log("shape", action, self.shapes, self.buildingShape)
+            if (self.buildingShape != null) {
+                self.buildingShape.idle()
+                self.removeDraggers()
+                self.buildingShape.activateDraggers()
+                self.buildingShape.checkStatus()
+                self.buildingShape = null
+            }
+        }
     }
-
-    // setupMove() {
-    //     let self = this
-    //     let ox = 0
-    //     let oy = 0
-    //     let draggedShape = null
-    //     self.optimizer.resgisterMouse(function(event, action) {            
-    //         let x = event.offsetX
-    //         let y = event.offsetY
-    //         let targetShape = self.pointInShape(x, y)
-    //         log("targetShape", targetShape, self.shapes, action)
-    //         if (action == 'down') {
-    //             if (targetShape != null && !targetShape.isCreating()) {
-    //                 draggedShape = targetShape
-    //                 ox = draggedShape.x - x
-    //                 oy = draggedShape.y - y     
-    //                 draggedShape.selected()
-    //             }
-    //         } else if (action == 'move') {
-    //             if (draggedShape != null && draggedShape.isSelected()) {
-    //                 draggedShape.x = x + ox
-    //                 draggedShape.y = y + oy
-    //             }
-    //         } else if (action == 'up') {
-    //             if (draggedShape != null) {
-    //                 draggedShape = null
-    //             }                
-    //         } 
-    //     })
-    // }
 
     removeDraggers() {
         for (let shape of this.shapes) {
@@ -91,8 +68,22 @@ class ShapeControls extends GenControls {
     }
 
     setupKey() {
-        this.optimizer.registerAction("Backspace", function(status) {
-            log("s", status)
+        this.optimizer.registerAction("Backspace", status => {
+            log("Backspace", status)
+            for (let shape of this.shapes) {
+                if (shape.isSelected()) {
+                    shape.deleted()
+                }
+            }
+        })
+
+        this.optimizer.registerAction("Shift", status => {
+            log("Shift", status)
+            for (let shape of this.shapes) {
+                if (shape.isCreating()) {
+                    shape.makeSpecial()
+                }
+            }
         })
     }
 

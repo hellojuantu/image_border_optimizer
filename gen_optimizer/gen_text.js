@@ -6,7 +6,7 @@ class GenText extends GenShape {
         this.y = y
         this.font = config.textFont.value
         this.color = config.textColor.value
-        this.deleted = false
+        this.status = this.enumStatus.creating
         this.fillProp(prop)
     }
     
@@ -21,15 +21,8 @@ class GenText extends GenShape {
         return this
     }
 
-    // hideDraggers() {
-        
-    // }
-
     draw() {
-        // log("draw text", this.text, this)
-        if (this.deleted) {
-            return
-        }
+        // log("draw text", this.text, this)       
         this.context.save()
         this.context.textBaseline = "top"
         this.context.font = this.font

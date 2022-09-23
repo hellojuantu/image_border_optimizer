@@ -20,44 +20,6 @@ class TextControls extends GenControls {
         // 从 input 中获取 文字的 x, y
         self.textX = 0
         self.textY = 0
-        
-        // self.optimizer.resgisterMouse(function(event, action) {
-        //     event.preventDefault()
-        //     if (parseBoolean(config.penEnabled.value) || 
-        //         !parseBoolean(config.textInputEnabled.value)) {
-        //         return
-        //     }
-        //     let x = event.offsetX
-        //     let y = event.offsetY
-        //     let targetText = self.pointInText(x, y)
-        //     if (targetText != null) {
-        //         return
-        //     }
-        //     log("action", action)
-        //     // add edit text
-        //     if (action == 'down') {
-        //         if (self.inputOpen) {
-        //             // close input
-        //             // self.closeInputAndAddText()
-        //         } else {
-        //             // open input
-        //             // let p = self.canvasToPage(x, y)
-        //             // self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
-        //             // // update offset
-        //             // self.textX = x
-        //             // self.textY = y
-        //         }
-        //     }
-        // })
-    }
-
-    addFloatInput(x, y) {
-        let self = this
-        let p = self.canvasToPage(x, y)
-        self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
-        // update offset
-        self.textX = x
-        self.textY = y
     }
 
     handleTextEvents(event, x, y) {
@@ -66,6 +28,7 @@ class TextControls extends GenControls {
         if (parseBoolean(config.penEnabled.value)) {
             return
         }
+        log('input', self.inputOpen)
         if (self.inputOpen) {
             self.closeInputAndAddText()
         } else {
@@ -106,10 +69,19 @@ class TextControls extends GenControls {
                 self.updateControls("config.textFont.value", targetText.font)
                 self.updateControls("config.textColor.value", targetText.color)
                 // 删除文字
-                targetText.deleted = true
+                targetText.deleted()
                 return
             }
         })
+    }
+
+    addFloatInput(x, y) {
+        let self = this
+        let p = self.canvasToPage(x, y)
+        self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
+        // update offset
+        self.textX = x
+        self.textY = y
     }
 
     insertInput(gx, gy, font, color, value='') {
@@ -132,14 +104,6 @@ class TextControls extends GenControls {
         input.style.color = color
         input.focus()
         input.select()
-        // input blur 时, 关闭 input
-        // bind(selector, 'blur', function(event) {
-        //     // log("blur", self.inputOpen)
-        //     if (self.inputOpen) {
-        //         // close input
-        //         self.closeInputAndAddText()
-        //     }
-        // })
     }
 
     closeInputAndAddText() {
@@ -174,7 +138,7 @@ class TextControls extends GenControls {
     
     pointInText(x, y) {
         for (let text of this.texts) {
-            if (text.pointInFrame(x, y) && !text.deleted) {
+            if (text.pointInFrame(x, y) && !text.isDeleted()) {
                 return text
             }
         }
@@ -194,7 +158,7 @@ class TextControls extends GenControls {
     draw() {
         let self = this
         // 过滤 texts 里面的被删除的文字
-        self.texts = self.texts.filter((t) => !t.deleted)
+        self.texts = self.texts.filter((t) => !t.isDeleted())
         for (let text of self.texts) {
             text.draw()
         }

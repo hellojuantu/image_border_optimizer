@@ -2,6 +2,7 @@ class GenShape extends GenControls {
     constructor(scene) {
         super(scene)
         this.draggers = []
+        this.numberOfDraggers = 0
         this.enumStatus = {
             creating: "creating",
             idle: "idle",
@@ -15,6 +16,12 @@ class GenShape extends GenControls {
         return new this(...args)
     }
 
+    addDragger(dragger) {
+        if (this.draggers.length < this.numberOfDraggers) {
+            this.draggers.push(dragger)
+        }
+    }
+
     activateDraggers() {
         for (let drag of this.draggers) {
             // rect 还在创建中，不需要拖拽
@@ -23,12 +30,14 @@ class GenShape extends GenControls {
             }
             drag.active = true
         }
+        this.selected()
     }
 
     hideDraggers() {
         for (let drag of this.draggers) {
             drag.active = false
         }
+        this.idle()
     }
 
     isSelected() {
@@ -65,6 +74,10 @@ class GenShape extends GenControls {
 
     pointInShapeFrame(x, y) {}
 
+    checkStatus() {}
+
+    makeSpecial() {}
+    
     draw() {
         for (let drag of this.draggers.filter(d => d.active)) {    
             // drag 需要跟随 rect 移动        

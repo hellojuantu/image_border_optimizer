@@ -9,24 +9,29 @@ class GenArrow extends GenShape {
         this.color = config.shapeColor.value
         this.border = config.shapeBorder.value
         this.status = this.enumStatus.creating
-        this.draggers = []
+        this.numberOfDraggers = 2
     }
 
     pointInShapeFrame(x, y, rotate) {
         // x,y 在矩形中
-        
-        
+        return false
+    }
+
+    checkStatus() {
+        let v1 = Vector.new(this.fromX, this.fromY)
+        let v2 = Vector.new(this.toX, this.toY)
+        this.distance = v1.distance(v2)
+        log("distance", this.distance)
+        if (this.distance < 20) {
+            super.deleted()
+            return
+        }
     }
 
     idle() {
-        if (this.fromX == this.toX || this.fromY == this.toY) {
-            this.deleted()
-        }
-
         this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
-        // log("rotate", rotate)
-        this.draggers.push(GenDragger.new(this.scene, 0, 0, this.rotate))
-        this.draggers.push(GenDragger.new(this.scene, this.toX - this.fromX, this.toY - this.fromY, this.rotate))
+        this.addDragger(GenDragger.new(this.scene, 0, 0, this.rotate))
+        this.addDragger(GenDragger.new(this.scene, this.toX - this.fromX, this.toY - this.fromY, this.rotate))    
 
         super.idle()
     }
@@ -77,8 +82,6 @@ class GenArrow extends GenShape {
         ctx.stroke()
         ctx.restore()
 
-
-        log("draggers", this.draggers)
         for (let drag of this.draggers.filter(d => d.active)) {    
             // drag 需要跟随 rect 移动        
             drag.setPosition(this.fromX, this.fromY)
