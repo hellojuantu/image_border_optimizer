@@ -10,6 +10,10 @@ class GenOptimizer {
         return this.i
     }
 
+    setCursor(cursor) {
+        this.canvas.style.cursor = cursor
+    }
+
     setup() {
         // canvas
         this.canvas = e("#id-canvas")
@@ -20,7 +24,17 @@ class GenOptimizer {
         // image and upload
         this.images = []
         this.bindUploadEvents()
-        //
+        // key
+        this.actions = {}
+        this.keydowns = {}
+        window.addEventListener('keydown', event => {
+            // log("keydown", event.key)
+            this.keydowns[event.key] = 'down'
+        })
+        window.addEventListener('keyup', event => {
+            this.keydowns[event.key] = 'up'
+        })
+        // mouse
         this.mouseActions = []
         this.setupMouse()
     }
@@ -53,6 +67,10 @@ class GenOptimizer {
                 for (const a of self.mouseActions) {
                     a(event, 'move')
                 }
+            } else {
+                for (const a of self.mouseActions) {
+                    a(event, 'overmove')
+                }
             }
         })
         this.canvas.addEventListener('mouseup', event => {
@@ -69,6 +87,10 @@ class GenOptimizer {
         })
     }
     
+    registerAction(key, callback) {
+        this.actions[key] = callback
+    }
+
     resgisterMouse(callback) {
         this.mouseActions.push(callback)
     }
@@ -95,6 +117,19 @@ class GenOptimizer {
         // log(window.fps)
         // events
         var g = this
+        var actions = Object.keys(g.actions)
+        // log("actions", g.actions)
+        for (var i = 0; i < actions.length; i++) {
+            var key = actions[i]
+            var status = g.keydowns[key]
+            // log("status", status)
+            if (status == 'down') {
+                g.actions[key]('down')
+            } else if (status == 'up') {
+                g.actions[key]('up')
+                g.keydowns[key] = null
+            }           
+        }
         // update
         g.update()
         // clear

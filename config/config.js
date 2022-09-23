@@ -149,9 +149,9 @@ var config = {
     },
     shapeBorder: {
         _comment: "shape border",
-        value: 5,
+        value: 3,
         valueType: 'number',
-        min: 5,
+        min: 3,
         max: 20,
         type: "range",
     }

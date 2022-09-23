@@ -7,6 +7,8 @@ class GenRect extends GenShape {
         this.h = h || 0
         this.border = config.shapeBorder.value
         this.color = config.shapeColor.value    
+        this.draggers = []
+        this.draggers.push(GenDragger.new(this.scene, this.x, this.y))
     }
     
     static new(...args) {
@@ -32,6 +34,10 @@ class GenRect extends GenShape {
         }        
     }
 
+    setupClick() {
+        
+    }
+
     draw() {
         this.context.save()
         this.context.lineWidth = this.border
@@ -45,5 +51,8 @@ class GenRect extends GenShape {
         this.context.closePath()
         this.context.stroke()
         this.context.restore()
+        for (let drag of this.draggers.filter(d => d.active)) {
+            drag.draw()
+        }
     }
 }

@@ -26,12 +26,13 @@ class TextControls extends GenControls {
             }
             let x = event.offsetX
             let y = event.offsetY
-            let targetText = self.pointInText(x, y).pop()
+            let targetText = self.pointInText(x, y)
             if (action == 'down') {
                 if (targetText != null && self.textUUID == null) {
                     ox = targetText.x - x
                     oy = targetText.y - y
                     draggedText = targetText
+                    self.optimizer.setCursor('move')
                 }
             } else if (action == 'move') {
                 if (draggedText != null) {
@@ -62,7 +63,7 @@ class TextControls extends GenControls {
             }
             let x = event.offsetX
             let y = event.offsetY
-            let targetText = self.pointInText(x, y).pop()
+            let targetText = self.pointInText(x, y)
             if (targetText != null) {
                 return
             }
@@ -93,7 +94,7 @@ class TextControls extends GenControls {
             }
             let x = event.offsetX
             let y = event.offsetY
-            let targetText = self.pointInText(x, y).pop()
+            let targetText = self.pointInText(x, y)
             // input open annd click text
             if (targetText != null && self.inputOpen) {
                 // close input
@@ -102,6 +103,7 @@ class TextControls extends GenControls {
             }
             // 双击编辑文字
             if (targetText != null && action == 'dblclick') {
+                self.optimizer.setCursor('default')
                 // 关闭之前的 input
                 self.closeInput()
                 // 保存文字的坐标, 关闭 input 时, 添加文字到对应坐标
@@ -173,13 +175,12 @@ class TextControls extends GenControls {
     }
 
     pointInText(x, y) {
-        let clickedTexts = []
         for (let text of this.texts) {
             if (text.pointInFrame(x, y) && !text.deleted) {
-                clickedTexts.push(text)
+                return text
             }
         }
-        return clickedTexts
+        return null
     }
 
     addText(content, x, y, prop={}) {

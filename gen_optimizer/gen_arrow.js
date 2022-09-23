@@ -31,7 +31,7 @@ class GenArrow extends GenShape {
         let toX = this.toX
         let toY = this.toY
         let theta = 40
-        let width = this.border
+        let width = Math.max(this.border, 5)
         let headlen = width * 3
         let color = this.color
      

@@ -16,6 +16,7 @@ class ShapeControls extends GenControls {
     setup() {
         this.setupDraw()
         this.setupMove()
+        this.setupKey()
     }
 
     setupDraw() {
@@ -68,6 +69,7 @@ class ShapeControls extends GenControls {
                     ox = targetShape.x - x
                     oy = targetShape.y - y
                     draggedShape = targetShape
+                    self.optimizer.setCursor('move')
                 }
             } else if (action == 'move') {
                 if (draggedShape != null) {
@@ -79,6 +81,12 @@ class ShapeControls extends GenControls {
                     draggedShape = null
                 }                
             }
+        })
+    }
+
+    setupKey() {
+        this.optimizer.registerAction("Backspace", function(status) {
+            log("s", status)
         })
     }
 

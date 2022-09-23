@@ -6,6 +6,7 @@ class PageConfigControls extends GenControls {
         this.textControl = textControl
         this.shapeControl = shapeControl
         this.setup()
+        this.setupCorsorEevnt()
     }
 
     setup() {
@@ -89,6 +90,7 @@ class PageConfigControls extends GenControls {
                 eventName: "click",
                 className: sc.pageClass.canvas,
                 callback: function(bindVar, target) {
+                    log("canvas")
                     // 点击 canvas 让 slider 全部 blur
                     Array.from(es(sel(sc.pageClass.slider))).forEach(function(e) {
                         e.blur()
@@ -96,11 +98,11 @@ class PageConfigControls extends GenControls {
                 },
             },
             {
-                eventName: "focus",
+                eventName: "click",
                 className: sc.pageClass.slider,
                 configToEvents: {
                     "config.shapeSelect": function(target) {
-                        log("focus")
+                        log("click")
                         self.updateControls("config.shapeSelect.value", '')
                     },
                 }
@@ -111,6 +113,32 @@ class PageConfigControls extends GenControls {
         sc.refreshConfig = function() {
             self.updateControls("config.index.max", this.images.length - 1)
         }
+    }
+
+    setupCorsorEevnt() {
+        let self = this
+        // 遍历所有的元素，设置鼠标样式
+        self.optimizer.resgisterMouse(function(event, action) {
+            if (parseBoolean(config.penEnabled.value)) {
+                return
+            }
+            let x = event.offsetX
+            let y = event.offsetY
+            let hover = self.pointInElement(x, y)
+            if (action == 'overmove') {
+                if (hover && !parseBoolean(config.shapeEnabled.value)) {
+                    self.optimizer.setCursor('move')
+                } else {
+                    self.optimizer.setCursor('default')
+                }
+            }
+        })
+    }
+
+    pointInElement(x, y) {
+        let inText = this.textControl.pointInText(x, y) != null
+        let inShape = this.shapeControl.pointInShape(x, y) != null
+        return inText || inShape
     }
 
     // 保存图片的修改
