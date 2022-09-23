@@ -7,44 +7,10 @@ class TextControls extends GenControls {
 
     setup() {
         this.texts = []
-        // 字体拖拽
-        this.setupMove()
         // 字体输入
         this.setupInput()
         // 双击编辑文字
         this.setupChangeText()
-    }
-
-    setupMove() {
-        let self = this
-        let ox = 0
-        let oy = 0
-        let draggedText = null
-        self.optimizer.resgisterMouse(function(event, action) {
-            if (parseBoolean(config.penEnabled.value)) {
-                return
-            }
-            let x = event.offsetX
-            let y = event.offsetY
-            let targetText = self.pointInText(x, y)
-            if (action == 'down') {
-                if (targetText != null && self.textUUID == null) {
-                    ox = targetText.x - x
-                    oy = targetText.y - y
-                    draggedText = targetText
-                    self.optimizer.setCursor('move')
-                }
-            } else if (action == 'move') {
-                if (draggedText != null) {
-                    draggedText.x = x + ox
-                    draggedText.y = y + oy
-                }
-            } else if (action == 'up') {
-                if (draggedText != null) {
-                    draggedText = null
-                }                
-            }
-        })
     }
 
     setupInput() {
@@ -55,47 +21,70 @@ class TextControls extends GenControls {
         self.textX = 0
         self.textY = 0
         
-        self.optimizer.resgisterMouse(function(event, action) {
-            event.preventDefault()
-            if (parseBoolean(config.penEnabled.value) || 
-                !parseBoolean(config.textInputEnabled.value)) {
-                return
+        // self.optimizer.resgisterMouse(function(event, action) {
+        //     event.preventDefault()
+        //     if (parseBoolean(config.penEnabled.value) || 
+        //         !parseBoolean(config.textInputEnabled.value)) {
+        //         return
+        //     }
+        //     let x = event.offsetX
+        //     let y = event.offsetY
+        //     let targetText = self.pointInText(x, y)
+        //     if (targetText != null) {
+        //         return
+        //     }
+        //     log("action", action)
+        //     // add edit text
+        //     if (action == 'down') {
+        //         if (self.inputOpen) {
+        //             // close input
+        //             // self.closeInputAndAddText()
+        //         } else {
+        //             // open input
+        //             // let p = self.canvasToPage(x, y)
+        //             // self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
+        //             // // update offset
+        //             // self.textX = x
+        //             // self.textY = y
+        //         }
+        //     }
+        // })
+    }
+
+    addFloatInput(x, y) {
+        let self = this
+        let p = self.canvasToPage(x, y)
+        self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
+        // update offset
+        self.textX = x
+        self.textY = y
+    }
+
+    handleTextEvents(event, x, y) {
+        event.preventDefault()
+        let self = this
+        if (parseBoolean(config.penEnabled.value)) {
+            return
+        }
+        if (self.inputOpen) {
+            self.closeInputAndAddText()
+        } else {
+            if (parseBoolean(config.textInputEnabled.value)) {
+                self.addFloatInput(x, y)
             }
-            let x = event.offsetX
-            let y = event.offsetY
-            let targetText = self.pointInText(x, y)
-            if (targetText != null) {
-                return
-            }
-            log("action", action)
-            // add edit text
-            if (action == 'down') {
-                if (self.inputOpen) {
-                    // close input
-                    self.closeInputAndAddText()
-                } else {
-                    // open input
-                    let p = self.canvasToPage(x, y)
-                    self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
-                    // update offset
-                    self.textX = x
-                    self.textY = y
-                }
-            }
-        })
+        } 
     }
 
     setupChangeText() {
         let self = this
         self.optimizer.resgisterMouse(function(event, action) {
-            if (parseBoolean(config.penEnabled.value) || 
-                !parseBoolean(config.textInputEnabled.value)) {
+            if (parseBoolean(config.penEnabled.value)) {
                 return
             }
             let x = event.offsetX
             let y = event.offsetY
             let targetText = self.pointInText(x, y)
-            // input open annd click text
+            // input open and click text
             if (targetText != null && self.inputOpen) {
                 // close input
                 self.closeInputAndAddText()
@@ -174,6 +163,15 @@ class TextControls extends GenControls {
         return inputFloat
     }
 
+    removeFloatInputText() {
+        let selector = "#" + this.inputId
+        let inputFloat = e(selector)
+        if (inputFloat != null) {
+            inputFloat.closest('div').remove()
+        }
+        return inputFloat
+    }
+    
     pointInText(x, y) {
         for (let text of this.texts) {
             if (text.pointInFrame(x, y) && !text.deleted) {
@@ -184,7 +182,9 @@ class TextControls extends GenControls {
     }
 
     addText(content, x, y, prop={}) {
-        this.texts.push(GenText.new(this.scene, content, x, y, prop))
+        let text = GenText.new(this.scene, content, x, y, prop)
+        text.idle()        
+        this.texts.push(text)
     }
 
     resetAndUpdate(texts) {

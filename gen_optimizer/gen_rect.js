@@ -7,23 +7,17 @@ class GenRect extends GenShape {
         this.h = h || 0
         this.border = config.shapeBorder.value
         this.color = config.shapeColor.value    
+        this.status = this.enumStatus.creating
         this.draggers = []
-        this.draggers.push(GenDragger.new(this.scene, this.x, this.y))
-    }
-    
-    static new(...args) {
-        return new this(...args)
     }
 
-    setMoving(x, y) {
+    creating(x, y) {
+        super.creating()
         this.w = x - this.x
         this.h = y - this.y
     }
 
-    checkAndClear() {
-        if (this.w == 0 || this.h == 0) {
-            this.deleted = true
-        }
+    idle() {                
         if (this.w < 0 || this.h < 0) {
             let offsetX = this.w < 0 ? this.w : 0
             let offsetY = this.h < 0 ? this.h : 0
@@ -31,11 +25,25 @@ class GenRect extends GenShape {
             this.y = this.y + offsetY
             this.w = Math.abs(this.w)
             this.h = Math.abs(this.h)
-        }        
+        }      
+        
+         // 无效图形直接删除
+         if (this.w == 0 || this.h == 0) {
+            super.deleted()
+            return
+        }
+
+        this.draggers.push(GenDragger.new(this.scene, 0, 0))
+        this.draggers.push(GenDragger.new(this.scene, this.w, 0))
+        this.draggers.push(GenDragger.new(this.scene, this.w, this.h))
+        this.draggers.push(GenDragger.new(this.scene, 0, this.h))
+
+        // 创建成功, 处于闲置状态
+        super.idle()
     }
 
-    setupClick() {
-        
+    pointInShapeFrame(x, y) {
+        return this.pointInHollowFrame(x, y, this.border)
     }
 
     draw() {
@@ -50,9 +58,8 @@ class GenRect extends GenShape {
         this.context.lineTo(this.x, this.y)
         this.context.closePath()
         this.context.stroke()
-        this.context.restore()
-        for (let drag of this.draggers.filter(d => d.active)) {
-            drag.draw()
-        }
+        this.context.restore()      
+        // 绘制拖拽点
+        super.draw() 
     }
 }

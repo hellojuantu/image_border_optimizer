@@ -7,6 +7,7 @@ class PageConfigControls extends GenControls {
         this.shapeControl = shapeControl
         this.setup()
         this.setupCorsorEevnt()
+        this.setupMove()
     }
 
     setup() {
@@ -115,6 +116,36 @@ class PageConfigControls extends GenControls {
         }
     }
 
+    setupMove() {
+        let self = this
+        let ox = 0
+        let oy = 0
+        let draggedShape = null
+        self.optimizer.resgisterMouse(function(event, action) {            
+            let x = event.offsetX
+            let y = event.offsetY
+            let targetShape = self.pointInElement(x, y)
+            // log("targetShape", targetShape, self.shapes, action)
+            if (action == 'down') {
+                if (targetShape != null && !targetShape.isCreating()) {
+                    draggedShape = targetShape
+                    ox = draggedShape.x - x
+                    oy = draggedShape.y - y     
+                    draggedShape.selected()
+                }
+            } else if (action == 'move') {
+                if (draggedShape != null && draggedShape.isSelected()) {
+                    draggedShape.x = x + ox
+                    draggedShape.y = y + oy
+                }
+            } else if (action == 'up') {
+                if (draggedShape != null) {
+                    draggedShape = null
+                }                
+            } 
+        })
+    }
+
     setupCorsorEevnt() {
         let self = this
         // 遍历所有的元素，设置鼠标样式
@@ -124,21 +155,40 @@ class PageConfigControls extends GenControls {
             }
             let x = event.offsetX
             let y = event.offsetY
-            let hover = self.pointInElement(x, y)
+            let element = self.pointInElement(x, y)
+            log("element", element)
             if (action == 'overmove') {
-                if (hover && !parseBoolean(config.shapeEnabled.value)) {
+                if (element != null && element.status != element.enumStatus.creating) {
                     self.optimizer.setCursor('move')
                 } else {
                     self.optimizer.setCursor('default')
+                }
+            } else if (action == 'up') {
+                if (element != null && element.isDeleted) {
+                    element == null
+                }
+                // 点击到空白的地方
+                if (element == null) {
+                    self.shapeControl.removeDraggers()  
+                    self.textControl.handleTextEvents(event, x, y)
+                } else {
+                    self.shapeControl.removeDraggers()
+                    element.activateDraggers()
                 }
             }
         })
     }
 
     pointInElement(x, y) {
-        let inText = this.textControl.pointInText(x, y) != null
-        let inShape = this.shapeControl.pointInShape(x, y) != null
-        return inText || inShape
+        let inText = this.textControl.pointInText(x, y)
+        let inShape = this.shapeControl.pointInShape(x, y)
+        if (inText != null) {
+            return inText
+        }
+        if (inShape != null) {
+            return inShape
+        }
+        return null
     }
 
     // 保存图片的修改

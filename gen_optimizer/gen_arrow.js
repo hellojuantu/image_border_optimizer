@@ -5,21 +5,33 @@ class GenArrow extends GenShape {
         this.fromY = fromY
         this.toX = toX || this.fromX
         this.toY = toY || this.fromY
+        this.rotate = 0
         this.color = config.shapeColor.value
         this.border = config.shapeBorder.value
+        this.status = this.enumStatus.creating
+        this.draggers = []
     }
 
-    pointInArrow(x, y) {
-        // TODO 坐标在箭头图形里
+    pointInShapeFrame(x, y, rotate) {
+        // x,y 在矩形中
+        
+        
     }
 
-    checkAndClear() {
+    idle() {
         if (this.fromX == this.toX || this.fromY == this.toY) {
-            this.deleted = true
+            this.deleted()
         }
+
+        this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
+        // log("rotate", rotate)
+        this.draggers.push(GenDragger.new(this.scene, 0, 0, this.rotate))
+        this.draggers.push(GenDragger.new(this.scene, this.toX - this.fromX, this.toY - this.fromY, this.rotate))
+
+        super.idle()
     }
 
-    setMoving(x, y) {
+    creating(x, y) {
         this.toX = x
         this.toY = y
     }
@@ -64,5 +76,13 @@ class GenArrow extends GenShape {
         ctx.lineWidth = width
         ctx.stroke()
         ctx.restore()
+
+
+        log("draggers", this.draggers)
+        for (let drag of this.draggers.filter(d => d.active)) {    
+            // drag 需要跟随 rect 移动        
+            drag.setPosition(this.fromX, this.fromY)
+            drag.draw()
+        }
     }
 }

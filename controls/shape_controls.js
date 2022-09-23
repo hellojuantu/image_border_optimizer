@@ -15,7 +15,6 @@ class ShapeControls extends GenControls {
 
     setup() {
         this.setupDraw()
-        this.setupMove()
         this.setupKey()
     }
 
@@ -29,59 +28,66 @@ class ShapeControls extends GenControls {
             }
             let x = event.offsetX
             let y = event.offsetY
-            log("shape", action, self.shapes)
             if (!self.shapeChoosed()) {
                 return
             }
+            let targetShape = self.pointInShape(x, y)
+            log("shape", action, self.shapes, targetShape)
             if (action == 'down') {
-                if (buildingShape == null) {
+                // 鼠标没有点到其他 shape
+                if (targetShape == null) {
                     buildingShape = self.shapeTypes[config.shapeSelect.value].new(sc, x, y)
                     self.shapes.push(buildingShape)
                 }
             } else if (action == 'move') {
                 if (buildingShape != null) {
-                    buildingShape.setMoving(x, y)
+                    buildingShape.creating(x, y)
                 }
             } else if (action == 'up') {
                 if (buildingShape != null) {
-                    buildingShape.checkAndClear()
+                    buildingShape.idle()
+                    self.removeDraggers()
+                    buildingShape.activateDraggers()
                     buildingShape = null
                 }
             }
         })
     }
 
-    setupMove() {
-        let self = this
-        let ox = 0
-        let oy = 0
-        let draggedShape = null
-        self.optimizer.resgisterMouse(function(event, action) {
-            if (parseBoolean(config.shapeEnabled.value)) {
-                return
-            }
-            let x = event.offsetX
-            let y = event.offsetY
-            let targetShape = self.pointInShape(x, y)
-            // log("targetShape", targetShape, self.shapes)
-            if (action == 'down') {
-                if (targetShape != null && self.textUUID == null) {
-                    ox = targetShape.x - x
-                    oy = targetShape.y - y
-                    draggedShape = targetShape
-                    self.optimizer.setCursor('move')
-                }
-            } else if (action == 'move') {
-                if (draggedShape != null) {
-                    draggedShape.x = x + ox
-                    draggedShape.y = y + oy
-                }
-            } else if (action == 'up') {
-                if (draggedShape != null) {
-                    draggedShape = null
-                }                
-            }
-        })
+    // setupMove() {
+    //     let self = this
+    //     let ox = 0
+    //     let oy = 0
+    //     let draggedShape = null
+    //     self.optimizer.resgisterMouse(function(event, action) {            
+    //         let x = event.offsetX
+    //         let y = event.offsetY
+    //         let targetShape = self.pointInShape(x, y)
+    //         log("targetShape", targetShape, self.shapes, action)
+    //         if (action == 'down') {
+    //             if (targetShape != null && !targetShape.isCreating()) {
+    //                 draggedShape = targetShape
+    //                 ox = draggedShape.x - x
+    //                 oy = draggedShape.y - y     
+    //                 draggedShape.selected()
+    //             }
+    //         } else if (action == 'move') {
+    //             if (draggedShape != null && draggedShape.isSelected()) {
+    //                 draggedShape.x = x + ox
+    //                 draggedShape.y = y + oy
+    //             }
+    //         } else if (action == 'up') {
+    //             if (draggedShape != null) {
+    //                 draggedShape = null
+    //             }                
+    //         } 
+    //     })
+    // }
+
+    removeDraggers() {
+        for (let shape of this.shapes) {
+            shape.hideDraggers()
+        }
     }
 
     setupKey() {
@@ -92,7 +98,7 @@ class ShapeControls extends GenControls {
 
     pointInShape(x, y) {
         for (let shape of this.shapes) {
-            if (shape.pointInHollowFrame(x, y, shape.border) && !shape.deleted) {
+            if (shape.pointInShapeFrame(x, y) && !shape.isDeleted()) {
                 return shape
             }
         }
@@ -105,7 +111,7 @@ class ShapeControls extends GenControls {
 
     draw() {
         let self = this
-        self.shapes = self.shapes.filter((s) => !s.deleted)
+        self.shapes = self.shapes.filter((s) => !s.isDeleted())
         for (let shape of self.shapes) {
             shape.draw()
         }

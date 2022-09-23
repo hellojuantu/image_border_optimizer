@@ -21,6 +21,10 @@ class GenText extends GenShape {
         return this
     }
 
+    // hideDraggers() {
+        
+    // }
+
     draw() {
         // log("draw text", this.text, this)
         if (this.deleted) {
