@@ -39,10 +39,10 @@ class GenRect extends GenShape {
             this.h = Math.abs(this.h)
         }      
 
-        this.addDragger(GenDragger.new(this.scene, 0, 0, 0 ,'nw-resize'))
-        this.addDragger(GenDragger.new(this.scene, this.w, 0, 0, 'ne-resize'))
-        this.addDragger(GenDragger.new(this.scene, this.w, this.h, 0, 'se-resize'))
-        this.addDragger(GenDragger.new(this.scene, 0, this.h, 0, 'sw-resize'))
+        this.addDragger(GenDragger.new(this, 0, 0, 0 ,'nw-resize'))
+        this.addDragger(GenDragger.new(this, this.w, 0, 0, 'ne-resize'))
+        this.addDragger(GenDragger.new(this, this.w, this.h, 0, 'se-resize'))
+        this.addDragger(GenDragger.new(this, 0, this.h, 0, 'sw-resize'))
         
         // 创建成功, 处于闲置状态
         super.idle()

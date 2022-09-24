@@ -14,6 +14,10 @@ class GenOptimizer {
         this.canvas.style.cursor = cursor
     }
 
+    getCursor() {
+        return this.canvas.style.cursor
+    }
+
     setup() {
         // canvas
         this.canvas = e("#id-canvas")

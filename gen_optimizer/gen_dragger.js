@@ -1,7 +1,8 @@
 class GenDragger extends GenShape {
-    // dragger 的坐标是相对于 shape x, y 
-    constructor(scene, offsetX, offsetY, rotate=0, cursor='move') {
-        super(scene)        
+    // dragger 的坐标是相对于 ownerShape x, y 
+    constructor(ownerShape, offsetX, offsetY, rotate=0, cursor='move') {
+        super(ownerShape.scene)        
+        this.owner = ownerShape
         this.w = 10
         this.h = 10
         this.offsetX = offsetX
@@ -12,29 +13,21 @@ class GenDragger extends GenShape {
         this.rotate = rotate
         this.cursor = cursor
         this.status = this.enumStatus.idle
-        // this.cursorEnum = {
-        //     northWest: 'nw-resize',
-        //     northEast: 'ne-resize',
-        //     southWest: 'sw-resize',
-        //     southEast: 'se-resize',
-        // }
-        this.setupMove()
     }
 
-    setupMove() {
-        let self = this
-        // self.optimizer.resgisterMouse(function(event, action) {
-        //     let x = event.offsetX
-        //     let y = event.offsetY
-        //     let dragger = self.pointInFrame(x, y)
-        //     // log("drag", dragger)
-        //     if (action == 'overmove') {
-        //         if (dragger != null) {
-        //             // log("overmove", dragger)
-        //             self.optimizer.setCursor(dragger.cursor)
-        //         }
-        //     }
-        // })
+    calcalateOffset(x, y) {
+        return this.owner.calcalateOffset(x, y)
+    }
+
+    activateDraggers() {
+        this.owner.activateDraggers()
+    }
+
+    moving(x, y, ox, oy) {
+        if (this.owner.isSelected()) {
+            return
+        }
+        this.owner.moving(x, y, ox, oy)
     }
 
     setPosition(x, y) {

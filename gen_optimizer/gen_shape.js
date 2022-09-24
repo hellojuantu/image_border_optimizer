@@ -10,6 +10,7 @@ class GenShape extends GenControls {
             deleted: "deleted",
         }
         this.status = this.enumStatus.creating
+        this.cursor = 'move'
     }
 
     static new(...args) {
@@ -70,6 +71,16 @@ class GenShape extends GenControls {
 
     isDeleted() {
         return this.status == this.enumStatus.deleted
+    }
+
+    calcalateOffset(x, y) {
+        this.ox = this.x - x
+        this.oy = this.y - y            
+    }
+
+    moving(x, y) {
+        this.x = x + this.ox
+        this.y = y + this.oy
     }
 
     pointInShapeFrame(x, y) {}

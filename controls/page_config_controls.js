@@ -8,7 +8,7 @@ class PageConfigControls extends GenControls {
         this.setup()
         this.setupCorsorEevnt()
         this.setupMove()
-        this.setupDrawShape()
+        this.setupDrawShapeEvent()
     }
 
     setup() {
@@ -118,26 +118,22 @@ class PageConfigControls extends GenControls {
     }
 
     setupMove() {
-        let self = this
-        let ox = 0
-        let oy = 0
+        let self = this       
         let draggedShape = null
         self.optimizer.resgisterMouse(function(event, action) {            
             let x = event.offsetX
             let y = event.offsetY
-            let targetShape = self.pointInElement(x, y)
-            // log("targetShape", targetShape, self.shapes, action)
+            let targetShape = self.pointInShapes(x, y)
+            // log("targetShape", targetShape, self.shapeControl.shapes, action)
             if (action == 'down') {
-                if (targetShape != null && !targetShape.isCreating()) {
-                    draggedShape = targetShape
-                    ox = draggedShape.x - x
-                    oy = draggedShape.y - y     
+                if (targetShape != null && !targetShape.isCreating() && self.optimizer.getCursor() == 'move') {
+                    draggedShape = targetShape                    
+                    draggedShape.calcalateOffset(x, y)                    
                     draggedShape.selected()
                 }
             } else if (action == 'move') {
-                if (draggedShape != null && draggedShape.isSelected()) {
-                    draggedShape.x = x + ox
-                    draggedShape.y = y + oy
+                if (draggedShape != null && draggedShape.isSelected() && self.optimizer.getCursor() == 'move') {
+                    draggedShape.moving(x, y)
                 }
             } else if (action == 'up') {
                 if (draggedShape != null) {
@@ -160,7 +156,9 @@ class PageConfigControls extends GenControls {
             // log("element", element)      
             if (action == 'overmove') {
                 if (element != null && element.status != element.enumStatus.creating) {
-                    self.optimizer.setCursor('move')
+                    // log("cursor", element.cursor)
+                    let cursor = element.cursor || 'move'
+                    self.optimizer.setCursor(cursor)
                 } else {
                     self.optimizer.setCursor('default')
                 }
@@ -179,34 +177,9 @@ class PageConfigControls extends GenControls {
                 }
             }
         })
-
-        // self.optimizer.resgisterMouse(function(event, action) {
-        //     if (parseBoolean(config.penEnabled.value)) {
-        //         return
-        //     }
-        //     let x = event.offsetX
-        //     let y = event.offsetY
-        //     let element = self.pointInDraggers(x, y)
-        //     if (action == 'overmove') {
-        //         if (element != null) {
-        //             self.optimizer.setCursor(element.cursor)
-        //         } else {
-        //             self.optimizer.setCursor('default')
-        //         }
-        //     }
-        // })
     }
 
-    pointInDraggers(x, y) {
-        for (let dragger of this.shapeControl.allDraggers()) {
-            if (dragger.pointInFrame(x, y)) {
-                return dragger
-            }
-        }
-        return null
-    }
-
-    setupDrawShape() {
+    setupDrawShapeEvent() {
         let self = this
         self.optimizer.resgisterMouse(function(event, action) {
             let x = event.offsetX
@@ -216,13 +189,36 @@ class PageConfigControls extends GenControls {
         })
     }
 
+    pointInDraggers(x, y) {
+        for (let dragger of this.shapeControl.allDraggers()) {
+            if (dragger.pointInFrame(x, y) && dragger.active) {
+                return dragger
+            }
+        }
+        return null
+    }
+
+    pointInShapes(x, y) {
+        let inText = this.textControl.pointInText(x, y)
+        let inShape = this.shapeControl.pointInShape(x, y)
+
+        if (inText != null) {
+            return inText
+        }
+        if (inShape != null) {
+            return inShape
+        }
+        
+        return null
+    }
+
     pointInElement(x, y) {
         let inText = this.textControl.pointInText(x, y)
         let inShape = this.shapeControl.pointInShape(x, y)
-        // let dragger = this.pointInDraggers(x, y)
-        // if (dragger != null) {
-        //     return dragger
-        // }
+        let dragger = this.pointInDraggers(x, y)
+        if (dragger != null) {
+            return dragger
+        }
         if (inText != null) {
             return inText
         }
