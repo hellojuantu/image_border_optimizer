@@ -39,6 +39,9 @@ class GenRect extends GenShape {
             this.h = Math.abs(this.h)
         }      
 
+        // 先检查状态, 后序还会检查
+        this.checkStatus()
+
         this.addDragger(GenDragger.new(this, 0, 0, 0 ,'nw-resize'))
         this.addDragger(GenDragger.new(this, this.w, 0, 0, 'ne-resize'))
         this.addDragger(GenDragger.new(this, this.w, this.h, 0, 'se-resize'))

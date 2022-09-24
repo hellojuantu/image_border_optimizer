@@ -23,11 +23,11 @@ class GenDragger extends GenShape {
         this.owner.activateDraggers()
     }
 
-    moving(x, y, ox, oy) {
+    moving(x, y) {
         if (this.owner.isSelected()) {
             return
         }
-        this.owner.moving(x, y, ox, oy)
+        this.owner.moving(x, y)
     }
 
     setPosition(x, y) {

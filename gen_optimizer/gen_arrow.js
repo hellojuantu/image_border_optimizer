@@ -33,7 +33,7 @@ class GenArrow extends GenShape {
         let v1 = Vector.new(this.fromX, this.fromY)
         let v2 = Vector.new(this.toX, this.toY)
         let v3 = Vector.new(x, y)
-        if (v1.distance(v3) + v2.distance(v3) < v1.distance(v2) + this.border / 3) {
+        if (v1.distance(v3) + v2.distance(v3) < v1.distance(v2) + this.border / 4) {
             return true
         }
         return false
