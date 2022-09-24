@@ -50,12 +50,20 @@ class GenArrow extends GenShape {
         }
     }
 
+    movingByDragger(dragger, x, y) {
+        if (dragger.positionDesc == 'tail') {
+            this.fromX = x
+            this.fromY = y
+        } else if (dragger.positionDesc == 'head') {
+            this.toX = x
+            this.toY = y   
+        }
+    }
+
     idle() {
         this.checkStatus()
 
-        this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
-        this.addDragger(GenDragger.new(this, 0, 0, this.rotate))
-        this.addDragger(GenDragger.new(this, this.toX - this.fromX, this.toY - this.fromY, this.rotate))    
+        this.setupDraggers()
         
         //
         this.w = this.distance
@@ -64,6 +72,24 @@ class GenArrow extends GenShape {
         this.y = this.fromY - this.border / 2
 
         super.idle()
+    }
+
+    setupDraggers() {
+        this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
+        // 
+        let tailDragger = GenDragger.new(this, 0, 0, 'crosshair', 'tail')
+        tailDragger.resetPosition = function() {
+            this.x = this.offsetX + this.owner.fromX - this.w / 2
+            this.y = this.offsetY + this.owner.fromY - this.h / 2
+        }
+        this.addDragger(tailDragger)
+        //
+        let headDragger = GenDragger.new(this, 0, 0, 'crosshair', 'head')
+        headDragger.resetPosition = function() {
+            this.x = this.offsetX + this.owner.toX - this.w / 2
+            this.y = this.offsetY + this.owner.toY - this.h / 2
+        }
+        this.addDragger(headDragger) 
     }
 
     creating(x, y) {
@@ -113,10 +139,6 @@ class GenArrow extends GenShape {
         ctx.stroke()
         ctx.restore()
 
-        for (let drag of this.draggers.filter(d => d.active)) {    
-            // drag 需要跟随 rect 移动        
-            drag.setPosition(this.fromX, this.fromY)
-            drag.draw()
-        }
+        super.draw()
     }
 }

@@ -92,7 +92,6 @@ class GenShape extends GenControls {
     draw() {
         for (let drag of this.draggers.filter(d => d.active)) {    
             // drag 需要跟随 rect 移动        
-            drag.setPosition(this.x, this.y)
             drag.draw()
         }
     }

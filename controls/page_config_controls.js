@@ -123,16 +123,18 @@ class PageConfigControls extends GenControls {
         self.optimizer.resgisterMouse(function(event, action) {            
             let x = event.offsetX
             let y = event.offsetY
-            let targetShape = self.pointInShapes(x, y)
+            let targetShape = self.pointInElement(x, y)
             // log("targetShape", targetShape, self.shapeControl.shapes, action)
             if (action == 'down') {
-                if (targetShape != null && !targetShape.isCreating() && self.optimizer.getCursor() == 'move') {
+                log("down", draggedShape)
+                if (targetShape != null && !targetShape.isCreating()) {
                     draggedShape = targetShape                    
                     draggedShape.calcalateOffset(x, y)                    
                     draggedShape.selected()
                 }
             } else if (action == 'move') {
-                if (draggedShape != null && draggedShape.isSelected() && self.optimizer.getCursor() == 'move') {
+                if (draggedShape != null && draggedShape.isSelected()) {
+                    log("moving", draggedShape)
                     draggedShape.moving(x, y)
                 }
             } else if (action == 'up') {
@@ -155,7 +157,7 @@ class PageConfigControls extends GenControls {
             let element = self.pointInElement(x, y)
             // log("element", element)      
             if (action == 'overmove') {
-                if (element != null && element.status != element.enumStatus.creating) {
+                if (element != null && !element.isCreating()) {
                     // log("cursor", element.cursor)
                     let cursor = element.cursor || 'move'
                     self.optimizer.setCursor(cursor)
