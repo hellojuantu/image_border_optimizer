@@ -38,6 +38,17 @@ class GenDragger extends GenShape {
         drag.y = drag.offsetY + this.owner.y - this.h / 2
     }
 
+    pointInShapeFrame(x, y) {
+        // x, y 在圆中
+        let r = this.r
+        // 中心坐标
+        let x1 = this.x + this.w / 2
+        let y1 = this.y + this.h / 2
+        // 点到中心坐标的距离
+        let d = Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1))
+        return d < r
+    }
+
     draw() {
         this.resetPosition()
         //
@@ -46,8 +57,8 @@ class GenDragger extends GenShape {
         var h2 = this.h / 2
         ctx.save()
         ctx.beginPath()
-        let r = 6
-        ctx.arc(this.x + w2, this.y + h2, r, 0, 2 * Math.PI)
+        this.r = 6
+        ctx.arc(this.x + w2, this.y + h2, this.r, 0, 2 * Math.PI)
         ctx.fillStyle = '#3872c5'
         ctx.lineWidth = 2
         ctx.strokeStyle= 'white'
