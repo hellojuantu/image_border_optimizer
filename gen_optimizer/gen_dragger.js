@@ -24,12 +24,11 @@ class GenDragger extends GenShape {
     }
 
     moving(x, y) {
-        log("this.optimizer.getCursor()", this.optimizer.getCursor())
         if (this.optimizer.getCursor() == 'move') {
             this.owner.moving(x, y)
-            return
+        } else if (this.optimizer.getCursor() == this.cursor) {
+            this.owner.movingByDragger(this, x, y)
         }
-        this.owner.movingByDragger(this, x, y)
     }
 
     resetPosition() {

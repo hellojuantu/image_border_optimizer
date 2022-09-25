@@ -4,10 +4,6 @@ class MainScene extends GenScene {
         this.setup()
     }
 
-    static new(...args) {
-        return new this(...args)
-    }
-
     setup() {        
         // 图片控制器
         let imageControl = ImageControls.new(this).addElement()

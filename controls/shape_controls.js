@@ -5,13 +5,16 @@ class ShapeControls extends GenControls {
         this.shapes = []
         this.shapeTypes = {
             'rect': GenRect,
+            // 'round rect': GenRoundRect,
             'arrow': GenArrow,
+            // 'line': 
         }
     }
 
     allDraggers() {
         let allDraggers = []
         for (let shape of this.shapes) {
+            // addAll()
             allDraggers.push(...shape.draggers)
         }
         return allDraggers
@@ -98,6 +101,14 @@ class ShapeControls extends GenControls {
 
     resetAndUpdate(shapes) {
         this.shapes = shapes
+    }
+
+    update() {
+        let self = this
+        self.shapes = self.shapes.filter((s) => !s.isDeleted())
+        for (let shape of self.shapes) {
+            shape.update()
+        }
     }
 
     draw() {

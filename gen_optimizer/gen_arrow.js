@@ -10,6 +10,7 @@ class GenArrow extends GenShape {
         this.border = config.shapeBorder.value
         this.status = this.enumStatus.creating
         this.numberOfDraggers = 2        
+        this.minDistance = 20
     }
 
     calcalateOffset(x, y) {
@@ -39,43 +40,12 @@ class GenArrow extends GenShape {
         return false
     }
 
-    checkStatus() {
-        let v1 = Vector.new(this.fromX, this.fromY)
-        let v2 = Vector.new(this.toX, this.toY)
-        this.distance = v1.distance(v2)
-        log("distance", this.distance)
-        if (this.distance < 20) {
-            super.deleted()
-            return
-        }
-    }
-
-    movingByDragger(dragger, x, y) {
-        if (dragger.positionDesc == 'tail') {
-            this.fromX = x
-            this.fromY = y
-        } else if (dragger.positionDesc == 'head') {
-            this.toX = x
-            this.toY = y   
-        }
-    }
-
-    idle() {
-        this.checkStatus()
-
-        this.setupDraggers()
-        
-        //
-        this.w = this.distance
-        this.h = this.border
-        this.x = this.fromX - this.border / 2
-        this.y = this.fromY - this.border / 2
-
-        super.idle()
+    creating(x, y) {
+        this.toX = x
+        this.toY = y
     }
 
     setupDraggers() {
-        this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
         // 
         let tailDragger = GenDragger.new(this, 0, 0, 'crosshair', 'tail')
         tailDragger.resetPosition = function() {
@@ -92,11 +62,46 @@ class GenArrow extends GenShape {
         this.addDragger(headDragger) 
     }
 
-    creating(x, y) {
-        this.toX = x
-        this.toY = y
+    movingByDragger(dragger, x, y) {
+        if (dragger.positionDesc == 'tail') {
+            this.fromX = x
+            this.fromY = y
+        } else if (dragger.positionDesc == 'head') {
+            this.toX = x
+            this.toY = y   
+        }
+    }
+    
+    idle() {
+        this.setupDraggers()
+        
+        //
+        this.w = this.distance
+        this.h = this.border
+        this.x = this.fromX - this.border / 2
+        this.y = this.fromY - this.border / 2
+
+        super.idle()
     }
 
+    checkStatus() {
+        let v1 = Vector.new(this.fromX, this.fromY)
+        let v2 = Vector.new(this.toX, this.toY)
+        this.distance = v1.distance(v2)
+        if (this.distance < this.minDistance) {
+            super.deleted()
+            return 
+        }
+    }
+
+    update() {
+        this.w = this.distance
+        this.h = this.border
+        this.x = this.fromX - this.border / 2
+        this.y = this.fromY - this.border / 2
+        this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
+    }
+    
     draw() { 
         let ctx = this.context
         let fromX = this.fromX
@@ -104,10 +109,13 @@ class GenArrow extends GenShape {
         let toX = this.toX
         let toY = this.toY
         let theta = 40
-        // let width = Math.max(this.border, 5)
         let width = this.border
         let headlen = width * 3
         let color = this.color
+
+        let v1 = Vector.new(this.fromX, this.fromY)
+        let v2 = Vector.new(this.toX, this.toY)
+        this.distance = v1.distance(v2)
      
         // 计算各角度和对应的 P2, P3 坐标
         let angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
@@ -129,11 +137,15 @@ class GenArrow extends GenShape {
         ctx.lineTo(toX, toY)
         arrowX = toX + topX
         arrowY = toY + topY
-        ctx.moveTo(arrowX, arrowY)
-        ctx.lineTo(toX, toY)
+        if (this.distance >= this.minDistance) {
+            ctx.moveTo(arrowX, arrowY)
+            ctx.lineTo(toX, toY)
+        }
         arrowX = toX + botX
         arrowY = toY + botY
-        ctx.lineTo(arrowX, arrowY)
+        if (this.distance >= this.minDistance) {
+            ctx.lineTo(arrowX, arrowY)
+        }
         ctx.strokeStyle = color
         ctx.lineWidth = width
         ctx.stroke()
