@@ -76,6 +76,9 @@ class GenShape extends GenControls {
     }
 
     selected() {
+        this.updateControls("config.shapeBorder.value", parseInt(this.border))
+        this.updateControls("config.shapeColor.value", this.color)
+        // 
         this.status = this.enumStatus.selected
     }
 

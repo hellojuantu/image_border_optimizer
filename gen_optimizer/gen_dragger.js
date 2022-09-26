@@ -3,8 +3,8 @@ class GenDragger extends GenShape {
     constructor(ownerShape, offsetX, offsetY, cursor='crosshair', positionDesc) {
         super(ownerShape.scene)        
         this.owner = ownerShape
-        this.w = 10
-        this.h = 10
+        this.w = 12
+        this.h = 12
         this.offsetX = offsetX
         this.offsetY = offsetY
         this.x = offsetX
@@ -21,6 +21,10 @@ class GenDragger extends GenShape {
 
     activateDraggers() {
         this.owner.activateDraggers()
+    }
+
+    selected() {
+        this.status = this.enumStatus.selected
     }
 
     moving(x, y) {

@@ -5,8 +5,8 @@ class GenOptimizer {
         this.setup()
     }
 
-    static instance(...args) {
-        this.i = this.i || new this(...args)
+    static instance(runCallback) {
+        this.i = this.i || new this(runCallback)
         return this.i
     }
 
@@ -102,7 +102,8 @@ class GenOptimizer {
     runWithScene(scene) {
         var self = this
         this.scene = scene
-        // log("runwitdh", this)
+        // 第一次加载需要刷新的配置
+        this.scene.refreshConfig()
         // 开始运行程序
         setTimeout(function(){
             self.runloop()
@@ -176,6 +177,7 @@ class GenOptimizer {
                         self.images.push(img)
                         log("images len, file len", self.images.length, files.length)
                         // 上传图片, 刷新配置
+                        // log("self.scene", self.scene)
                         self.scene && self.scene.refreshConfig()
                         if (self.images.length == files.length) {
                             log("__start")

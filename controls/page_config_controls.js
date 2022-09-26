@@ -49,6 +49,29 @@ class PageConfigControls extends GenControls {
                             input.style.color = target.value
                         }
                     },
+                    "config.shapeBorder": function(target) {
+                        for (let shape of self.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                shape.border = parseInt(target.value)
+                            }
+                        }
+                    },
+                    "config.shapeColor": function(target) {
+                        for (let shape of self.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                shape.color = target.value
+                            }
+                        }
+                    },
+                    "config.index": function(target) {
+                        self.saveImage()
+                        //
+                        let i = parseInt(target.value)
+                        self.penControl.resetAndUpdate(self.imageControl.imageChanges[i].points)
+                        self.textControl.resetAndUpdate(self.imageControl.imageChanges[i].texts)
+                        self.shapeControl.resetAndUpdate(self.imageControl.imageChanges[i].shapes)
+ 
+                    },
                 }
             },
             {
@@ -113,6 +136,7 @@ class PageConfigControls extends GenControls {
 
         // 上传图片需要刷新的配置
         sc.refreshConfig = function() {
+            log("refreshConfig")
             self.updateControls("config.index.max", this.images.length - 1)
         }
     }
