@@ -25,6 +25,7 @@ class TextControls extends GenControls {
     handleTextEvents(event, x, y) {
         event.preventDefault()
         let self = this
+        let sc = self.scene
         if (parseBoolean(config.penEnabled.value)) {
             return
         }
@@ -34,6 +35,7 @@ class TextControls extends GenControls {
         } else {
             if (parseBoolean(config.textInputEnabled.value)) {
                 self.addFloatInput(x, y)
+                sc.getComponent('attribute').builder(GenText.configAttribute())                
             }
         } 
     }
@@ -63,9 +65,9 @@ class TextControls extends GenControls {
                 self.textY = targetText.y
                 // 打开 input
                 let p = self.canvasToPage(self.textX, self.textY)
+                log("targetText", targetText)
                 self.insertInput(p.x, p.y, targetText.font, targetText.color, targetText.text)
                 // 设置字体属性到配置栏
-                log("targetText.color", targetText.color)
                 self.updateControls("config.textFont.value", targetText.font)
                 self.updateControls("config.textColor.value", targetText.color)
                 // 删除文字
@@ -78,7 +80,7 @@ class TextControls extends GenControls {
     addFloatInput(x, y) {
         let self = this
         let p = self.canvasToPage(x, y)
-        self.insertInput(p.x, p.y , config.textFont.value, config.textColor.value)
+        self.insertInput(p.x, p.y, config.textFont.value, config.textColor.value)
         // update offset
         self.textX = x
         self.textY = y
@@ -102,8 +104,22 @@ class TextControls extends GenControls {
         input.style.top = (gy - 3) + "px"
         input.style.font = font
         input.style.color = color
+        let t = calTextWH(value, font)
+        input.style.width = t.w + 'px'
         input.focus()
         input.select()
+        // input blur 时, 关闭 input
+        bind(selector, 'input', function(event) {
+            // log("blur", self.inputOpen)
+            // if (self.inputOpen) {
+            //     // close input
+            //     self.closeInputAndAddText()
+            // }
+            let t = calTextWH(event.target.value, event.target.style.font)
+            let selector = "#" + self.inputId
+            let input = e(selector)
+            input.style.width = t.w + 'px'
+        })
     }
 
     closeInputAndAddText() {
@@ -121,7 +137,7 @@ class TextControls extends GenControls {
         //
         let selector = "#" + this.inputId
         let inputFloat = e(selector)
-        if (inputFloat != null) {
+        if (inputFloat != null && inputFloat.closest('div') != null) {
             inputFloat.closest('div').remove()
         }
         return inputFloat
@@ -146,7 +162,8 @@ class TextControls extends GenControls {
     }
 
     addText(content, x, y, prop={}) {
-        let text = GenText.new(this.scene, content, x, y, prop)
+        let text = GenText.new(this.scene, content, x, y)
+        text.fillProp(prop)
         text.idle()        
         this.texts.push(text)
     }

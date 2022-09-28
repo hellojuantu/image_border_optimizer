@@ -42,12 +42,12 @@ class GenShape extends GenControls {
         for (let drag of this.draggers) {
             // rect 还在创建中，不需要拖拽
             if (this.isCreating()) {
-                return
+                return null
             }
             drag.active = true
         }
         // 转换为 selected 状态
-        this.selected()
+        return this.selected()
     }
 
     /**
@@ -76,9 +76,6 @@ class GenShape extends GenControls {
     }
 
     selected() {
-        this.updateControls("config.shapeBorder.value", parseInt(this.border))
-        this.updateControls("config.shapeColor.value", this.color)
-        // 
         this.status = this.enumStatus.selected
     }
 

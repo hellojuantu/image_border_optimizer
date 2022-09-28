@@ -10,7 +10,24 @@ class GenArrow extends GenShape {
         this.border = config.shapeBorder.value
         this.status = this.enumStatus.creating
         this.numberOfDraggers = 2        
-        this.minDistance = 20
+        this.minDistance = 0
+    }
+
+    static configAttribute() {
+        return {
+            "config.shapeBorder": config.shapeBorder,
+            "config.shapeColor": config.shapeColor,
+        }
+    }
+
+    selected() {
+        super.selected()
+        this.updateControls("config.shapeBorder.value", parseInt(this.border))
+        this.updateControls("config.shapeColor.value", this.color)
+        return {
+            "config.shapeBorder": config.shapeBorder,
+            "config.shapeColor": config.shapeColor,
+        }
     }
 
     calcalateOffset(x, y) {
@@ -88,7 +105,9 @@ class GenArrow extends GenShape {
         let v1 = Vector.new(this.fromX, this.fromY)
         let v2 = Vector.new(this.toX, this.toY)
         this.distance = v1.distance(v2)
-        if (this.distance < this.minDistance) {
+        log("checkStatus", this.distance)
+        log("deleted", this.distance <= this.minDistance)
+        if (this.distance <= this.minDistance) {
             super.deleted()
             return 
         }
@@ -102,7 +121,7 @@ class GenArrow extends GenShape {
         this.rotate = 180 / Math.PI * Math.atan2(this.toY - this.fromY, this.toX - this.fromX)
     }
     
-    draw() { 
+    draw() {  
         let ctx = this.context
         let fromX = this.fromX
         let fromY = this.fromY
@@ -116,7 +135,12 @@ class GenArrow extends GenShape {
         let v1 = Vector.new(this.fromX, this.fromY)
         let v2 = Vector.new(this.toX, this.toY)
         this.distance = v1.distance(v2)
-     
+        
+        if (this.distance <= 0) {
+            super.deleted()
+            return
+        }
+
         // 计算各角度和对应的 P2, P3 坐标
         let angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
             angle1 = (angle + theta) * Math.PI / 180,

@@ -14,6 +14,23 @@ class GenRect extends GenShape {
         }
     }
 
+    static configAttribute() {
+        return {
+            "config.shapeBorder": config.shapeBorder,
+            "config.shapeColor": config.shapeColor,
+        }
+    }
+
+    selected() {
+        super.selected()
+        this.updateControls("config.shapeBorder.value", parseInt(this.border))
+        this.updateControls("config.shapeColor.value", this.color)
+        return {
+            "config.shapeBorder": config.shapeBorder,
+            "config.shapeColor": config.shapeColor,
+        }
+    }
+
     moving(x, y) {
         for (let p of Object.keys(this.position)) {
             let v = this.position[p]
@@ -33,8 +50,9 @@ class GenRect extends GenShape {
     }
 
     checkStatus() {        
+        let border = this.border || null
         // 无效图形直接删除
-        if (this.w <= 0 || this.h <= 0) {
+        if (this.w <= 0 || this.h <= 0 || border == null) {
             super.deleted()
             return
         }
@@ -148,6 +166,8 @@ class GenRect extends GenShape {
             this.context.restore()  
             // 绘制拖拽点
             super.draw() 
+        } else {
+            this.deleted()
         }
     }
 }

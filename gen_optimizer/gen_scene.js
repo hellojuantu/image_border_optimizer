@@ -7,6 +7,7 @@ class GenScene {
         this.elements = []
         this.events = {}
         this.pageClass = {}
+        this.components = {}
     }
 
     static new(...args) {
@@ -28,6 +29,14 @@ class GenScene {
     buildPage(insertHtml) {
         insertHtml && insertHtml()
     }
+    
+    bindComponent(name, component) {
+        this.components[name] = component
+    }
+
+    getComponent(name) {
+        return this.components[name]
+    }
 
     registerGlobalEvents(sceneEvents) {
         let self = this
@@ -36,25 +45,27 @@ class GenScene {
             let eventName = event.eventName
             let className = event.className
             let selector = sel(className)
-            let callback = event.callback
+            let after = event.after
+            let before = event.before
             let configToEvents = event.configToEvents || {}
-            self.bindConfigEvents(eventName, configToEvents)
-            log("selector, eventName", selector, eventName)
+            self.bindConfigEvents(className, eventName, configToEvents)
+            log("selector, eventName, configToEvents", selector, eventName, configToEvents)
             bindAll(selector, eventName, function(event) {
                 let target = event.target
                 let bindVar = target.dataset.value
-                // log("eventName, events, bindVar", eventName, self.events, bindVar)
-                let eventId = self.eventId(eventName, bindVar)
+                // log("eventName, events, bindVar: ", eventName, self.events, bindVar)
+                let eventId = self.eventId(className, eventName, bindVar)
+                log("eventId", eventId)
                 let eventFunc = self.events[eventId]
+                before && before(bindVar, target)
                 // 某个配置区域独有的事件
                 eventFunc && eventFunc(target)
-                // 全局的事件
-                callback && callback(bindVar, target)
+                after && after(bindVar, target)
             })
         }        
     }
 
-    bindConfigEvents(eventName, configToEvents) {
+    bindConfigEvents(className, eventName, configToEvents) {
         /**
             eventName -> "input",
             configToEvents -> {
@@ -65,13 +76,16 @@ class GenScene {
         let self = this
         for (let bindVar of Object.keys(configToEvents)) {
             let eventFun = configToEvents[bindVar]
-            let eventId = self.eventId(eventName, bindVar)
+            let eventId = self.eventId(className, eventName, bindVar)
             self.bindEvent(eventId, eventFun)
         }
     }
 
-    eventId(eventName, bindVar) {
-        return eventName + "->" + bindVar
+    /**
+     * className eventName bindVar 三者才能确定一个事件
+     */
+    eventId(className, eventName, bindVar) {
+        return className + "->" + eventName + "->" + bindVar
     }
 
     bindEvent(eventName, events) {

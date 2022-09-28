@@ -16,4 +16,11 @@ class GenPoint {
     static new(...args) {
         return new this(...args)
     }
+
+    static configAttribute() {
+        return {
+            "config.penWeight": config.penWeight,
+            "config.penColor": config.penColor, 
+        }
+    }
 }

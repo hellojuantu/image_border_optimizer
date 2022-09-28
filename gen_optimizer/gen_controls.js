@@ -1,6 +1,7 @@
 class GenControls {
     constructor(scene) {
         this.optimizer = scene.optimizer
+        this.canvasArea = this.optimizer.canvasArea
         this.canvas = this.optimizer.canvas
         this.context = this.optimizer.context
         this.images = this.optimizer.images
@@ -35,16 +36,16 @@ class GenControls {
     pageToCanvas(x, y) {
         let self = this
         return {
-            "x": x - self.canvas.offsetLeft,
-            "y": y - self.canvas.offsetTop,
+            "x": x - self.canvas.offsetLeft + self.canvasArea.scrollLeft,
+            "y": y - self.canvas.offsetTop + self.canvasArea.scrollTop,
         }
     }
 
     canvasToPage(x, y) {
         let self = this
         return {
-            "x": x + self.canvas.offsetLeft,
-            "y": y + self.canvas.offsetTop,
+            "x": x + self.canvas.offsetLeft - self.canvasArea.scrollLeft,
+            "y": y + self.canvas.offsetTop - self.canvasArea.scrollTop,
         }
     }
 
@@ -68,23 +69,23 @@ class GenControls {
     
     // config.xxx.prop = updateValue
     updateControls(bindVarStr, updateValue) {
-        var list = bindVarStr.split(".")
-        var bind = list[1]
-        var prop = list[2]
-        var sliders = es(sel(this.scene.pageClass.slider))
+        log("updateControls")
+        let self = this
+        let sc = self.scene
+        let list = bindVarStr.split(".")
+        let bind = list[1]
+        let prop = list[2]
+        let sliders = es(sel(sc.pageClass.input))
         for (let i = 0; i < sliders.length; i++) {
             let slide = sliders[i]
             let bindVar = slide.dataset.value
             if (bindVar == `config.${bind}`) {
                 let parsedValue = this.parseValueWithType(updateValue, config[bind]['valueType'])
+                log("parsedValue", parsedValue)
                 // update config
                 config[bind][prop] = parsedValue
                 // update html slide
                 slide[prop] = parsedValue
-                if (prop == 'value') {
-                    let label = slide.closest('label').querySelector(sel(this.scene.pageClass.lable))
-                    label.innerText = parsedValue
-                }
                 return
             }
         }

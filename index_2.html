@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>visual-drag-demo</title>
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+    <link href="./visual-drag-demo_files/app.813052a6.css" rel="stylesheet">
+    <link rel="stylesheet" href="./visual-drag-demo_files/643.a23df2f1.css"/>
+    <link rel="stylesheet" href="./visual-drag-demo_files/chunk-vendors.2f61e822.css"/>
+</head>
+<body>
+    <div class="home">
+        <div class="toolbar">
+            <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
+            <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
+            <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
+            <button type="button" data-type="button" data-value="config.centerButton" class="gen-auto-button el-button el-button--default el-button--small">背景居中</button>
+            <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
+            
+            <div style="float: right;">                   
+                <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-ziyouquxian"></span>
+                <span data-value="config.textInputEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenben"></span>
+                <span data-value="config.shapeEnabled" data-shape="rect" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-juxing"></span>
+                <span data-value="config.shapeEnabled" data-shape="arrow" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-shangyi"></span>
+            </div>
+        </div>
+        <main>
+            <section class="left">
+            </section>
+            <section class="center">  
+            <div class="content" id="id-canvas-area">
+                <canvas class="editor edit"
+                style="opacity: 1;background: rgb(255, 255, 255);"
+                id="id-canvas" class="canvas-area" width="1000" height="800"></canvas>  
+            </div>      
+            </section>
+            <section class="right">
+                <div class="attr-container">
+                    <p class="title">画布属性</p>
+                    <form class="gen-attribute el-form" style="padding: 20px">                
+                    </form>                                    
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- 配置文件 -->
+    <script src="./config/config.js"></script>
+    <!-- optimizer 框架 -->
+    <script src="./gen_optimizer/gen_utils.js"></script>
+    <script src="./gen_optimizer/gen_vector.js"></script>
+    <script src="./gen_optimizer/gen_image_optimizer.js"></script>
+    <script src="./gen_optimizer/gen_controls.js"></script>
+    <script src="./gen_optimizer/gen_point.js"></script>
+    <script src="./gen_optimizer/gen_scene.js"></script>
+    <script src="./gen_optimizer/gen_shape.js"></script>
+    <script src="./gen_optimizer/gen_text.js"></script>
+    <script src="./gen_optimizer/gen_rect.js"></script>
+    <script src="./gen_optimizer/gen_arrow.js"></script>
+    <script src="./gen_optimizer/gen_dragger.js"></script>
+    <!-- 控制器 -->
+    <script src="./controls/shape_controls.js"></script>
+    <script src="./controls/pen_controls.js"></script>
+    <script src="./controls/image_controls.js"></script>
+    <script src="./controls/page_config_controls.js"></script>
+    <script src="./controls/text_controls.js"></script>
+    <!-- 场景 -->
+    <script src="./scene/main_scene.js"></script>
+    <!-- 程序入口 -->
+    <script src="./main.js"></script>
+</body>
+</html>

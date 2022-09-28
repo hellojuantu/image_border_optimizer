@@ -21,6 +21,7 @@ class PenControls extends GenControls {
         // 遍历数组元素, 画线
         let beginPoint = null
         let points = self.points
+        // log("points", points)
         for (let point of points) {
             windowOfPoints.push(point)
             // 
@@ -59,6 +60,10 @@ class PenControls extends GenControls {
         let self = this
         self.points = []
         self.optimizer.resgisterMouse(function(event, action) {
+            // 'true' => true (boolean)
+            if (!parseBoolean(config.penEnabled.value)) {
+                return
+            }
             // log("action", action)
             let x = event.offsetX
             let y = event.offsetY
@@ -66,8 +71,7 @@ class PenControls extends GenControls {
             let box = canvas.getBoundingClientRect()
             let ox = x * (canvas.width / box.width)
             let oy = y * (canvas.height / box.height)
-            // 'true' => true (boolean)
-            if (parseBoolean(config.penEnabled.value)) {
+            if (action == 'move' || action == 'down' || action == 'up') {
                 self.addPoint(ox, oy, action)
             }
         })

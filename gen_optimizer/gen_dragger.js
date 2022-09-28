@@ -25,6 +25,7 @@ class GenDragger extends GenShape {
 
     selected() {
         this.status = this.enumStatus.selected
+        return this.owner.selected()
     }
 
     moving(x, y) {

@@ -1,5 +1,5 @@
 class GenText extends GenShape {
-    constructor(scene, text, x, y, prop={}) {
+    constructor(scene, text, x, y) {
         super(scene)
         this.text = text
         this.x = x
@@ -7,7 +7,23 @@ class GenText extends GenShape {
         this.font = config.textFont.value
         this.color = config.textColor.value
         this.status = this.enumStatus.creating
-        this.fillProp(prop)
+    }
+    
+    static configAttribute() {
+        return {
+            "config.textFont": config.textFont,
+            "config.textColor": config.textColor,
+        }
+    }
+
+    selected() {
+        super.selected()
+        this.updateControls("config.textFont.value", this.font)
+        this.updateControls("config.textColor.value", this.color)
+        return {
+            "config.textFont": config.textFont,
+            "config.textColor": config.textColor,
+        }
     }
     
     static new (...args) {

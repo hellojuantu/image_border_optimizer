@@ -20,9 +20,10 @@ class GenOptimizer {
 
     setup() {
         // canvas
+        this.canvasArea = e("#id-canvas-area")
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
-        this.setupNotice()
+        // this.setupNotice()
         // 
         this.scene = null
         // image and upload
@@ -41,6 +42,7 @@ class GenOptimizer {
         // mouse
         this.mouseActions = []
         this.setupMouse()
+        this.__start()
     }
 
     setupNotice() {
@@ -87,6 +89,12 @@ class GenOptimizer {
             moving = false
             for (const a of self.mouseActions) {
                 a(event, 'dblclick')
+            }
+        })
+        this.canvas.addEventListener('mouseleave', event => {
+            moving = false
+            for (const a of self.mouseActions) {
+                a(event, 'mouseleave')
             }
         })
     }
@@ -179,10 +187,10 @@ class GenOptimizer {
                         // 上传图片, 刷新配置
                         // log("self.scene", self.scene)
                         self.scene && self.scene.refreshConfig()
-                        if (self.images.length == files.length) {
-                            log("__start")
-                            self.__start()
-                        }
+                        // if (self.images.length == files.length) {
+                        //     log("__start")
+                        //     self.__start()
+                        // }
                     }
                 }
             }

@@ -21,7 +21,7 @@ var config = {
         valueType: 'number',
         min: 0,
         max: 30,
-        type: "range",
+        type: "number",
     },
     offset: {
         _comment: "canvas offset",
@@ -29,7 +29,7 @@ var config = {
         valueType: 'number',
         min: 2,
         max: 30,
-        type: "range",
+        type: "number",
     },
     imageOffset: {
         _comment: "image offset",
@@ -37,7 +37,7 @@ var config = {
         valueType: 'number',
         min: -100,
         max: 100,
-        type: "range",
+        type: "number",
     },
     shadowOffset: {
         _comment: "shadow offset",
@@ -45,7 +45,7 @@ var config = {
         valueType: 'number',
         min: -50,
         max: 50,
-        type: "range",
+        type: "number",
     },
     shadowBlur: {
         _comment: "shadow blur level",
@@ -53,7 +53,7 @@ var config = {
         valueType: 'number',
         min: 0,
         max: 30,
-        type: "range",
+        type: "number",
     },
     shadowColorAlpha: {
         _comment: "shadow color alpha",
@@ -61,7 +61,7 @@ var config = {
         valueType: 'number',
         min: 0,
         max: 10,
-        type: "range",
+        type: "number",
     },
     shadowColor: {
         _comment: "shadow color",
@@ -75,7 +75,7 @@ var config = {
         valueType: 'number',
         min: 0,
         max: 30,
-        type: "range",
+        type: "number",
     },
     borderColor: {
         _comment: "border color",
@@ -95,7 +95,7 @@ var config = {
         valueType: 'number',
         min: 0,
         max: 10,
-        type: "range",
+        type: "number",
     },
     penColor: {
         _comment: "pen color",
@@ -153,6 +153,6 @@ var config = {
         valueType: 'number',
         min: 3,
         max: 20,
-        type: "range",
+        type: "number",
     }
 }

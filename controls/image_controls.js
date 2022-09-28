@@ -27,6 +27,7 @@ class ImageControls extends GenControls {
         var self = this
         let canvas = self.canvas
         let context = self.context
+        // log("image draw", self.images)
         var img = self.images[config.index.value]
         if (img == null) {
             return
@@ -70,5 +71,16 @@ class ImageControls extends GenControls {
         this.context.closePath()
         this.context.stroke()
         this.context.restore()
+    }
+
+    configAttribute() {
+        return {
+            "config.borderLength": config.borderLength, 
+            "config.borderColor": config.borderColor,
+            "config.shadowOffset": config.shadowOffset,
+            "config.shadowColorAlpha": config.shadowColorAlpha,
+            "config.shadowColor": config.shadowColor,
+            "config.shadowBlur": config.shadowBlur
+        }
     }
 }
