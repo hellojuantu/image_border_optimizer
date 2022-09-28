@@ -299,6 +299,15 @@ class PageConfigControls extends GenControls {
         })
     }
 
+    // 切换时, 需要保存图片的修改
+    saveImage() {
+        let points = this.penControl.points
+        let texts = this.textControl.texts
+        let shapes = this.shapeControl.shapes
+        this.imageControl.saveImage(points, texts, shapes)
+    }
+
+    // -------- 鼠标点击对象范围函数 --------
     pointInDraggers(x, y) {
         for (let dragger of this.shapeControl.allDraggers()) {
             if (dragger.pointInFrame(x, y) && dragger.active) {
@@ -339,75 +348,7 @@ class PageConfigControls extends GenControls {
         return null
     }
 
-    // 保存图片的修改
-    saveImage() {
-        let points = this.penControl.points
-        let texts = this.textControl.texts
-        let shapes = this.shapeControl.shapes
-        this.imageControl.saveImage(points, texts, shapes)
-    }
-
-    // insertControls() {
-    //     let self = this
-    //     let sc = self.scene
-    //     var div = e(sel(sc.pageClass.controls))
-    //     var keys = Object.keys(config)
-    //     for (var k of keys) {
-    //         var item = config[k]
-    //         if (item.type == 'button') {
-    //             continue
-    //         }
-    //         // var html = self.templateControls(k, item)
-    //         // appendHtml(div, html)
-    //     }
-    // }
-
-    // templateControls(key, item) {
-    //     let self = this
-    //     let sc = self.scene
-    //     let sliderClass = sc.pageClass.slider
-    //     let buttonClass = sc.pageClass.button
-    //     var minAndMax = `
-    //         max = ${item.max}
-    //         min = ${item.min}
-    //     `
-    //     let hasList = item.list != null
-    //     let list = ``
-    //     if (hasList) {
-    //         list = `
-    //             <datalist id="${item.list.name}">
-    //                 ${item.list.options.map(v => `<option value="${v}">${v}</option>`).join("")}}
-    //             </datalist>
-    //         `
-    //     }
-    //     var inputAndRange = `
-    //         <input class='${sliderClass}' type="${item.type}"
-    //             value="${item.value}"
-    //             ${item.type == 'range' ? minAndMax : ''}
-    //             data-value="config.${key}"
-    //             data-type="${item.type}"
-    //             ${hasList ? `list="${item.list.name}"` : ''}
-    //             >
-    //         ${item._comment}: <span class="gen-label">${item.value}</span>
-    //     `
-    //     var button = `
-    //         <div class="gen-controller">
-    //             <label>
-    //                 <button class='${buttonClass}' data-type="${item.type}" data-value="config.${key}">${item._comment}</button>
-    //             </label>
-    //         </div>
-    //     `        
-    //     var t = `
-    //         <div class="gen-controller">
-    //             <label>
-    //                 ${item.type == 'button' ? button : inputAndRange}
-    //                 ${hasList ? list : ''}
-    //             </label>
-    //         </div>
-    //     `
-    //     return t
-    // }
-
+    // -------- 全局属性组件 --------
     insertAttribute(attributeMap) {
         log("attributeMap", attributeMap)
         Array.from(es(".el-form-item")).forEach(element => {

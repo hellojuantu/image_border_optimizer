@@ -20,10 +20,7 @@ class GenText extends GenShape {
         super.selected()
         this.updateControls("config.textFont.value", this.font)
         this.updateControls("config.textColor.value", this.color)
-        return {
-            "config.textFont": config.textFont,
-            "config.textColor": config.textColor,
-        }
+        return GenText.configAttribute()
     }
     
     static new (...args) {

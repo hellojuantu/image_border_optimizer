@@ -25,10 +25,7 @@ class GenRect extends GenShape {
         super.selected()
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
-        return {
-            "config.shapeBorder": config.shapeBorder,
-            "config.shapeColor": config.shapeColor,
-        }
+        return GenRect.configAttribute()
     }
 
     moving(x, y) {

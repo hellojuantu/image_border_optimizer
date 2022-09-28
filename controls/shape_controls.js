@@ -60,7 +60,7 @@ class ShapeControls extends GenControls {
                 self.buildingShape.idle()
                 self.removeDraggers()
                 let att = self.buildingShape.activateDraggers()
-                log("shape controls", att)
+                // log("shape controls", att)
                 sc.getComponent('attribute').builder(att)
                 self.buildingShape.checkStatus()
                 self.buildingShape = null
@@ -79,6 +79,7 @@ class ShapeControls extends GenControls {
             log("Backspace", status)
             for (let shape of this.shapes) {
                 if (shape.isSelected()) {
+                    // TODO: 删除
                     // shape.deleted()
                 }
             }

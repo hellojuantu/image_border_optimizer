@@ -1,1 +1,1 @@
-#Image-Border-Optimizer
+#Image-Border-Optimizer v2.0

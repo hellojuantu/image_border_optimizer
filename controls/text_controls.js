@@ -108,13 +108,8 @@ class TextControls extends GenControls {
         input.style.width = t.w + 'px'
         input.focus()
         input.select()
-        // input blur 时, 关闭 input
-        bind(selector, 'input', function(event) {
-            // log("blur", self.inputOpen)
-            // if (self.inputOpen) {
-            //     // close input
-            //     self.closeInputAndAddText()
-            // }
+        // 输入时, 自动更新宽度
+        bind(selector, 'input', function(event) {           
             let t = calTextWH(event.target.value, event.target.style.font)
             let selector = "#" + self.inputId
             let input = e(selector)
