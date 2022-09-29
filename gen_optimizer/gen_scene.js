@@ -15,8 +15,13 @@ class GenScene {
     }
 
     // 上传图片需要刷新的配置
-    refreshConfig() {
+    refreshConfig(tempImages) {
         
+    }
+
+    // 更新左边的图片快照
+    updateActiveImageSnapshot() {
+
     }
 
     registerPageClass(prop) {

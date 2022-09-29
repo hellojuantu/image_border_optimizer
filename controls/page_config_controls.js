@@ -82,15 +82,7 @@ class PageConfigControls extends GenControls {
                                 shape.color = target.value
                             }
                         }
-                    },
-                    "config.index": function(target) {
-                        self.saveImage()
-                        //
-                        let i = parseInt(target.value)
-                        self.penControl.resetAndUpdate(self.imageControl.imageChanges[i].points)
-                        self.textControl.resetAndUpdate(self.imageControl.imageChanges[i].texts)
-                        self.shapeControl.resetAndUpdate(self.imageControl.imageChanges[i].shapes)
-                    },
+                    },                   
                 }
             },
             // 左上按钮事件
@@ -104,16 +96,7 @@ class PageConfigControls extends GenControls {
                             self.saveImage()
                             var v = config.index.value - 1
                             config.index.value = v
-                            self.penControl.resetAndUpdate(self.imageControl.getImageChanges(v).points)
-                            self.textControl.resetAndUpdate(self.imageControl.getImageChanges(v).texts)
-                            self.shapeControl.resetAndUpdate(self.imageControl.getImageChanges(v).shapes)
-                            //
-                            removeClassAll('image-active')
-                            for (let block of es('.image-block')) {
-                                if (block.dataset.index == v) {
-                                    block.classList.add('image-active')
-                                }
-                            }
+                            self.switchImage(v)                          
                         }
                     },
                     "config.nextButton": function(target) {
@@ -124,16 +107,7 @@ class PageConfigControls extends GenControls {
                             var v = config.index.value + 1
                             config.index.value = v
                             // 更新画笔和文字
-                            self.penControl.resetAndUpdate(self.imageControl.getImageChanges(v).points)
-                            self.textControl.resetAndUpdate(self.imageControl.getImageChanges(v).texts)
-                            self.shapeControl.resetAndUpdate(self.imageControl.getImageChanges(v).shapes)
-                            //
-                            removeClassAll('image-active')
-                            for (let block of es('.image-block')) {
-                                if (block.dataset.index == v) {
-                                    block.classList.add('image-active')
-                                }
-                            }
+                            self.switchImage(v)                          
                         }
                     },
                     "config.centerButton": function(target) {
@@ -153,17 +127,15 @@ class PageConfigControls extends GenControls {
                     },
                     "action.copyImageButton": function(target) {
                         log("TODO copyImageButton")
+                        clipboardImg(self.canvas.toDataURL("image/png"))
                     },
                     "action.newBlank": function(target) {
-                        self.images.push(self.optimizer.defaultBlankImage())
-                        sc.getComponent('imageSelector').builder(self.images)
-                        //
-                        // removeClassAll('image-active')
-                        // for (let block of es('.image-block')) {
-                        //     if (block.dataset.index == config.index.value) {
-                        //         block.classList.add('image-active')                                
-                        //     }
-                        // }
+                        let b = self.optimizer.defaultBlankImage()
+                        self.images.push(b)
+                        let tempImages = []
+                        tempImages.push(b)
+                        sc.getComponent('imageSelector').builder(tempImages)
+                        config.index.max = self.images.length - 1
                     },
                 },
             },            
@@ -175,7 +147,6 @@ class PageConfigControls extends GenControls {
                     let shapeActive = 'shape-active'
                     if (target.classList.contains(shapeActive)) {
                         target.classList.remove(shapeActive)
-                        // sc.getComponent('attribute').builder(self.imageControl.configAttribute())
                     } else {
                         removeClassAllWithCallback(shapeActive, (e) => {
                             let bindVar = e.dataset.value
@@ -214,47 +185,29 @@ class PageConfigControls extends GenControls {
                         self.saveImage()
                         let v = parseInt(target.dataset.index)
                         config.index.value = v
-                        self.penControl.resetAndUpdate(self.imageControl.getImageChanges(v).points)
-                        self.textControl.resetAndUpdate(self.imageControl.getImageChanges(v).texts)
-                        self.shapeControl.resetAndUpdate(self.imageControl.getImageChanges(v).shapes)    
-                        //
-                        removeClassAll('image-active')
-                        for (let block of es('.image-block')) {
-                            if (block.dataset.index == v) {
-                                block.classList.add('image-active')                                
-                            }
-                        }
+                        self.switchImage(v)
                     },
                 }
             },
         ])
 
+        sc.updateActiveImageSnapshot = function() {
+            let raw = this.images[config.index.value]
+            if (raw.dataset.type == 'default_blank') {
+                e('.image-active > div > img').src = this.canvas.toDataURL("image/png")   
+            }
+        }
+
         // 上传图片需要刷新的配置
         // 每次上传图片都会调用
-        sc.refreshConfig = function() {
+        sc.refreshConfig = function(tempImages) {
             log("refreshConfig")
-            self.updateControls("config.index.max", this.images.length - 1)
-            //
-            sc.getComponent('imageSelector').builder(this.images)
-            // //
-            // removeClassAll('image-active')
-            // for (let block of es('.image-block')) {
-            //     let v = config.index.value
-            //     if (block.dataset.index == v) {
-            //         block.classList.add('image-active')
-            //     }
-            // }
+            sc.getComponent('imageSelector').builder(tempImages)    
+            config.index.max = self.images.length - 1
         }
 
         // 使用组件构建属性
         sc.getComponent('attribute').builder(self.imageControl.configAttribute())
-    }
-
-    updateImageSnapshot() {
-        let raw = this.images[config.index.value]
-        if (raw.dataset.type == 'default_blank') {
-            raw.src = this.canvas.toDataURL("image/png")       
-        }
     }
 
     /**
@@ -378,6 +331,22 @@ class PageConfigControls extends GenControls {
         this.imageControl.saveImage(points, texts, shapes)
     }
 
+    // 切换图片, 恢复图片的修改
+    switchImage(imageIndex) {
+        let self = this
+        let v = imageIndex
+        self.penControl.resetAndUpdate(self.imageControl.getImageChanges(v).points)
+        self.textControl.resetAndUpdate(self.imageControl.getImageChanges(v).texts)
+        self.shapeControl.resetAndUpdate(self.imageControl.getImageChanges(v).shapes)    
+        // css
+        removeClassAll('image-active')
+        for (let block of es('.image-block')) {
+            if (block.dataset.index == v) {
+                block.classList.add('image-active')                                
+            }
+        }
+    }
+
     // -------- 鼠标点击对象范围函数 --------
     pointInDraggers(x, y) {
         for (let dragger of this.shapeControl.allDraggers()) {
@@ -461,10 +430,10 @@ class PageConfigControls extends GenControls {
     insertImageSelector(imageSnapshots) {
         log("imageSnapshots", imageSnapshots)
         let list = e(".image-list")
-        list.innerHTML = ''
+        let max = config.index.max
         for (let i = 0; i < imageSnapshots.length; i++) {
             let image = imageSnapshots[i]
-            image.dataset.index = i
+            image.dataset.index = i + max + 1
             let html = this.template(image)
             appendHtml(list, html)
         }       
@@ -481,10 +450,11 @@ class PageConfigControls extends GenControls {
     templateImageSelector(image) {
         let url = image.src
         let index = image.dataset.index
+        let type = image.dataset.type
         let t = `
-        <div class="block image-block" data-value="config.index" data-index="${index}">
-            <div class="el-image" data-value="config.index" data-index="${index}" style="width: 100px; height: 100px;display: block;margin: auto;">
-                <img src="${url}" data-value="config.index" data-index="${index}" class="el-image__inner" style="object-fit: scale-down;">
+        <div class="block image-block" data-value="config.index" data-index="${index}" data-type="${type}">
+            <div class="el-image" data-value="config.index" data-index="${index}" data-type="${type}" style="width: 100px; height: 100px;display: block;margin: auto;">
+                <img src="${url}" data-value="config.index" data-index="${index}" data-type="${type}" class="el-image__inner" style="object-fit: scale-down;">
             </div>
         </div>
         `

@@ -24,11 +24,16 @@ class GenOptimizer {
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
         // blank image
-        this.blankImageSrc = this.canvas.toDataURL("image/png")
+        this.blankImage = {
+            src: this.canvas.toDataURL("image/png"),
+            w: this.canvas.width,
+            h: this.canvas.height,
+        }
         // 
         this.scene = null
         // image and upload
         this.images = []
+        this.imageSnapshots = []
         this.setupBlankImage()
         //
         this.bindUploadEvents()
@@ -50,20 +55,17 @@ class GenOptimizer {
 
     defaultBlankImage() {
         let image = new Image()
-        image.src = this.blankImageSrc
-        image.width = this.canvas.width
-        image.height = this.canvas.height
+        image.src = this.blankImage.src
+        image.width = this.blankImage.w
+        image.height = this.blankImage.h
         image.dataset.type = 'default_blank'
         return image
-    }
-
-    updateImageSnapshot() {
-        e('.image-active > div > img').src = this.canvas.toDataURL("image/png")   
     }
 
     setupBlankImage() {
         let blankImage = this.defaultBlankImage()
         this.images.push(blankImage)
+        this.imageSnapshots.push(blankImage)
     }
 
     setupNotice() {
@@ -132,7 +134,7 @@ class GenOptimizer {
         let self = this
         this.scene = scene                
         // 第一次加载需要刷新的配置
-        this.scene.refreshConfig()
+        this.scene.refreshConfig(this.images)
         // 开始运行程序
         setTimeout(function(){
             self.runloop()
@@ -141,6 +143,8 @@ class GenOptimizer {
 
     draw() {
         this.scene.draw()
+        // update snapshot
+        this.scene.updateActiveImageSnapshot()
     }
 
     update() {
@@ -170,8 +174,6 @@ class GenOptimizer {
         g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)        
         // draw
         g.draw()                
-        // update snapshot
-        g.updateImageSnapshot()
         // next run loop
         setTimeout(function(){
             g.runloop()
@@ -206,6 +208,7 @@ class GenOptimizer {
                 reader.onload = function (e) {
                     let img = new Image()
                     img.src = e.target.result
+                    img.dataset.type = 'user_upload'
                     img.onload = function() { 
                         tempImages.push(img)
                         self.images.push(img)
@@ -213,7 +216,7 @@ class GenOptimizer {
                         // 上传图片, 刷新配置
                         if (tempImages.length == files.length) {
                             log("__start")
-                            self.scene && self.scene.refreshConfig()
+                            self.scene && self.scene.refreshConfig(tempImages)
                         }
                     }
                 }
