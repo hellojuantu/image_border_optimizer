@@ -323,7 +323,9 @@ class PageConfigControls extends GenControls {
         })
     }
 
-    // 切换时, 需要保存图片的修改
+    /**
+     * 切换时, 需要保存图片的修改
+     */
     saveImage() {
         let points = this.penControl.points
         let texts = this.textControl.texts
@@ -331,7 +333,9 @@ class PageConfigControls extends GenControls {
         this.imageControl.saveImage(points, texts, shapes)
     }
 
-    // 切换图片, 恢复图片的修改
+    /**
+     * 切换图片, 恢复图片的修改
+     */
     switchImage(imageIndex) {
         let self = this
         let v = imageIndex
@@ -389,6 +393,7 @@ class PageConfigControls extends GenControls {
     }
 
     // -------- 全局属性组件 --------
+    // 右边属性组件
     insertAttribute(attributeMap) {
         log("attributeMap", attributeMap)
         Array.from(es(".el-form-item")).forEach(element => {

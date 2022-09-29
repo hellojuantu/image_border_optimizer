@@ -68,6 +68,7 @@ class GenControls {
     }
     
     // config.xxx.prop = updateValue
+    // 右边属性变更使用
     updateControls(bindVarStr, updateValue) {
         log("updateControls")
         let self = this
@@ -103,6 +104,8 @@ class GenControls {
                 return value
         }
     }
+
+    static configAttribute() {}
     
     draw() {
     }
