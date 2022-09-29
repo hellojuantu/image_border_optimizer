@@ -20,7 +20,7 @@ var config = {
         value: 0,
         valueType: 'number',
         min: 0,
-        max: 30,
+        max: -1,
         type: "number",
     },
     offset: {

@@ -23,11 +23,14 @@ class GenOptimizer {
         this.canvasArea = e("#id-canvas-area")
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
-        // this.setupNotice()
+        // blank image
+        this.blankImageSrc = this.canvas.toDataURL("image/png")
         // 
         this.scene = null
         // image and upload
         this.images = []
+        this.setupBlankImage()
+        //
         this.bindUploadEvents()
         // key
         this.actions = {}
@@ -43,6 +46,24 @@ class GenOptimizer {
         this.mouseActions = []
         this.setupMouse()
         this.__start()
+    }
+
+    defaultBlankImage() {
+        let image = new Image()
+        image.src = this.blankImageSrc
+        image.width = this.canvas.width
+        image.height = this.canvas.height
+        image.dataset.type = 'default_blank'
+        return image
+    }
+
+    updateImageSnapshot() {
+        e('.image-active > div > img').src = this.canvas.toDataURL("image/png")   
+    }
+
+    setupBlankImage() {
+        let blankImage = this.defaultBlankImage()
+        this.images.push(blankImage)
     }
 
     setupNotice() {
@@ -108,8 +129,8 @@ class GenOptimizer {
     }
 
     runWithScene(scene) {
-        var self = this
-        this.scene = scene
+        let self = this
+        this.scene = scene                
         // 第一次加载需要刷新的配置
         this.scene.refreshConfig()
         // 开始运行程序
@@ -142,13 +163,15 @@ class GenOptimizer {
                 g.actions[key]('up')
                 g.keydowns[key] = null
             }           
-        }
+        }                    
         // update
         g.update()
         // clear
-        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)
+        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)        
         // draw
-        g.draw()
+        g.draw()                
+        // update snapshot
+        g.updateImageSnapshot()
         // next run loop
         setTimeout(function(){
             g.runloop()
@@ -161,7 +184,7 @@ class GenOptimizer {
 
     bindUploadEvents() {
         var self = this
-        var dp = this.canvas
+        var dp = e('.image-list')
     
         dp.addEventListener('dragover', function (e) {
             e.stopPropagation()
@@ -175,22 +198,23 @@ class GenOptimizer {
             let files = Object.values(e.dataTransfer.files).filter(
                 f => f.type.includes("image")
             )
-            for (var file of files) {
-                var reader = new FileReader()
+            let tempImages = []
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i]
+                let reader = new FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = function (e) {
                     let img = new Image()
                     img.src = e.target.result
                     img.onload = function() { 
+                        tempImages.push(img)
                         self.images.push(img)
-                        log("images len, file len", self.images.length, files.length)
+                        log("tempImages len, file len", self.images.length, files.length)
                         // 上传图片, 刷新配置
-                        // log("self.scene", self.scene)
-                        self.scene && self.scene.refreshConfig()
-                        // if (self.images.length == files.length) {
-                        //     log("__start")
-                        //     self.__start()
-                        // }
+                        if (tempImages.length == files.length) {
+                            log("__start")
+                            self.scene && self.scene.refreshConfig()
+                        }
                     }
                 }
             }

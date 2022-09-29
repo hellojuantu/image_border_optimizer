@@ -1,17 +1,14 @@
 class ImageControls extends GenControls {
     constructor(scene) {
         super(scene)
-        this.setupImageChanges()
+        this.imageChanges = []
     }
 
-    setupImageChanges() {
-        this.imageChanges = []
-        for (let i = 0; i <= config.index.max; i++) {
-            this.imageChanges.push({
-                points: [],
-                texts: [],
-                shapes: [],
-            })
+    getImageChanges(index) { 
+        return this.imageChanges[index] || {
+            points: [],
+            texts: [],
+            shapes: [],
         }
     }
 
@@ -30,6 +27,13 @@ class ImageControls extends GenControls {
         // log("image draw", self.images)
         var img = self.images[config.index.value]
         if (img == null) {
+            return
+        }
+        // 空白页面, 不加阴影
+        if (img.dataset.type == 'default_blank') {
+            canvas.width = img.width
+            canvas.height = img.height
+            context.drawImage(img, 0, 0)
             return
         }
         // get config
@@ -80,7 +84,10 @@ class ImageControls extends GenControls {
             "config.shadowOffset": config.shadowOffset,
             "config.shadowColorAlpha": config.shadowColorAlpha,
             "config.shadowColor": config.shadowColor,
-            "config.shadowBlur": config.shadowBlur
+            "config.shadowBlur": config.shadowBlur,
+            "config.imageOffset": config.imageOffset,
+            "config.offset": config.offset,
+            "config.index": config.index,
         }
     }
 }

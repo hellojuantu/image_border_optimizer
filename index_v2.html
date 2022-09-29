@@ -12,6 +12,7 @@
 <body>
     <div class="home">
         <div class="toolbar">
+            <button type="button" data-type="button" data-value="action.newBlank" class="gen-auto-button el-button el-button--default el-button--small">新建空白</button>
             <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
             <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
             <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
@@ -27,6 +28,9 @@
         </div>
         <main>
             <section class="left">
+                <p class="title">图片列表 (拖拽放入)</p>
+                <div class="image-list">                    
+                </div>
             </section>
             <section class="center">  
             <div class="content" id="id-canvas-area">
@@ -38,8 +42,10 @@
             <section class="right">
                 <div class="attr-container">
                     <p class="title">画布属性</p>
-                    <form class="gen-attribute el-form" style="padding: 20px">                
-                    </form>                                    
+                    <div class="gen-attribute-list">
+                        <form class="gen-attribute el-form">
+                        </form>  
+                    </div>                                                 
                 </div>
             </section>
         </main>

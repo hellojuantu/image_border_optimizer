@@ -426,6 +426,32 @@
 	color: #409eff
 }
 
+.gen-attribute-list {
+    color: #303133;
+    overflow: visible;
+    height: 98%;
+    overflow-y: scroll;
+}
+
+.gen-attribute {
+	padding: 20px;
+    padding-top: 0;
+}
+
+.left > .title {
+	text-align: center;
+	margin-bottom: 0px !important;
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 2px solid #e4e7ed;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.attr-container {
+	height: 98%;
+}
+
 .attr-container .title {
 	text-align: center;
 	margin-bottom: 10px;
@@ -434,7 +460,6 @@
 	border-bottom: 2px solid #e4e7ed;
 	font-size: 14px;
 	font-weight: 500;
-	color: #303133
 }
 
 .home {
@@ -459,7 +484,29 @@
 	overflow: auto
 }
 
-.home main .left>div:first-child {
+.home main .left>div {
+	/* border-bottom: 1px solid #ddd */
+}
+
+.image-block {
+	border: 1px solid transparent;
+}
+
+.image-block:hover {
+	border: 1px solid #409eff;
+	cursor: pointer;
+}
+
+.image-active {
+	border: 1px solid #409eff !important;
+}
+
+.image-list {
+	height: 100%;
+    overflow-y: scroll;
+}
+
+.image-list>div {
 	border-bottom: 1px solid #ddd
 }
 
