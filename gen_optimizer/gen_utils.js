@@ -1,10 +1,14 @@
-var e = sel => document.querySelector(sel)
+const e = sel => document.querySelector(sel)
 
-var log = console.log.bind(console)
+const log = function() {
+    if (window.verbose) {
+        console.log.apply(console, arguments)
+    }
+}
 
-var es = sel => document.querySelectorAll(sel)
+const es = sel => document.querySelectorAll(sel)
 
-var bindAll = function(sel, eventName, callback) {
+const bindAll = function(sel, eventName, callback) {
     var l = es(sel)
     for (var i = 0; i < l.length; i++ ) {
         var input = l[i]
@@ -14,21 +18,21 @@ var bindAll = function(sel, eventName, callback) {
     }
 }
 
-var bind = function(sel, eventName, callback) {
+const bind = function(sel, eventName, callback) {
     e(sel).addEventListener(eventName, function(event) {
         callback(event)
     })
 }
 
-var parseBoolean = function(booleanString) {
+const parseBoolean = function(booleanString) {
     return JSON.parse(booleanString)
 }
 
-var appendHtml = function(div, html) {
+const appendHtml = function(div, html) {
     div.insertAdjacentHTML('beforeend', html)
 }
 
-var uuid = function() {
+const uuid = function() {
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
 		let r = Math.random() * 16 | 0
 	    let v = (c == 'x' ? r : (r & 0x3 | 0x8))
@@ -36,7 +40,7 @@ var uuid = function() {
 	});
 }
 
-var sel = function(className) {
+const sel = function(className) {
     return '.' + className
 }
 

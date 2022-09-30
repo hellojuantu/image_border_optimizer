@@ -2,12 +2,17 @@ class GenOptimizer {
     constructor(runCallback) {
         this.runCallback = runCallback
         window.fps = 10
+        window.verbose = true
         this.setup()
     }
 
     static instance(runCallback) {
         this.i = this.i || new this(runCallback)
         return this.i
+    }
+
+    enableDebugMode(verbose) {
+        window.verbose = verbose
     }
 
     setCursor(cursor) {

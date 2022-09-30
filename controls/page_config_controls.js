@@ -27,7 +27,9 @@ class PageConfigControls extends GenControls {
             "home": "home",
             'attribute': "gen-attribute",
             'input': 'gen-input',
-            'images': 'image-list'
+            'images': 'image-list',
+            'imageBlock': 'image-block',
+            'shapeActive': 'shape-active',
         })
 
         // 绑定组件, 全局可用
@@ -95,7 +97,6 @@ class PageConfigControls extends GenControls {
                         if (config.index.value > 0) {
                             self.saveImage()
                             var v = config.index.value - 1
-                            config.index.value = v
                             self.switchImage(v)                          
                         }
                     },
@@ -104,9 +105,8 @@ class PageConfigControls extends GenControls {
                         if (config.index.value < self.images.length - 1) {
                             // 保存当前图片的修改
                             self.saveImage()
-                            var v = config.index.value + 1
-                            config.index.value = v
                             // 更新画笔和文字
+                            var v = config.index.value + 1
                             self.switchImage(v)                          
                         }
                     },
@@ -126,7 +126,7 @@ class PageConfigControls extends GenControls {
                         self.shapeControl.resetAndUpdate([])
                     },
                     "action.copyImageButton": function(target) {
-                        log("TODO copyImageButton")
+                        log("copyImageButton")
                         clipboardImg(self.canvas.toDataURL("image/png"))
                     },
                     "action.newBlank": function(target) {
@@ -144,7 +144,7 @@ class PageConfigControls extends GenControls {
                 eventName: "click",
                 className: sc.pageClass.drawer,
                 before: function(bindVar, target) {
-                    let shapeActive = 'shape-active'
+                    let shapeActive = sc.pageClass.shapeActive
                     if (target.classList.contains(shapeActive)) {
                         target.classList.remove(shapeActive)
                     } else {
@@ -154,21 +154,16 @@ class PageConfigControls extends GenControls {
                         }) 
                         target.classList.add(shapeActive)
                     }
-                    eval(bindVar + '.value=' + parseBoolean(target.classList.contains('shape-active')))
+                    eval(bindVar + '.value=' + parseBoolean(target.classList.contains(shapeActive)))
                 },
                 configToEvents: {                    
                     "config.penEnabled": function(target) {
-                        log("penEnabled")      
-                        // 显示右边属性    
                         sc.getComponent('attribute').builder(GenPoint.configAttribute())
                     },
                     "config.textInputEnabled": function(target) {
-                        log("textInputEnabled")
-                        // 显示右边属性  
                         sc.getComponent('attribute').builder(GenText.configAttribute())                
                     },
                     "config.shapeEnabled": function(target) {
-                        log("shapeEnabled", target, target.dataset)  
                         let shape = config.shapeSelect.value = target.dataset.shape                                                         
                         // 显示右边属性 
                         let att = self.shapeControl.shapeTypes[shape].configAttribute()
@@ -182,29 +177,24 @@ class PageConfigControls extends GenControls {
                 className: sc.pageClass.images,
                 configToEvents: {                    
                     "config.index": function(target) {
-                        // log("target", target.closest('.image-block'))
-                        let index = target.closest('.image-block').dataset.index
+                        let imageBlock = sel(sc.pageClass.imageBlock)
+                        let index = target.closest(imageBlock).dataset.index
                         self.saveImage()
                         let v = parseInt(index)
-                        config.index.value = v
                         self.switchImage(v)
                     },
                     "action.delete": function(target) {
-                        let outer = target.closest('.image-block')
+                        let imageBlock = sel(sc.pageClass.imageBlock)
+                        let outer = target.closest(imageBlock)
                         let delId = parseInt(outer.dataset.index)
                         // only one can't delete
-                        if (es('.image-block').length <= 1) {
+                        if (es(imageBlock).length <= 1) {
                             return
                         }
-                        removeWithCondition('.image-block', (e) => {
+                        removeWithCondition(imageBlock, (e) => {
                             return e.dataset.index == delId
                         })
-                        // for (let b of bs) {
-                        //     if (b.dataset.index == delId) {
-                        //         b.remove()                                
-                        //     }
-                        // }
-                        let bs = es('.image-block')
+                        let bs = es(imageBlock)
                         self.imageControl.delImage(delId)
                         config.index.max = self.images.length - 1                        
                         // 重新给 image-list 分配 index
@@ -213,7 +203,6 @@ class PageConfigControls extends GenControls {
                         }
                         // 删除自己跳转到 index 0
                         if (delId == config.index.value) {
-                            config.index.value = 0
                             self.switchImage(0)
                         } else if (delId < config.index.value) {
                             config.index.value -= 1
@@ -223,6 +212,7 @@ class PageConfigControls extends GenControls {
             },
         ])
 
+        // 更新图片快照
         sc.updateActiveImageSnapshot = function() {
             let raw = this.images[config.index.value]
             if (raw.dataset.type == 'default_blank') {
@@ -308,6 +298,7 @@ class PageConfigControls extends GenControls {
             let y = event.offsetY
             let element = self.pointInElement(x, y)
 
+            // 先处理 shape 的事件
             self.shapeControl.handleShapeEvent(action, x, y, element)
 
             if (action == 'up') {
@@ -371,6 +362,7 @@ class PageConfigControls extends GenControls {
     switchImage(imageIndex) {
         let self = this
         let v = imageIndex
+        config.index.value = v
         self.penControl.resetAndUpdate(self.imageControl.getImageChanges(v).points)
         self.textControl.resetAndUpdate(self.imageControl.getImageChanges(v).texts)
         self.shapeControl.resetAndUpdate(self.imageControl.getImageChanges(v).shapes)    
