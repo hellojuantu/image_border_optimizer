@@ -67,12 +67,8 @@ class PenControls extends GenControls {
             // log("action", action)
             let x = event.offsetX
             let y = event.offsetY
-            let canvas = self.canvas
-            let box = canvas.getBoundingClientRect()
-            let ox = x * (canvas.width / box.width)
-            let oy = y * (canvas.height / box.height)
             if (action == 'move' || action == 'down' || action == 'up') {
-                self.addPoint(ox, oy, action)
+                self.addPoint(x, y, action)
             }
         })
     }
