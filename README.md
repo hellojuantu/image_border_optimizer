@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.2
+## Image-Border-Optimizer v2.2.1
 ## 轻量化的图片编辑器
 ## 项目特点
 - 纯原生 JS 开发, 无三方框架

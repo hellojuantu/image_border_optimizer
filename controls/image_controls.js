@@ -92,7 +92,6 @@ class ImageControls extends GenControls {
             "config.shadowBlur": config.shadowBlur,
             "config.imageOffset": config.imageOffset,
             "config.offset": config.offset,
-            "config.index": config.index,
         }
     }
 }
