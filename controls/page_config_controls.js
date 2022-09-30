@@ -182,11 +182,43 @@ class PageConfigControls extends GenControls {
                 className: sc.pageClass.images,
                 configToEvents: {                    
                     "config.index": function(target) {
+                        // log("target", target.closest('.image-block'))
+                        let index = target.closest('.image-block').dataset.index
                         self.saveImage()
-                        let v = parseInt(target.dataset.index)
+                        let v = parseInt(index)
                         config.index.value = v
                         self.switchImage(v)
                     },
+                    "action.delete": function(target) {
+                        let outer = target.closest('.image-block')
+                        let delId = parseInt(outer.dataset.index)
+                        // only one can't delete
+                        if (es('.image-block').length <= 1) {
+                            return
+                        }
+                        removeWithCondition('.image-block', (e) => {
+                            return e.dataset.index == delId
+                        })
+                        // for (let b of bs) {
+                        //     if (b.dataset.index == delId) {
+                        //         b.remove()                                
+                        //     }
+                        // }
+                        let bs = es('.image-block')
+                        self.imageControl.delImage(delId)
+                        config.index.max = self.images.length - 1                        
+                        // 重新给 image-list 分配 index
+                        for (let i = 0; i < bs.length; i++) {
+                            bs[i].dataset.index = i                            
+                        }
+                        // 删除自己跳转到 index 0
+                        if (delId == config.index.value) {
+                            config.index.value = 0
+                            self.switchImage(0)
+                        } else if (delId < config.index.value) {
+                            config.index.value -= 1
+                        }
+                    }
                 }
             },
         ])
@@ -458,8 +490,11 @@ class PageConfigControls extends GenControls {
         let type = image.dataset.type
         let t = `
         <div class="block image-block" data-value="config.index" data-index="${index}" data-type="${type}">
-            <div class="el-image" data-value="config.index" data-index="${index}" data-type="${type}" style="width: 100px; height: 100px;display: block;margin: auto;">
-                <img src="${url}" data-value="config.index" data-index="${index}" data-type="${type}" class="el-image__inner" style="object-fit: scale-down;">
+            <div class="el-image" data-value="config.index" style="width: 100px; height: 100px;display: block;margin: auto;">
+                <img src="${url}" data-value="config.index" class="el-image__inner" style="object-fit: scale-down;">
+            </div>
+            <div class="image-delete" data-value="action.delete">
+                <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
             </div>
         </div>
         `

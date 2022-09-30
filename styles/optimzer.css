@@ -507,7 +507,9 @@
 }
 
 .image-list>div {
-	border-bottom: 2px solid #ddd
+	border-bottom: 2px solid #ddd;
+    border-left: 2px solid #ddd;
+    border-right: 2px solid #ddd;
 }
 
 .home main .right {
@@ -544,4 +546,12 @@
 
 .home .global-attr {
 	padding: 10px
+}
+
+.image-delete {
+	display: inline-block;
+}
+
+.image-delete:hover,.image-delete:hover {
+	color:#5cb6ff;
 }

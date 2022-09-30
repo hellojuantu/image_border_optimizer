@@ -74,13 +74,22 @@ const removeClassAllWithCallback = function (className, callback) {
     }
 }
 
-const removeClassAllWithCondition = function (className, removedType) {
+const removeWithCondition = function(selector, condition) {
+    let elements = es(selector)
+    for (let e of elements) {
+        if (condition(e)) {
+            e.remove()
+            break;
+        }
+    }
+}
+
+const removeClassAllWithIndex = function (className, removedIndex) {
     let selector = '.' + className
     let elements = document.querySelectorAll(selector)
     for (let i = 0; i < elements.length; i++) {
         let e = elements[i]
-        log("e", e)
-        if (e.dataset.type === removedType) {
+        if (e.dataset.index === removedIndex) {
             e.classList.remove(className)
         }
     }

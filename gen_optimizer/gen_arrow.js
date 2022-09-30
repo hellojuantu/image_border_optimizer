@@ -134,7 +134,7 @@ class GenArrow extends GenShape {
         this.distance = v1.distance(v2)
         
         if (this.distance <= 0) {
-            super.deleted()
+            // super.deleted()
             return
         }
 

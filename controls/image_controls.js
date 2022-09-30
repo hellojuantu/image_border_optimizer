@@ -4,6 +4,11 @@ class ImageControls extends GenControls {
         this.imageChanges = []
     }
 
+    delImage(index) {
+        this.images.splice(index, 1)
+        this.imageChanges.splice(index, 1)
+    }
+
     getImageChanges(index) { 
         return this.imageChanges[index] || {
             points: [],

@@ -164,7 +164,7 @@ class GenRect extends GenShape {
             // 绘制拖拽点
             super.draw() 
         } else {
-            this.deleted()
+            // this.deleted()
         }
     }
 }
