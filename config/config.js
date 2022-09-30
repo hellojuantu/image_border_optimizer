@@ -154,5 +154,5 @@ var config = {
         min: 3,
         max: 20,
         type: "number",
-    }
+    },
 }

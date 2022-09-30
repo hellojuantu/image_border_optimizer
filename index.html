@@ -19,7 +19,10 @@
             <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
             <button type="button" data-type="button" data-value="config.centerButton" class="gen-auto-button el-button el-button--default el-button--small">背景居中</button>
             <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
-            
+            <div class="canvas-config canvas-zoom">
+                <span>画布比例</span>
+                <input value="100" class="zoom-input" type="number" data-value="action-zoom"> % 
+            </div>
             <div style="float: right;">                   
                 <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-ziyouquxian"></span>
                 <span data-value="config.textInputEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenben"></span>
@@ -34,11 +37,11 @@
                 </div>
             </section>
             <section class="center">  
-            <div class="content" id="id-canvas-area">
-                <canvas class="editor edit"
-                style="opacity: 1;background: rgb(255, 255, 255);"
-                id="id-canvas" class="canvas-area" width="1000" height="800"></canvas>  
-            </div>      
+                <div class="content" id="id-canvas-area">
+                    <div id="id-canvas-wrapper">
+                        <canvas class="editor edit canvas-area" id="id-canvas" width="1000" height="800"></canvas>  
+                    </div>
+               </div>      
             </section>
             <section class="right">
                 <div class="attr-container">

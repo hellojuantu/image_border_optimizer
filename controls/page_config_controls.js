@@ -30,6 +30,7 @@ class PageConfigControls extends GenControls {
             'images': 'image-list',
             'imageBlock': 'image-block',
             'shapeActive': 'shape-active',
+            'zoom': 'canvas-zoom',
         })
 
         // 绑定组件, 全局可用
@@ -210,6 +211,20 @@ class PageConfigControls extends GenControls {
                     }
                 }
             },
+            {
+                eventName: 'input',
+                className: sc.pageClass.zoom,
+                configToEvents: {
+                    "action-zoom": function(target)  {
+                        let zoom = target.value / 100
+                        log("action-zoom", zoom)
+                        let wrapper = e("#id-canvas-wrapper")
+                        wrapper.style.height = self.canvas.height * zoom + "px"
+                        wrapper.style.width = self.canvas.width * zoom + "px"
+                        self.canvas.style.transform = `scale(${zoom})`
+                    },
+                },
+            }
         ])
 
         // 更新图片快照

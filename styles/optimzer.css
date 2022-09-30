@@ -131,7 +131,7 @@
 .editor {
 	position: relative;
 	background: #fff;
-	margin: auto
+	/* margin: auto */
 }
 
 .editor .lock {
@@ -554,4 +554,11 @@
 
 .image-delete:hover,.image-delete:hover {
 	color:#5cb6ff;
+}
+
+.canvas-area {
+	opacity: 1;
+	background: rgb(255, 255, 255);
+	transform-origin: left top;
+	display: block;
 }

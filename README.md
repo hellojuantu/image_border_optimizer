@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.2.1
+## Image-Border-Optimizer v2.2.2
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hellojuantu.github.io/image_border_optimizer/)
@@ -21,12 +21,13 @@
 
 ## 更新日志
 
-### GenOptimizer v2.2.1
+### GenOptimizer v2.2.2
 - 新增了创建空白页面, 可以直接在空白页面上绘制 ok
 - 新增左边图片快照列表, 可以切换图片 ok
 - 新增了图片的删除功能, 优化删除逻辑 ok
 - 新增了图片的复制功能, 复制可以直接粘贴使用 ok
 - 优化了图形放置的点按逻辑
+- 新增了画板缩放功能 ok
 
 ### GenOptimizer v2.0
 - 做了大量的优化, 优化了代码结构, 优化了代码逻辑, 优化了代码的可读性 ok
