@@ -1,5 +1,10 @@
 ## Image-Border-Optimizer v2.2.1
 ## 轻量化的图片编辑器
+## 在线 DEMO
+- [GenOptimizer 在线演示地址](https://hellojuantu.github.io/image_border_optimizer/)
+
+![GenOptimizer Demo](demo.jpg)
+
 ## 项目特点
 - 纯原生 JS 开发, 无三方框架
 - 基于自研 Optimizer 框架为基础
