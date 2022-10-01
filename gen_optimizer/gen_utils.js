@@ -1,17 +1,15 @@
 const e = sel => document.querySelector(sel)
 
-const log = function() {
-    if (window.verbose) {
-        console.log.apply(console, arguments)
-    }
+let log = function() {
+    
 }
 
 const es = sel => document.querySelectorAll(sel)
 
 const bindAll = function(sel, eventName, callback) {
-    var l = es(sel)
-    for (var i = 0; i < l.length; i++ ) {
-        var input = l[i]
+    let l = es(sel)
+    for (let i = 0; i < l.length; i++ ) {
+        let input = l[i]
         input.addEventListener(eventName, function(event) {
             callback(event)
         })

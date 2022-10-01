@@ -5,7 +5,7 @@ class PenControls extends GenControls {
     }
 
     drawLine(beginPoint, controlPoint, endPoint) {
-        var context = this.context
+        let context = this.context
         context.beginPath()
         context.moveTo(beginPoint.x, beginPoint.y)
         context.strokeStyle = beginPoint.color

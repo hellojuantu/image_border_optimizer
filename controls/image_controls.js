@@ -26,11 +26,11 @@ class ImageControls extends GenControls {
     }
 
     draw() {
-        var self = this
+        let self = this
         let canvas = self.canvas
         let context = self.context
         // log("image draw", self.images)
-        var img = self.images[config.index.value]
+        let img = self.images[config.index.value]
         if (img == null) {
             return
         }
@@ -42,8 +42,8 @@ class ImageControls extends GenControls {
             return
         }
         // get config
-        var offset = config.offset.value
-        var io = config.imageOffset.value
+        let offset = config.offset.value
+        let io = config.imageOffset.value
         // 
         canvas.width = img.width + offset * 20
         canvas.height = img.height + offset * 20
@@ -56,7 +56,7 @@ class ImageControls extends GenControls {
     }
 
     drawShadow(img, io) {
-        var shadowOffset = config.shadowOffset.value
+        let shadowOffset = config.shadowOffset.value
         this.context.save()
         this.context.globalAlpha = config.shadowColorAlpha.value / 10
         this.context.shadowOffsetX = shadowOffset

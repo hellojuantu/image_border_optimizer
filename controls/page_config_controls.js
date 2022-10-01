@@ -53,7 +53,7 @@ class PageConfigControls extends GenControls {
                 className: sc.pageClass.attribute,
                 after: function(bindVar, target) {
                     log("input", bindVar, target)
-                    var v = target.value
+                    let v = target.value
                     self.updateControls(bindVar + '.value', v)
                 },
                 configToEvents: {
@@ -97,7 +97,7 @@ class PageConfigControls extends GenControls {
                         // log("preButton", config.index.value)
                         if (config.index.value > 0) {
                             self.saveImage()
-                            var v = config.index.value - 1
+                            let v = config.index.value - 1
                             self.switchImage(v)                          
                         }
                     },
@@ -107,17 +107,17 @@ class PageConfigControls extends GenControls {
                             // 保存当前图片的修改
                             self.saveImage()
                             // 更新画笔和文字
-                            var v = config.index.value + 1
+                            let v = config.index.value + 1
                             self.switchImage(v)                          
                         }
                     },
                     "config.centerButton": function(target) {
-                        var w = self.canvas.width
-                        var img = self.images[config.index.value]
+                        let w = self.canvas.width
+                        let img = self.images[config.index.value]
                         if (img == null) {
                             return
                         }
-                        var imgW = img.width
+                        let imgW = img.width
                         self.updateControls('config.imageOffset.value', (w - imgW) / 2)
                     },
                     "config.penClearButton": function(target) {
@@ -448,7 +448,7 @@ class PageConfigControls extends GenControls {
     }
 
     templateAttribute(bindVar, attribute) {
-        var minAndMax = `
+        let minAndMax = `
             max = ${attribute.max}
             min = ${attribute.min}
         `

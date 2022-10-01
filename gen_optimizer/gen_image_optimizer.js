@@ -13,6 +13,9 @@ class GenOptimizer {
 
     enableDebugMode(verbose) {
         window.verbose = verbose
+        if (window.verbose) {
+            log = console.log.bind(console)
+        }
     }
 
     setCursor(cursor) {
@@ -159,12 +162,12 @@ class GenOptimizer {
     runloop() {
         // log(window.fps)
         // events
-        var g = this
-        var actions = Object.keys(g.actions)
+        let g = this
+        let actions = Object.keys(g.actions)
         // log("actions", g.actions)
-        for (var i = 0; i < actions.length; i++) {
-            var key = actions[i]
-            var status = g.keydowns[key]
+        for (let i = 0; i < actions.length; i++) {
+            let key = actions[i]
+            let status = g.keydowns[key]
             // log("status", status)
             if (status == 'down') {
                 g.actions[key]('down')
@@ -190,8 +193,8 @@ class GenOptimizer {
     }
 
     bindUploadEvents() {
-        var self = this
-        var dp = e('.image-list')
+        let self = this
+        let dp = e('.image-list')
     
         dp.addEventListener('dragover', function (e) {
             e.stopPropagation()

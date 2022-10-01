@@ -57,8 +57,8 @@ class GenDragger extends GenShape {
         this.resetPosition()
         //
         let ctx = this.context
-        var w2 = this.w / 2
-        var h2 = this.h / 2
+        let w2 = this.w / 2
+        let h2 = this.h / 2
         ctx.save()
         ctx.beginPath()
         this.r = 6
