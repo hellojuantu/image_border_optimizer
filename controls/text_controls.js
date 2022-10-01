@@ -99,13 +99,14 @@ class TextControls extends GenControls {
         e("#id-canvas-area").append(div)
         // 添加样式
         let input = e(selector)
+        let zoom = parseInt(e(".zoom-input").value) / 100
         input.style.display = "block"
         input.style.left = (gx - 1) + "px"
         input.style.top = (gy - 3) + "px"
-        input.style.font = font
+        input.style.font = self.fixFont(font)
         input.style.color = color
         let t = calTextWH(value, font)
-        input.style.width = t.w + 'px'
+        input.style.width = t.w * zoom + 'px'
         input.focus()
         input.select()
         // 输入时, 自动更新宽度
@@ -165,6 +166,17 @@ class TextControls extends GenControls {
 
     resetAndUpdate(texts) {
         this.texts = texts
+    }
+
+    /**
+     * 修正显示的字体大小
+     */
+     fixFont(font) {
+        font = font.trim()
+        let zoom = config.zoom.value / 100
+        let size = parseInt(font.split(' ')[0].replace('px', '')) * zoom
+        let family = font.split(' ')[1]
+        return `${size}px ${family}`
     }
 
     draw() {

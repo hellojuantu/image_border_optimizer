@@ -19,33 +19,37 @@ class GenControls {
 
     coordinateToCanvas(x, y) {
         let canvasBound = this.canvas.getBoundingClientRect()
+        let zoom = config.zoom.value / 100
         return {
-            "x": x - canvasBound.left,
-            "y": y - canvasBound.top,
+            "x": x / zoom - canvasBound.left,
+            "y": y / zoom - canvasBound.top,
         }
     }
 
     canvasToCoordinate(x, y) {
         let canvasBound = this.canvas.getBoundingClientRect()
+        let zoom = config.zoom.value / 100
         return {
-            "x": x + canvasBound.left,
-            "y": y + canvasBound.top,
+            "x": x * zoom + canvasBound.left,
+            "y": y * zoom + canvasBound.top,
         }
     }
 
     pageToCanvas(x, y) {
         let self = this
+        let zoom = config.zoom.value / 100
         return {
-            "x": x - self.canvas.offsetLeft + self.canvasArea.scrollLeft,
-            "y": y - self.canvas.offsetTop + self.canvasArea.scrollTop,
+            "x": x / zoom - self.canvas.offsetLeft + self.canvasArea.scrollLeft,
+            "y": y / zoom - self.canvas.offsetTop + self.canvasArea.scrollTop,
         }
     }
 
     canvasToPage(x, y) {
         let self = this
+        let zoom = config.zoom.value / 100
         return {
-            "x": x + self.canvas.offsetLeft - self.canvasArea.scrollLeft,
-            "y": y + self.canvas.offsetTop - self.canvasArea.scrollTop,
+            "x": x * zoom + self.canvas.offsetLeft - self.canvasArea.scrollLeft,
+            "y": y * zoom + self.canvas.offsetTop - self.canvasArea.scrollTop,
         }
     }
 

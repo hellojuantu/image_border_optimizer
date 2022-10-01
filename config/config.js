@@ -155,4 +155,10 @@ var config = {
         max: 20,
         type: "number",
     },
+    zoom: {
+        _comment: "zoom",
+        value: 100,
+        valueType: 'number',
+        type: "number",
+    }
 }

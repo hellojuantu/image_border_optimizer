@@ -61,7 +61,7 @@ class PageConfigControls extends GenControls {
                         if (self.textControl.inputOpen) {
                             let sel = "#" + self.textControl.inputId
                             let input = e(sel)
-                            input.style.font = target.value
+                            input.style.font = self.textControl.fixFont(target.value)
                             input.style.width = calTextWH(input.value, input.style.font).w + "px"
                         }
                     },
@@ -216,8 +216,8 @@ class PageConfigControls extends GenControls {
                 className: sc.pageClass.zoom,
                 configToEvents: {
                     "action-zoom": function(target)  {
-                        let zoom = target.value / 100
-                        log("action-zoom", zoom)
+                        config.zoom.value = parseInt(target.value)
+                        let zoom = config.zoom.value / 100
                         let wrapper = e("#id-canvas-wrapper")
                         wrapper.style.height = self.canvas.height * zoom + "px"
                         wrapper.style.width = self.canvas.width * zoom + "px"
