@@ -58,7 +58,7 @@ class ShapeControls extends GenControls {
                 self.buildingShape.idle()
                 self.removeDraggers()
                 let att = self.buildingShape.activateDraggers()
-                sc.getComponent('attribute').builder(att)
+                sc.getComponent('attribute').buildWith(att)
                 self.buildingShape.checkStatus()
                 self.buildingShape = null
             }

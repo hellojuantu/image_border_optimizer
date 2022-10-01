@@ -19,11 +19,130 @@
 - 基于面向对象, 高度抽象代码
 - 简单易用, 能快速开发出各种效果
 
+## Optimizer 框架使用
+## 启动
+首先需要场景管理器, 通过继承 GenScene 来创建场景, 场景里对于页面中的多个控制器进行管理
+```JavaScript
+class MainScene extends GenScene {
+    constructor(optimizer) {
+        super(optimizer)
+    }
+}
+```
+全局使用 instance 获取实例, 加载场景管理器, 最简单的 Optimizer 程序就启动了
+```JavaScript
+GenOptimizer.instance(function(o){
+    let scene = MainScene.new(o)
+    o.runWithScene(scene)
+})
+```
+## 场景管理器
+### 事件
+#### 页面事件
+```html
+...
+<div class='gen-auto-button-area'>
+    <button class='gen-auto-button' data-value='config.arg1'>text</button>
+</div>
+...
+```
+```JavaScript
+// 注册页面 class, 全局可用
+this.registerPageClass({
+    "buttonArea": 'gen-auto-button-area',
+    ...
+})
+
+// 注册全局事件       
+this.registerGlobalEvents([     
+    {
+        eventName: "click",
+        // 事件绑定的元素区域
+        className: sc.pageClass.buttonArea,
+        // 在 所有 configToEvents 响应之 前 触发
+        after: function(bindVar, target) {
+            // bindVar: 绑定的变量
+            // target: 事件触发的目标
+        },        
+        // 在 所有 configToEvents 响应之 后 触发
+        before: function(bindVar, target) {
+            // bindVar: 绑定的变量
+            // target: 事件触发的目标
+        },
+        // 事件响应
+        configToEvents: {
+            // 自定义绑定的变量: 事件触发后的响应
+            "config.arg1": function(target) {
+                
+            },
+            "action.arg1": function(target) {
+                
+            },
+            ...
+        }
+    },
+    ...
+])
+```
+#### 鼠标事件
+```JavaScript
+this.resgisterMouse(function(event, action) { 
+    // event 是鼠标点击的事件
+    // action 为鼠标点击的事件名称    
+    if (action == 'mouseleave') {
+        console.log('mouseleave canvas')
+    } else if (action == 'up') {
+        console.log('up canvas')
+    } else if (action == 'down') {
+        console.log('down canvas')
+    } else if (action == 'move') {
+        console.log('move canvas')
+    }
+})
+```
+#### 键盘事件
+```JavaScript
+this.registerAction("Backspace", status => {
+    // status 为 'down' 时, 表示按下, 为 'up' 时, 表示松开
+    console.log("Backspace", status)
+})
+
+this.registerAction("s", status => {
+    // status 为 'down' 时, 表示按下, 为 'up' 时, 表示松开
+    console.log("s", status)
+})
+```
+### 组件
+#### 注册组件
+```JavaScript
+this.bindComponent('attribute', GenComponent.new(
+    this.insertAttribute,
+    this.templateAttribute,
+))
+
+insertAttribute(data) {
+    // 插入 html 组件到页面上 
+    // 调用 this.template(data) 来获取 html 模板
+}
+
+templateAttribute(data) {
+    // 组件的模板
+    return `<div>...</div>`
+}
+```
+#### 使用组件
+```JavaScript
+// 全局可使用组件
+let data = ...
+this.getComponent('attribute').buildWith(data)
+```
+
 ## 更新日志
 
 ### GenOptimizer v2.2.3
 - 修复了画板缩放后画笔轨迹不一致问题 ok
 - 修复了画板缩放后文字输入定位问题 ok
+- 优化了组件的使用方式 ok
 
 ### GenOptimizer v2.2.2
 - 新增了创建空白页面, 可以直接在空白页面上绘制 ok

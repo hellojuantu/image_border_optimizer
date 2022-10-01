@@ -36,6 +36,7 @@ class GenScene {
     }
     
     bindComponent(name, component) {
+        component.scene = this
         this.components[name] = component
     }
 

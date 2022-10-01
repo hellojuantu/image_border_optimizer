@@ -3,7 +3,7 @@ function __main() {
         // close debug mode
         o.enableDebugMode(false)
         // MainScene
-        var scene = MainScene.new(o)
+        let scene = MainScene.new(o)
         o.runWithScene(scene)
     })
     

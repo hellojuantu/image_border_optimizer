@@ -35,7 +35,7 @@ class TextControls extends GenControls {
         } else {
             if (parseBoolean(config.textInputEnabled.value)) {
                 self.addFloatInput(x, y)
-                sc.getComponent('attribute').builder(GenText.configAttribute())                
+                sc.getComponent('attribute').buildWith(GenText.configAttribute())                
             }
         } 
     }

@@ -35,15 +35,15 @@ class PageConfigControls extends GenControls {
 
         // 绑定组件, 全局可用
         // 右边属性组件
-        sc.bindComponent('attribute', {
-            'template': self.templateAttribute,
-            'builder': self.insertAttribute,
-        })
+        sc.bindComponent('attribute', GenComponent.new(
+            self.insertAttribute,
+            self.templateAttribute,
+        ))
         // 左边图片选择组件
-        sc.bindComponent('imageSelector', {
-            'template': self.templateImageSelector,
-            'builder': self.insertImageSelector,
-        })
+        sc.bindComponent('imageSelector', GenComponent.new(
+            self.insertImageSelector,
+            self.templateImageSelector,
+        ))
 
         // 注册全局场景事件
         sc.registerGlobalEvents([     
@@ -135,7 +135,7 @@ class PageConfigControls extends GenControls {
                         self.images.push(b)
                         let tempImages = []
                         tempImages.push(b)
-                        sc.getComponent('imageSelector').builder(tempImages)
+                        sc.getComponent('imageSelector').buildWith(tempImages)
                         config.index.max = self.images.length - 1
                     },
                 },
@@ -159,16 +159,16 @@ class PageConfigControls extends GenControls {
                 },
                 configToEvents: {                    
                     "config.penEnabled": function(target) {
-                        sc.getComponent('attribute').builder(GenPoint.configAttribute())
+                        sc.getComponent('attribute').buildWith(GenPoint.configAttribute())
                     },
                     "config.textInputEnabled": function(target) {
-                        sc.getComponent('attribute').builder(GenText.configAttribute())                
+                        sc.getComponent('attribute').buildWith(GenText.configAttribute())                
                     },
                     "config.shapeEnabled": function(target) {
                         let shape = config.shapeSelect.value = target.dataset.shape                                                         
                         // 显示右边属性 
                         let att = self.shapeControl.shapeTypes[shape].configAttribute()
-                        sc.getComponent('attribute').builder(att)
+                        sc.getComponent('attribute').buildWith(att)
                     },                   
                 }
             },
@@ -239,12 +239,12 @@ class PageConfigControls extends GenControls {
         // 每次上传图片都会调用
         sc.refreshConfig = function(tempImages) {
             log("refreshConfig")
-            sc.getComponent('imageSelector').builder(tempImages)    
+            sc.getComponent('imageSelector').buildWith(tempImages)    
             config.index.max = self.images.length - 1
         }
 
         // 使用组件构建属性
-        sc.getComponent('attribute').builder(self.imageControl.configAttribute())
+        sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
     }
 
     /**
@@ -281,7 +281,7 @@ class PageConfigControls extends GenControls {
                     draggedShape.calcalateOffset(x, y)                    
                     let attributeMap = draggedShape.selected()
                     log("attributeMap", attributeMap)
-                    sc.getComponent('attribute').builder(attributeMap)
+                    sc.getComponent('attribute').buildWith(attributeMap)
                 }
             } else if (action == 'move') {
                 if (draggedShape != null && draggedShape.isSelected()) {
@@ -324,7 +324,7 @@ class PageConfigControls extends GenControls {
                 // 点击到空白的地方
                 if (element == null) {
                     log("点击到空白的地方")
-                    sc.getComponent('attribute').builder(self.imageControl.configAttribute())
+                    sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
                     self.shapeControl.removeDraggers()  
                     self.textControl.handleTextEvents(event, x, y)
                 } else {
