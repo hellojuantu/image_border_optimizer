@@ -63,38 +63,38 @@ class GenRect extends GenShape {
         this.position.leftBottom.y = y
     }
 
-    makeSpecial() {
-        this.w = this.h
-    }
-
     setupDraggers() {
         let leftTop = GenDragger.new(this, 0, 0, 'crosshair', 'left-top')
         leftTop.resetPosition = function() {
-            this.x = this.offsetX + this.owner.position.leftTop.x - this.w / 2
-            this.y = this.offsetY + this.owner.position.leftTop.y - this.h / 2
+            let direct = this.owner.directMatrix['leftTop']
+            this.x = this.offsetX + this.owner.position.leftTop.x - this.w / 2 + direct[0] * this.owner.border / 2
+            this.y = this.offsetY + this.owner.position.leftTop.y - this.h / 2 + direct[1] * this.owner.border / 2
         }
         this.addDragger(leftTop)
 
         let rightTop = GenDragger.new(this, 0, 0, 'crosshair', 'right-top')
         rightTop.resetPosition = function() {
-            this.x = this.offsetX + this.owner.position.rightTop.x - this.w / 2
-            this.y = this.offsetY + this.owner.position.rightTop.y - this.h / 2
+            let direct = this.owner.directMatrix['rightTop']
+            this.x = this.offsetX + this.owner.position.rightTop.x - this.w / 2 + direct[0] * this.owner.border / 2
+            this.y = this.offsetY + this.owner.position.rightTop.y - this.h / 2 + direct[1] * this.owner.border / 2
         }
         this.addDragger(rightTop)
 
-        let rightBottom = GenDragger.new(this, 0, 0, 'crosshair', 'right-bottom')
-        rightBottom.resetPosition = function() {
-            this.x = this.offsetX + this.owner.position.rightBottom.x - this.w / 2
-            this.y = this.offsetY + this.owner.position.rightBottom.y - this.h / 2
-        }
-        this.addDragger(rightBottom)
-
         let leftBottom = GenDragger.new(this, 0, 0, 'crosshair', 'left-bottom')
         leftBottom.resetPosition = function() {
-            this.x = this.offsetX + this.owner.position.leftBottom.x - this.w / 2
-            this.y = this.offsetY + this.owner.position.leftBottom.y - this.h / 2
+            let direct = this.owner.directMatrix['leftBottom']
+            this.x = this.offsetX + this.owner.position.leftBottom.x - this.w / 2 + direct[0] * this.owner.border / 2
+            this.y = this.offsetY + this.owner.position.leftBottom.y - this.h / 2 + direct[1] * this.owner.border / 2
         }
         this.addDragger(leftBottom)
+
+        let rightBottom = GenDragger.new(this, 0, 0, 'crosshair', 'right-bottom')
+        rightBottom.resetPosition = function() {
+            let direct = this.owner.directMatrix['rightBottom']
+            this.x = this.offsetX + this.owner.position.rightBottom.x - this.w / 2 + direct[0] * this.owner.border / 2
+            this.y = this.offsetY + this.owner.position.rightBottom.y - this.h / 2 + direct[1] * this.owner.border / 2
+        }
+        this.addDragger(rightBottom)
     }
 
     movingByDragger(dragger, x, y) {
@@ -145,7 +145,42 @@ class GenRect extends GenShape {
         this.x = this.leftTopPosition().x
         this.y = this.leftTopPosition().y
         this.w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
-        this.h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y)
+        this.h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
+        this.updateDirectMatrix()
+    }
+
+    /**
+     * 更新方向矩阵, 给 border 加减使用
+     */
+    updateDirectMatrix() {
+        this.directMatrix = {
+            'leftTop': [-1, -1],
+            'leftBottom': [-1, 1],
+            'rightTop': [1, -1],
+            'rightBottom': [1, 1],
+        }
+        // 复制 this.position
+        let position = {}
+        for (let p of Object.keys(this.position)) {
+            position[p] = this.position[p]
+        }
+        // 计算方向矩阵
+        for (let p of Object.keys(position)) {
+            let v = position[p]
+            let direct = this.directMatrix[p]
+            let x = v.x - this.x
+            let y = v.y - this.y
+            if (x == 0) {
+                direct[0] = -1
+            } else {
+                direct[0] = x / Math.abs(x)
+            }
+            if (y == 0) {
+                direct[1] = -1
+            } else {
+                direct[1] = y / Math.abs(y)
+            }
+        }
     }
 
     draw() {
@@ -154,17 +189,16 @@ class GenRect extends GenShape {
             this.context.lineWidth = this.border
             this.context.strokeStyle = this.color
             this.context.beginPath()
-            this.context.moveTo(this.position.leftTop.x, this.position.leftTop.y)
-            this.context.lineTo(this.position.rightTop.x, this.position.rightTop.y)
-            this.context.lineTo(this.position.rightBottom.x, this.position.rightBottom.y)
-            this.context.lineTo(this.position.leftBottom.x, this.position.leftBottom.y)
+            this.context.strokeRect(this.x, this.y, this.w, this.h)
+            // this.context.moveTo(this.position.leftTop.x, this.position.leftTop.y)
+            // this.context.lineTo(this.position.rightTop.x, this.position.rightTop.y)
+            // this.context.lineTo(this.position.rightBottom.x, this.position.rightBottom.y)
+            // this.context.lineTo(this.position.leftBottom.x, this.position.leftBottom.y)
             this.context.closePath()
             this.context.stroke()
             this.context.restore()  
             // 绘制拖拽点
             super.draw() 
-        } else {
-            // this.deleted()
         }
     }
 }

@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.2.3
+## Image-Border-Optimizer v2.2.4
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hellojuantu.github.io/image_border_optimizer/)
@@ -139,6 +139,11 @@ this.getComponent('attribute').buildWith(data)
 
 ## 更新日志
 
+### GenOptimizer v2.2.4
+- 优化了矩形的绘画方式, 使得矩形的绘画更加平滑 ok
+- 修复了矩形拖拽点位置不准确问题 ok
+- 修复了调节调整属性时, 按 Backspace 键会删除图形的问题 ok
+
 ### GenOptimizer v2.2.3
 - 修复了画板缩放后画笔轨迹不一致问题 ok
 - 修复了画板缩放后文字输入定位问题 ok
@@ -152,11 +157,11 @@ this.getComponent('attribute').buildWith(data)
 - 优化了图形放置的点按逻辑 ok
 - 新增了画板缩放功能 ok
 
-### GenOptimizer v2.0
+### GenOptimizer v2.0.0
 - 做了大量的优化, 优化了代码结构, 优化了代码逻辑, 优化了代码的可读性 ok
 - 优化了页面的布局, 优化了页面的交互 ok
 
-### GenOptimizer v1.0
+### GenOptimizer v1.0.0
 - 拖拽上传图片 ok
 - 优化代码架构 ok
 - 添加可输入字体 ok

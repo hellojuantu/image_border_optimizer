@@ -8,7 +8,6 @@ class PageConfigControls extends GenControls {
         this.setup()
         this.setupCorsorEvent()
         this.setupMove()
-        this.setupMouseleave()
         this.setupDraggerEvent()
     }
 
@@ -245,18 +244,6 @@ class PageConfigControls extends GenControls {
 
         // 使用组件构建属性
         sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
-    }
-
-    /**
-     * 注册鼠标移出画布事件
-     */
-    setupMouseleave() {
-        let self = this       
-        self.optimizer.resgisterMouse(function(event, action) {     
-            if (action == 'mouseleave') {
-                log('mouseleave canvas')
-            }
-        })
     }
 
     /**

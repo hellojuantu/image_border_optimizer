@@ -8,6 +8,8 @@ class GenScene {
         this.events = {}
         this.pageClass = {}
         this.components = {}
+        this.pointInScene = false
+        this.setupMouseleave()
     }
 
     static new(...args) {
@@ -22,6 +24,21 @@ class GenScene {
     // 更新左边的图片快照
     updateActiveImageSnapshot() {
 
+    }
+
+    /**
+     * 注册鼠标是否在场景事件
+     */
+     setupMouseleave() {
+        this.optimizer.resgisterMouse((event, action) => {     
+            if (action == 'mouseleave') {
+                this.pointInScene = false
+                log('mouseleave canvas', this.pointInScene)
+            } else if (action == 'mouseenter') {
+                this.pointInScene = true
+                log("mouseenter canvas", this.pointInScene)
+            }
+        })
     }
 
     registerPageClass(prop) {

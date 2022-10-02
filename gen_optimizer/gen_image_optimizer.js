@@ -128,6 +128,12 @@ class GenOptimizer {
                 a(event, 'mouseleave')
             }
         })
+        this.canvas.addEventListener('mouseenter', event => {
+            moving = false
+            for (const a of self.mouseActions) {
+                a(event, 'mouseenter')
+            }
+        })
     }
     
     registerAction(key, callback) {

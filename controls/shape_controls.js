@@ -73,6 +73,9 @@ class ShapeControls extends GenControls {
 
     setupKey() {
         this.optimizer.registerAction("Backspace", status => {
+            if (!this.scene.pointInScene) {
+                return
+            }
             log("Backspace", status)
             for (let shape of this.shapes) {
                 if (shape.isSelected()) {
@@ -81,14 +84,18 @@ class ShapeControls extends GenControls {
             }
         })
 
-        this.optimizer.registerAction("Shift", status => {
-            log("Shift", status)
-            for (let shape of this.shapes) {
-                if (shape.isCreating()) {
-                    shape.makeSpecial()
-                }
-            }
-        })
+        // TODO
+        // this.optimizer.registerAction("Shift", status => {
+        //     if (!this.scene.pointInScene) {
+        //         return
+        //     }
+        //     log("Shift", status)
+        //     for (let shape of this.shapes) {
+        //         if (shape.isCreating()) {
+        //             shape.makeSpecial()
+        //         }
+        //     }
+        // })
     }
 
     pointInShape(x, y) {
