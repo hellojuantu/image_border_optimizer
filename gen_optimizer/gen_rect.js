@@ -50,6 +50,9 @@ class GenRect extends GenShape {
     }
 
     checkStatus() {        
+        if (this.isCreating() || this.isSelected()) {
+            return
+        }
         let w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
         let h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
         let border = this.border || null
