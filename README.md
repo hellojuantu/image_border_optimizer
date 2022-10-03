@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.2.5
+## Image-Border-Optimizer v2.2.6
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hellojuantu.github.io/image_border_optimizer/)
