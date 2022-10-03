@@ -97,16 +97,17 @@ class PageConfigControls extends GenControls {
                 eventName: "click",
                 className: sc.pageClass.drawer,
                 before: function(bindVar, target) {
+                    log("drawer", bindVar, target)
                     let shapeActive = sc.pageClass.shapeActive
-                    if (target.classList.contains(shapeActive)) {
-                        target.classList.remove(shapeActive)
-                    } else {
-                        removeClassAllWithCallback(shapeActive, (e) => {
-                            let bindVar = e.dataset.value
-                            eval(bindVar + '.value=false')
-                        }) 
-                        target.classList.add(shapeActive)
-                    }
+                    // if (target.classList.contains(shapeActive)) {
+                    //     target.classList.remove(shapeActive)
+                    // } else {
+                    removeClassAllWithCallback(shapeActive, (e) => {
+                        let bindVar = e.dataset.value
+                        eval(bindVar + '.value=false')
+                    }) 
+                    target.classList.add(shapeActive)
+                    // }
                     eval(bindVar + '.value=' + parseBoolean(target.classList.contains(shapeActive)))
                 },
                 configToEvents: {                    
@@ -121,7 +122,10 @@ class PageConfigControls extends GenControls {
                         // 显示右边属性 
                         let att = self.shapeControl.shapeTypes[shape].configAttribute()
                         sc.getComponent('attribute').buildWith(att)
-                    },                   
+                    },      
+                    "config.defaultPointerEnable": function(target) {
+                        sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
+                    }
                 }
             },
             {

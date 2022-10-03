@@ -1,9 +1,9 @@
-## Image-Border-Optimizer v2.2.6
+## Image-Border-Optimizer v2.2.7
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hellojuantu.github.io/image_border_optimizer/)
 
-![GenOptimizer Demo](demo.jpg)
+![GenOptimizer Demo](./public/img/demo.jpg)
 
 ## 项目特点
 - 纯原生 JS 开发, 无三方框架
@@ -133,6 +133,10 @@ this.getComponent('attribute').buildWith(data)
 ```
 
 ## 更新日志
+### GenOptimizer v2.2.7
+- 优化了项目公共资源结构, 使得项目更加清晰
+- 优化了 icon 样式, 使得更加美观
+- 新增了默认指针, 方便了图形选择切换
 
 ### GenOptimizer v2.2.6
 - 修复了创建图形时的点按逻辑

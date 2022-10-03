@@ -4,11 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" href="./favicon.ico">
+    <link rel="icon" href="./public/img/favicon.ico">
     <title>GenOptimizer</title>
-    <link href="./styles/app.css" rel="stylesheet">
-    <link rel="stylesheet" href="./styles/optimzer.css"/>
-    <link rel="stylesheet" href="./styles/elementUI.css"/>
+    <link rel="stylesheet" href="./public/styles/app.css"/>
+    <link rel="stylesheet" href="./public/styles/optimzer.css"/>
+    <link rel="stylesheet" href="./public/styles/elementUI.css"/>
 </head>
 <body>
     <div class="home">
@@ -24,15 +24,16 @@
                 <input value="100" class="zoom-input" type="number" data-value="action-zoom"> % 
             </div>
             <div style="float: right;">                   
-                <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small el-icon-edit"></span>
-                <span data-value="config.textInputEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenben"></span>
-                <span data-value="config.shapeEnabled" data-shape="rect" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-juxing"></span>
-                <span data-value="config.shapeEnabled" data-shape="arrow" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-shangyi"></span>
+                <span data-value="config.defaultPointerEnable" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yidong_huaban1 shape-active"></span>
+                <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-huabi_huaban1"></span>
+                <span data-value="config.textInputEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenzi_huaban1"></span>
+                <span data-value="config.shapeEnabled" data-shape="rect" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-juxinggongju_huaban1"></span>
+                <span data-value="config.shapeEnabled" data-shape="arrow" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-jiantou_youshang"></span>
             </div>
         </div>
         <main>
             <section class="left">
-                <p class="title">图片列表 (拖拽放入)</p>
+                <p class="title">画布列表 (拖拽放入)</p>
                 <div class="image-list">                    
                 </div>
             </section>

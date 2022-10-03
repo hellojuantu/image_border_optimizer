@@ -162,5 +162,11 @@ var config = {
         value: 100,
         valueType: 'number',
         type: "number",
+    },
+    defaultPointerEnable: {
+        _comment: "default pointer enable",
+        value: 'false',
+        valueType: 'boolean',
+        type: "checkbox",
     }
 }
