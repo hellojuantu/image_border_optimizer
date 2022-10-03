@@ -6,13 +6,13 @@ let log = function() {
 
 const es = sel => document.querySelectorAll(sel)
 
-const bindAll = function(sel, eventName, callback) {
+const bindAll = function(sel, eventName, callback, useCapture=false) {
     let l = es(sel)
     for (let i = 0; i < l.length; i++ ) {
         let input = l[i]
         input.addEventListener(eventName, function(event) {
             callback(event)
-        })
+        }, useCapture)
     }
 }
 

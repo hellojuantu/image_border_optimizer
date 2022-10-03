@@ -34,59 +34,12 @@ class PageConfigControls extends GenControls {
 
         // 绑定组件, 全局可用
         // 右边属性组件
-        sc.bindComponent('attribute', GenComponent.new(
-            self.insertAttribute,
-            self.templateAttribute,
-        ))
+        sc.bindComponent('attribute', Attribute.new(this))
         // 左边图片选择组件
-        sc.bindComponent('imageSelector', GenComponent.new(
-            self.insertImageSelector,
-            self.templateImageSelector,
-        ))
+        sc.bindComponent('imageSelector', ImageSelector.new(this))
 
         // 注册全局场景事件
-        sc.registerGlobalEvents([     
-            // 属性的事件       
-            {
-                eventName: "input",
-                className: sc.pageClass.attribute,
-                after: function(bindVar, target) {
-                    log("input", bindVar, target)
-                    let v = target.value
-                    self.updateControls(bindVar + '.value', v)
-                },
-                configToEvents: {
-                    "config.textFont": function(target) {
-                        if (self.textControl.inputOpen) {
-                            let sel = "#" + self.textControl.inputId
-                            let input = e(sel)
-                            input.style.font = self.textControl.fixFont(target.value)
-                            input.style.width = calTextWH(input.value, input.style.font).w + "px"
-                        }
-                    },
-                    "config.textColor": function(target) {
-                        if (self.textControl.inputOpen) {
-                            let sel = "#" + self.textControl.inputId
-                            let input = e(sel)
-                            input.style.color = target.value
-                        }
-                    },
-                    "config.shapeBorder": function(target) {
-                        for (let shape of self.shapeControl.shapes) {
-                            if (shape.isSelected()) {
-                                shape.border = parseInt(target.value)
-                            }
-                        }
-                    },
-                    "config.shapeColor": function(target) {
-                        for (let shape of self.shapeControl.shapes) {
-                            if (shape.isSelected()) {
-                                shape.color = target.value
-                            }
-                        }
-                    },                   
-                }
-            },
+        sc.registerGlobalEvents([               
             // 左上按钮事件
             {
                 eventName: "click",
@@ -169,45 +122,6 @@ class PageConfigControls extends GenControls {
                         let att = self.shapeControl.shapeTypes[shape].configAttribute()
                         sc.getComponent('attribute').buildWith(att)
                     },                   
-                }
-            },
-            // 左边图片列表事件
-            {
-                eventName: 'click',
-                className: sc.pageClass.images,
-                configToEvents: {                    
-                    "config.index": function(target) {
-                        let imageBlock = sel(sc.pageClass.imageBlock)
-                        let index = target.closest(imageBlock).dataset.index
-                        self.saveImage()
-                        let v = parseInt(index)
-                        self.switchImage(v)
-                    },
-                    "action.delete": function(target) {
-                        let imageBlock = sel(sc.pageClass.imageBlock)
-                        let outer = target.closest(imageBlock)
-                        let delId = parseInt(outer.dataset.index)
-                        // only one can't delete
-                        if (es(imageBlock).length <= 1) {
-                            return
-                        }
-                        removeWithCondition(imageBlock, (e) => {
-                            return e.dataset.index == delId
-                        })
-                        let bs = es(imageBlock)
-                        self.imageControl.delImage(delId)
-                        config.index.max = self.images.length - 1                        
-                        // 重新给 image-list 分配 index
-                        for (let i = 0; i < bs.length; i++) {
-                            bs[i].dataset.index = i                            
-                        }
-                        // 删除自己跳转到 index 0
-                        if (delId == config.index.value) {
-                            self.switchImage(0)
-                        } else if (delId < config.index.value) {
-                            config.index.value -= 1
-                        }
-                    }
                 }
             },
             {
@@ -416,82 +330,5 @@ class PageConfigControls extends GenControls {
         }
         
         return null
-    }
-
-    // -------- 全局属性组件 --------
-    // 右边属性组件
-    insertAttribute(attributeMap) {
-        log("attributeMap", attributeMap)
-        Array.from(es(".el-form-item")).forEach(element => {
-            element.remove()
-        });
-        let form = e(".gen-attribute")
-        for (let bindVar of Object.keys(attributeMap)) {
-            // log("bindVar", bindVar)
-            let attribute = attributeMap[bindVar]
-            let html = this.template(bindVar, attribute)
-            appendHtml(form, html)
-        }
-    }
-
-    templateAttribute(bindVar, attribute) {
-        let minAndMax = `
-            max = ${attribute.max}
-            min = ${attribute.min}
-        `
-        let t = `
-        <div class="el-form-item el-form-item--small">
-            <label class="el-form-item__label">${attribute._comment}</label>
-            <div class="el-form-item__content">
-            <div class="el-input el-input--small">
-                <input 
-                type="${attribute.type}" 
-                data-value="${bindVar}" 
-                value="${attribute.value}" 
-                ${attribute.type == 'number' ? minAndMax : ''}
-                autocomplete="off" class="gen-input el-input__inner"/>
-            </div>
-            </div>
-        </div>
-        `
-        return t
-    }
-
-    // 左边栏的图片组件
-    insertImageSelector(imageSnapshots) {
-        log("imageSnapshots", imageSnapshots)
-        let list = e(".image-list")
-        let max = config.index.max
-        for (let i = 0; i < imageSnapshots.length; i++) {
-            let image = imageSnapshots[i]
-            image.dataset.index = i + max + 1
-            let html = this.template(image)
-            appendHtml(list, html)
-        }       
-        //
-        removeClassAll('image-active')
-        for (let block of es('.image-block')) {
-            let v = config.index.value
-            if (block.dataset.index == v) {
-                block.classList.add('image-active')
-            }
-        }
-    }
-
-    templateImageSelector(image) {
-        let url = image.src
-        let index = image.dataset.index
-        let type = image.dataset.type
-        let t = `
-        <div class="block image-block" data-value="config.index" data-index="${index}" data-type="${type}">
-            <div class="el-image" data-value="config.index" style="width: 100px; height: 100px;display: block;margin: auto;">
-                <img src="${url}" data-value="config.index" class="el-image__inner" style="object-fit: scale-down;">
-            </div>
-            <div class="image-delete" data-value="action.delete">
-                <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
-            </div>
-        </div>
-        `
-        return t
     }
 }

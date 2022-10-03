@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.2.4
+## Image-Border-Optimizer v2.2.5
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hellojuantu.github.io/image_border_optimizer/)
@@ -115,20 +115,15 @@ this.registerAction("s", status => {
 ### 组件
 #### 注册组件
 ```JavaScript
-this.bindComponent('attribute', GenComponent.new(
-    this.insertAttribute,
-    this.templateAttribute,
-))
-
-insertAttribute(data) {
-    // 插入 html 组件到页面上 
-    // 调用 this.template(data) 来获取 html 模板
+class MyComponent extends GenComponent {
+    constructor(control) {
+        super(control.scene)
+        this.control = control
+    }
+    ...
 }
 
-templateAttribute(data) {
-    // 组件的模板
-    return `<div>...</div>`
-}
+this.bindComponent('attribute', MyComponent.new(this))
 ```
 #### 使用组件
 ```JavaScript
@@ -138,6 +133,14 @@ this.getComponent('attribute').buildWith(data)
 ```
 
 ## 更新日志
+
+### GenOptimizer v2.2.5
+- 新增了矩形的填充模式
+- 新增了属性模板的选择器
+- 优化了创建图形时的检查机制
+- 优化了组件的使用方式
+- 优化了组件事件的加载机制
+- 优化了组件的模板机制
 
 ### GenOptimizer v2.2.4
 - 优化了矩形的绘画方式, 使得矩形的绘画更加平滑 ok

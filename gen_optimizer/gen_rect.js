@@ -3,6 +3,7 @@ class GenRect extends GenShape {
         super(scene)
         this.border = config.shapeBorder.value
         this.color = config.shapeColor.value    
+        this.fill = parseBoolean(config.shapeFill.value)
         this.status = this.enumStatus.creating
         this.numberOfDraggers = 4
         // 四个定点坐标
@@ -18,6 +19,7 @@ class GenRect extends GenShape {
         return {
             "config.shapeBorder": config.shapeBorder,
             "config.shapeColor": config.shapeColor,
+            "config.shapeFill": config.shapeFill,
         }
     }
 
@@ -25,6 +27,7 @@ class GenRect extends GenShape {
         super.selected()
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
+        this.updateControls("config.shapeFill.value", this.fill)
         return GenRect.configAttribute()
     }
 
@@ -47,12 +50,17 @@ class GenRect extends GenShape {
     }
 
     checkStatus() {        
+        let w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
+        let h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
         let border = this.border || null
+        // log("check status", w, h, border)
         // 无效图形直接删除
-        if (this.w <= 0 || this.h <= 0 || border == null) {
+        if (w <= 0 || h <= 0 || border == null) {
+            log("rect delete")
             super.deleted()
             return
         }
+        // log("rect create")
     }
 
     creating(x, y) {
@@ -126,6 +134,9 @@ class GenRect extends GenShape {
     }
 
     pointInShapeFrame(x, y) {
+        if (this.fill) {
+            return this.pointInFrame(x, y)
+        }
         return this.pointInHollowFrame(x, y, this.border)
     }
 
@@ -153,6 +164,15 @@ class GenRect extends GenShape {
      * 更新方向矩阵, 给 border 加减使用
      */
     updateDirectMatrix() {
+        if (this.fill) {
+            this.directMatrix = {
+                'leftTop': [0, 0],
+                'leftBottom': [0, 0],
+                'rightTop': [0, 0],
+                'rightBottom': [0, 0],
+            }
+            return
+        }
         this.directMatrix = {
             'leftTop': [-1, -1],
             'leftBottom': [-1, 1],
@@ -186,17 +206,19 @@ class GenRect extends GenShape {
     draw() {
         if (this.w > 0 && this.h > 0) {
             this.context.save()
-            this.context.lineWidth = this.border
-            this.context.strokeStyle = this.color
-            this.context.beginPath()
-            this.context.strokeRect(this.x, this.y, this.w, this.h)
-            // this.context.moveTo(this.position.leftTop.x, this.position.leftTop.y)
-            // this.context.lineTo(this.position.rightTop.x, this.position.rightTop.y)
-            // this.context.lineTo(this.position.rightBottom.x, this.position.rightBottom.y)
-            // this.context.lineTo(this.position.leftBottom.x, this.position.leftBottom.y)
-            this.context.closePath()
-            this.context.stroke()
-            this.context.restore()  
+            if (this.fill) {
+                this.context.fillStyle = this.color
+                this.context.fillRect(this.x, this.y, this.w, this.h)
+                this.context.restore()  
+            } else {
+                this.context.lineWidth = this.border
+                this.context.strokeStyle = this.color
+                this.context.beginPath()
+                this.context.strokeRect(this.x, this.y, this.w, this.h)
+                this.context.closePath()
+                this.context.stroke()
+                this.context.restore()  
+            }
             // 绘制拖拽点
             super.draw() 
         }

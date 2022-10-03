@@ -131,15 +131,7 @@ var config = {
         _comment: "shape select",
         value: 'rect',
         valueType: 'string',
-        type: "text",
-        list: {
-            name: "shape_list",
-            options: [
-                'rect', 
-                'arrow',
-                // 'circle',
-            ],
-        }
+        type: "text",        
     },
     shapeColor: {
         _comment: "shape color",
@@ -154,6 +146,16 @@ var config = {
         min: 3,
         max: 20,
         type: "number",
+    },
+    shapeFill: {
+        _comment: "shape fill",
+        value: "false",
+        valueType: 'boolean',
+        type: "text",
+        options: [
+            'false',
+            'true', 
+        ],
     },
     zoom: {
         _comment: "zoom",

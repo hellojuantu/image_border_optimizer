@@ -8,6 +8,7 @@ class GenScene {
         this.events = {}
         this.pageClass = {}
         this.components = {}
+        this.inUsedComponentNames = []
         this.pointInScene = false
         this.setupMouseleave()
     }
@@ -47,17 +48,18 @@ class GenScene {
         }
         return this
     }
-
-    buildPage(insertHtml) {
-        insertHtml && insertHtml()
-    }
     
     bindComponent(name, component) {
-        component.scene = this
         this.components[name] = component
     }
 
     getComponent(name) {
+        if (!this.inUsedComponentNames.includes(name)) {
+            this.inUsedComponentNames.push(name)
+            // 初始化组件的事件
+            this.components[name].setupEvents()
+        }
+        log("inUsedComponentNames", this.inUsedComponentNames)
         return this.components[name]
     }
 
@@ -70,6 +72,7 @@ class GenScene {
             let selector = sel(className)
             let after = event.after
             let before = event.before
+            let useCapture = event.useCapture || false
             let configToEvents = event.configToEvents || {}
             self.bindConfigEvents(className, eventName, configToEvents)
             log("selector, eventName, configToEvents", selector, eventName, configToEvents)
@@ -84,7 +87,7 @@ class GenScene {
                 // 某个配置区域独有的事件
                 eventFunc && eventFunc(target)
                 after && after(bindVar, target)
-            })
+            }, useCapture)
         }        
     }
 

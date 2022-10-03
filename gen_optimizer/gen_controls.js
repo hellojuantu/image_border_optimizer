@@ -74,7 +74,8 @@ class GenControls {
     // config.xxx.prop = updateValue
     // 右边属性变更使用
     updateControls(bindVarStr, updateValue) {
-        log("updateControls")
+        log("bindVarStr", bindVarStr)
+        log("updateValue", updateValue)
         let self = this
         let sc = self.scene
         let list = bindVarStr.split(".")
@@ -86,7 +87,7 @@ class GenControls {
             let bindVar = slide.dataset.value
             if (bindVar == `config.${bind}`) {
                 let parsedValue = this.parseValueWithType(updateValue, config[bind]['valueType'])
-                log("parsedValue", parsedValue)
+                log(bindVar, "parsedValue", parsedValue)
                 // update config
                 config[bind][prop] = parsedValue
                 // update html slide
@@ -97,13 +98,14 @@ class GenControls {
     }
 
     parseValueWithType(value, type) {
+        // log("type", type)
         switch (type) {
             case 'number':
                 return parseInt(value)
             case 'string':
                 return String(value)
             case 'boolean':
-                return !parseBoolean(value)
+                return parseBoolean(value)
             default:
                 return value
         }

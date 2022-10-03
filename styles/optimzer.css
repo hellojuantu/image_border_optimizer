@@ -1,3 +1,7 @@
+.hide {
+	display: none;
+}
+
 .shape-active {
 	color:#409eff !important;
 	border-color:#c6e2ff !important;

@@ -5,7 +5,6 @@ class ShapeControls extends GenControls {
         this.shapes = []
         this.shapeTypes = {
             'rect': GenRect,
-            // 'round rect': GenRoundRect,
             'arrow': GenArrow,
             // 'line': 
         }
@@ -60,6 +59,7 @@ class ShapeControls extends GenControls {
                 let att = self.buildingShape.activateDraggers()
                 sc.getComponent('attribute').buildWith(att)
                 self.buildingShape.checkStatus()
+                log("+++shapes", self.shapes)
                 self.buildingShape = null
             }
         }
@@ -113,7 +113,10 @@ class ShapeControls extends GenControls {
 
     update() {
         let self = this
-        self.shapes = self.shapes.filter((s) => !s.isDeleted())
+        self.shapes = self.shapes.filter((s) => {
+            s.checkStatus()
+            return !s.isDeleted()
+        })
         for (let shape of self.shapes) {
             shape.update()
         }
@@ -121,7 +124,10 @@ class ShapeControls extends GenControls {
 
     draw() {
         let self = this
-        self.shapes = self.shapes.filter((s) => !s.isDeleted())
+        self.shapes = self.shapes.filter((s) => {
+            s.checkStatus()
+            return !s.isDeleted()
+        })
         for (let shape of self.shapes) {
             shape.draw()
         }
