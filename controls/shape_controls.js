@@ -6,6 +6,7 @@ class ShapeControls extends GenControls {
         this.shapeTypes = {
             'rect': GenRect,
             'arrow': GenArrow,
+            'circle': GenCircle,
             // 'line': 
         }
     }
@@ -92,7 +93,11 @@ class ShapeControls extends GenControls {
         //     log("Shift", status)
         //     for (let shape of this.shapes) {
         //         if (shape.isCreating()) {
-        //             shape.makeSpecial()
+        //             if (status == 'down') {
+        //                 shape.makeSpecial()
+        //             } else if (status == 'up') {
+        //                 shape.makeNormal()
+        //             }
         //         }
         //     }
         // })
@@ -114,6 +119,9 @@ class ShapeControls extends GenControls {
     update() {
         let self = this
         self.shapes = self.shapes.filter((s) => {
+            if (s.isCreating() || s.isSelected()) {
+                return true
+            }
             s.checkStatus()
             return !s.isDeleted()
         })
@@ -125,6 +133,9 @@ class ShapeControls extends GenControls {
     draw() {
         let self = this
         self.shapes = self.shapes.filter((s) => {
+            if (s.isCreating() || s.isSelected()) {
+                return true
+            }
             s.checkStatus()
             return !s.isDeleted()
         })

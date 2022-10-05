@@ -11,6 +11,7 @@ class GenShape extends GenControls {
         }
         this.status = this.enumStatus.creating
         this.cursor = 'move'
+        this.isSpecial = false
     }
 
     // -------- 拖拽相关 --------
@@ -61,9 +62,18 @@ class GenShape extends GenControls {
     }
 
     /**
-     * shape 的特殊形态 (按下 Shilft 触发)
+     * shape 的特殊形态 (按下 Shilft down 触发)
      */
-    makeSpecial() {}
+    makeSpecial() {
+        this.isSpecial = true
+    }
+
+    /**
+     * shape 的默认形态 (按下 Shilft up 触发)
+     */
+     makeNormal() {
+        this.isSpecial = false
+     }
 
     // -------- shape 生命周期相关 ---------
     /**
@@ -131,6 +141,11 @@ class GenShape extends GenControls {
      */
     pointInShapeFrame(x, y) {}
 
+    center() {
+        let x = this.x + this.w / 2
+        let y = this.y + this.h / 2
+        return Vector.new(x, y)
+    }
 
     // -------- 画图相关 ---------
     /**

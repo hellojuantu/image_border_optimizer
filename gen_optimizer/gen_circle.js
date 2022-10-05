@@ -1,4 +1,4 @@
-class GenRect extends GenShape {
+class GenCircle extends GenShape {
     constructor(scene, x, y) {
         super(scene)
         this.border = config.shapeBorder.value
@@ -49,18 +49,18 @@ class GenRect extends GenShape {
         }
     }
 
-    checkStatus() {                
+    checkStatus() {              
         let w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
         let h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
         let border = this.border || null
         // log("check status", w, h, border)
         // 无效图形直接删除
         if (w <= 0 || h <= 0 || border == null) {
-            log("rect delete")
+            log("******** circle delete")
             super.deleted()
             return
         }
-        // log("rect create")
+        // log("************** circle create")
     }
 
     creating(x, y) {
@@ -133,11 +133,40 @@ class GenRect extends GenShape {
         }
     }
 
-    pointInShapeFrame(x, y) {
-        if (this.fill) {
-            return this.pointInFrame(x, y)
+    pointInShapeFrame(px, py) {
+        if (this.isCreating()) {
+            return true
         }
-        return this.pointInHollowFrame(x, y, this.border)
+        if (this.fill) {
+            return this.pointInFrame(px, py)
+        }
+        return this.pointInHollowFrame(px, py, this.border)
+    }
+
+    pointInFrame(px, py) {
+        let center = this.center()
+        let xRadius = this.w / 2
+        let yRadius = this.h / 2
+        if (xRadius <= 0 || yRadius <= 0) {
+            return false
+        }
+        let normalized = Vector.new(px - center.x, py - center.y)
+        return Math.pow(normalized.x / xRadius, 2) + Math.pow(normalized.y / yRadius, 2) <= 1
+    }
+
+    pointInHollowFrame(px, py, border) {
+        let center = this.center()
+        let xRadius = this.w / 2
+        let yRadius = this.h / 2
+        if (xRadius <= 0 || yRadius <= 0) {
+            return false
+        }
+        let normalized = Vector.new(px - center.x, py - center.y)
+        let halfBorder = border / 2
+        let inner = Math.pow(normalized.x / (xRadius + halfBorder), 2) + Math.pow(normalized.y / (yRadius + halfBorder), 2) <= 1
+        // 去除椭圆边框
+        let outer = Math.pow(normalized.x / (xRadius - halfBorder), 2) + Math.pow(normalized.y / (yRadius - halfBorder), 2) >= 1
+        return inner && outer
     }
 
     leftTopPosition() {
@@ -206,19 +235,20 @@ class GenRect extends GenShape {
     draw() {
         if (this.w > 0 && this.h > 0) {
             this.context.save()
+            this.context.strokeStyle = this.color
+            this.context.beginPath()
+            let w2 = this.w / 2
+            let h2 = this.h / 2
+            this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, Math.PI * 2)
             if (this.fill) {
                 this.context.fillStyle = this.color
-                this.context.fillRect(this.x, this.y, this.w, this.h)
-                this.context.restore()  
+                this.context.fill()            
             } else {
                 this.context.lineWidth = this.border
-                this.context.strokeStyle = this.color
-                this.context.beginPath()
-                this.context.strokeRect(this.x, this.y, this.w, this.h)
-                this.context.closePath()
-                this.context.stroke()
-                this.context.restore()  
             }
+            this.context.closePath()
+            this.context.stroke()
+            this.context.restore()    
             // 绘制拖拽点
             super.draw() 
         }

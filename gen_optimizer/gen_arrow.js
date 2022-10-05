@@ -98,10 +98,7 @@ class GenArrow extends GenShape {
         super.idle()
     }
 
-    checkStatus() {
-        if (this.isCreating() || this.isSelected()) {
-            return
-        }
+    checkStatus() {        
         let v1 = Vector.new(this.fromX, this.fromY)
         let v2 = Vector.new(this.toX, this.toY)
         this.distance = v1.distance(v2)
