@@ -16,7 +16,7 @@ var config = {
         type: "button",
     },
     index: {
-        _comment: "image index",
+        _comment: "background index",
         value: 0,
         valueType: 'number',
         min: 0,
@@ -32,7 +32,7 @@ var config = {
         type: "number",
     },
     imageOffset: {
-        _comment: "image offset",
+        _comment: "background offset",
         value: 60,
         valueType: 'number',
         min: -100,
@@ -168,5 +168,17 @@ var config = {
         value: 'false',
         valueType: 'boolean',
         type: "checkbox",
-    }
+    },
+    canvasHeight: {
+        _comment: "canvas height",
+        value: 800,
+        valueType: 'number',
+        type: "number",
+    },
+    canvasWidth: {
+        _comment: "canvas width",
+        value: 1000,
+        valueType: 'number',
+        type: "number",
+    },
 }

@@ -1,9 +1,11 @@
-class GenCircle extends GenShape {
-    constructor(scene, x, y) {
+class GenImage extends GenShape {
+    constructor(scene, x, y, image) {
         super(scene)
+        this.image = image
+        this.w = image.width
+        this.h = image.height
         this.border = config.shapeBorder.value
         this.color = config.shapeColor.value    
-        this.fill = parseBoolean(config.shapeFill.value)
         this.status = this.enumStatus.creating
         this.numberOfDraggers = 4
         // 四个定点坐标
@@ -19,7 +21,6 @@ class GenCircle extends GenShape {
         return {
             "config.shapeBorder": config.shapeBorder,
             "config.shapeColor": config.shapeColor,
-            "config.shapeFill": config.shapeFill,
         }
     }
 
@@ -27,8 +28,7 @@ class GenCircle extends GenShape {
         super.selected()
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
-        this.updateControls("config.shapeFill.value", this.fill)
-        return GenCircle.configAttribute()
+        return GenImage.configAttribute()
     }
 
     moving(x, y) {
@@ -47,20 +47,6 @@ class GenCircle extends GenShape {
             'rightTop': Vector.new(self.position.rightTop.x - x, self.position.rightTop.y - y),
             'rightBottom': Vector.new(self.position.rightBottom.x - x, self.position.rightBottom.y - y),
         }
-    }
-
-    checkStatus() {                
-        let w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
-        let h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
-        let border = this.border || null
-        // log("check status", w, h, border)
-        // 无效图形直接删除
-        if (w <= 0 || h <= 0 || border == null) {
-            log("rect delete")
-            super.deleted()
-            return
-        }
-        // log("rect create")
     }
 
     creating(x, y) {
@@ -120,40 +106,8 @@ class GenCircle extends GenShape {
         }
     }
 
-    pointInShapeFrame(px, py) {
-        if (this.isCreating()) {
-            return true
-        }
-        if (this.fill) {
-            return this.pointInFrame(px, py)
-        }
-        return this.pointInHollowFrame(px, py, this.border)
-    }
-
-    pointInFrame(px, py) {
-        let center = this.center()
-        let xRadius = this.w / 2
-        let yRadius = this.h / 2
-        if (xRadius <= 0 || yRadius <= 0) {
-            return false
-        }
-        let normalized = Vector.new(px - center.x, py - center.y)
-        return Math.pow(normalized.x / xRadius, 2) + Math.pow(normalized.y / yRadius, 2) <= 1
-    }
-
-    pointInHollowFrame(px, py, border) {
-        let center = this.center()
-        let xRadius = (this.w - this.border) / 2
-        let yRadius = (this.h - this.border) / 2
-        if (xRadius <= 0 || yRadius <= 0) {
-            return false
-        }
-        let normalized = Vector.new(px - center.x, py - center.y)
-        let halfBorder = border / 2
-        let inner = Math.pow(normalized.x / (xRadius + halfBorder), 2) + Math.pow(normalized.y / (yRadius + halfBorder), 2) <= 1
-        // 去除椭圆边框
-        let outer = Math.pow(normalized.x / (xRadius - halfBorder), 2) + Math.pow(normalized.y / (yRadius - halfBorder), 2) >= 1
-        return inner && outer
+    pointInShapeFrame(x, y) {
+        return this.pointInFrame(x, y)
     }
 
     leftTopPosition() {
@@ -172,36 +126,34 @@ class GenCircle extends GenShape {
         this.x = this.leftTopPosition().x
         this.y = this.leftTopPosition().y
         this.w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
-        this.h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
+        this.h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y)
     }
 
     draw() {
-        if (this.w > 0 && this.h > 0) {
-            this.context.save()
-            this.context.strokeStyle = this.color
-            this.context.beginPath()
-            let w2 = this.w / 2
-            let h2 = this.h / 2
-            if (this.fill) {
-                this.context.fillStyle = this.color
-                this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, 2 * Math.PI)
-                this.context.fill()
-            } else {                
-                if (this.w > 2 * this.border && this.h > 2 * this.border) {
-                    let halfBorder = this.border / 2
-                    this.context.lineWidth = halfBorder * 2
-                    this.context.ellipse(this.x + w2, this.y + h2, w2 - halfBorder, h2 - halfBorder, 0, 0, Math.PI * 2)
-                    this.context.stroke()
-                } else {                
-                    this.context.fillStyle = this.color
-                    this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, Math.PI * 2)
-                    this.context.fill()
-                }
-            }
-            this.context.closePath()
-            this.context.restore()
-            // 绘制拖拽点
-            super.draw() 
+        this.context.save()
+        // 缩放图片
+        this.context.drawImage(this.image, this.x, this.y, this.w, this.h)
+        this.drawBorder()
+        this.context.restore()
+        // 绘制拖拽点
+        super.draw() 
+    }
+
+    drawBorder() {
+        log("border", this.border)
+        if (this.border == 0) {
+            return
         }
+        this.context.save()
+        if (this.w > 2 * this.border && this.h > 2 * this.border) {
+            this.context.strokeStyle = this.color
+            let border = this.border / 2
+            this.context.lineWidth = border * 2
+            this.context.strokeRect(this.x + border, this.y + border, this.w - border * 2, this.h - border * 2)
+        } else {
+            this.context.fillStyle = this.color
+            this.context.fillRect(this.x, this.y, this.w, this.h)               
+        }
+        this.context.restore()
     }
 }

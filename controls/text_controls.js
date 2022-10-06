@@ -99,7 +99,7 @@ class TextControls extends GenControls {
         e("#id-canvas-area").append(div)
         // 添加样式
         let input = e(selector)
-        let zoom = parseInt(e(".zoom-input").value) / 100
+        let zoom = self.parseValueWithType(e(".zoom-input").value, 'number') / 100
         input.style.display = "block"
         input.style.left = (gx - 1) + "px"
         input.style.top = (gy - 3) + "px"
@@ -160,8 +160,8 @@ class TextControls extends GenControls {
     addText(content, x, y, prop={}) {
         let text = GenText.new(this.scene, content, x, y)
         text.fillProp(prop)
-        text.idle()        
-        this.texts.push(text)
+        text.idle()                
+        this.texts.unshift(text)
     }
 
     resetAndUpdate(texts) {
@@ -171,10 +171,10 @@ class TextControls extends GenControls {
     /**
      * 修正显示的字体大小
      */
-     fixFont(font) {
+    fixFont(font) {
         font = font.trim()
         let zoom = config.zoom.value / 100
-        let size = parseInt(font.split(' ')[0].replace('px', '')) * zoom
+        let size = this.parseValueWithType(font.split(' ')[0].replace('px', ''), 'number') * zoom
         let family = font.split(' ')[1]
         return `${size}px ${family}`
     }
@@ -183,7 +183,9 @@ class TextControls extends GenControls {
         let self = this
         // 过滤 texts 里面的被删除的文字
         self.texts = self.texts.filter((t) => !t.isDeleted())
-        for (let text of self.texts) {
+        // 倒着遍历
+        for (let i = self.texts.length - 1; i >= 0; i--) {
+            let text = self.texts[i]
             text.draw()
         }
     }

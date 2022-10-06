@@ -1,4 +1,4 @@
-class ImageSelector extends GenComponent {
+class PanelSelector extends GenComponent {
     constructor(control) {
         super(control.scene)
         this.control = control
@@ -21,9 +21,9 @@ class ImageSelector extends GenComponent {
                     "config.index": function(target) {
                         let imageBlock = sel(sc.pageClass.imageBlock)
                         let index = target.closest(imageBlock).dataset.index
-                        control.saveImage()
+                        control.savePanel()
                         let v = parseInt(index)
-                        control.switchImage(v)
+                        control.switchPanel(v)
                     },
                     "action.delete": function(target) {
                         let imageBlock = sel(sc.pageClass.imageBlock)
@@ -37,15 +37,15 @@ class ImageSelector extends GenComponent {
                             return e.dataset.index == delId
                         })
                         let bs = es(imageBlock)
-                        control.imageControl.delImage(delId)
-                        config.index.max = self.images.length - 1                        
+                        control.panelControl.delete(delId)
+                        config.index.max = self.panels.length - 1                        
                         // 重新给 image-list 分配 index
                         for (let i = 0; i < bs.length; i++) {
                             bs[i].dataset.index = i                            
                         }
                         // 删除自己跳转到 index 0
                         if (delId == config.index.value) {
-                            control.switchImage(0)
+                            control.switchPanel(0)
                         } else if (delId < config.index.value) {
                             config.index.value -= 1
                         }
@@ -55,12 +55,12 @@ class ImageSelector extends GenComponent {
         ])
     }
 
-    builder(imageSnapshots) {
-        log("imageSnapshots", imageSnapshots)
+    builder(panelSnapshots) {
+        log("panelSnapshots", panelSnapshots)
         let list = e(".image-list")
         let max = config.index.max
-        for (let i = 0; i < imageSnapshots.length; i++) {
-            let image = imageSnapshots[i]
+        for (let i = 0; i < panelSnapshots.length; i++) {
+            let image = panelSnapshots[i]
             image.dataset.index = i + max + 1
             let html = this.template(image)
             appendHtml(list, html)

@@ -19,10 +19,15 @@
             <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
             <button type="button" data-type="button" data-value="config.centerButton" class="gen-auto-button el-button el-button--default el-button--small">背景居中</button>
             <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
+            <div class="canvas-config canvas-hw">
+                <span>画布大小</span>
+                <input value="1000" class="canvas-hw-input" type="number" data-prop="width" data-value="action-canvasHW"> ×
+                <input value="800" class="canvas-hw-input" type="number" data-prop="height" data-value="action-canvasHW" style="margin-left: 0px;">
+            </div>
             <div class="canvas-config canvas-zoom">
                 <span>画布比例</span>
                 <input value="100" class="zoom-input" type="number" data-value="action-zoom"> % 
-            </div>
+            </div>            
             <div style="float: right;">                   
                 <span data-value="config.defaultPointerEnable" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yidong_huaban1 shape-active"></span>
                 <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-huabi_huaban1"></span>
@@ -61,7 +66,7 @@
     <!-- optimizer 框架 -->
     <script src="./gen_optimizer/gen_utils.js"></script>
     <script src="./gen_optimizer/gen_vector.js"></script>
-    <script src="./gen_optimizer/gen_image_optimizer.js"></script>
+    <script src="./gen_optimizer/gen_optimizer.js"></script>
     <script src="./gen_optimizer/gen_controls.js"></script>
     <script src="./gen_optimizer/gen_component.js"></script>
     <script src="./gen_optimizer/gen_point.js"></script>
@@ -71,14 +76,15 @@
     <script src="./gen_optimizer/gen_rect.js"></script>
     <script src="./gen_optimizer/gen_arrow.js"></script>
     <script src="./gen_optimizer/gen_circle.js"></script>
+    <script src="./gen_optimizer/gen_image.js"></script>
     <script src="./gen_optimizer/gen_dragger.js"></script>
     <!-- 组件 -->
     <script src="./components/Attribute.js"></script>
-    <script src="./components/ImageSelector.js"></script>
+    <script src="./components/PanelSelector.js"></script>
     <!-- 控制器 -->
     <script src="./controls/shape_controls.js"></script>
     <script src="./controls/pen_controls.js"></script>
-    <script src="./controls/image_controls.js"></script>
+    <script src="./controls/panel_controls.js"></script>
     <script src="./controls/page_config_controls.js"></script>
     <script src="./controls/text_controls.js"></script>
     <!-- 场景 -->

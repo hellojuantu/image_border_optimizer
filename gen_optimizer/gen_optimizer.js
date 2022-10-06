@@ -28,7 +28,7 @@ class GenOptimizer {
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
         // blank image
-        this.blankImage = {
+        this.blankPanel = {
             src: this.canvas.toDataURL("image/png"),
             w: this.canvas.width,
             h: this.canvas.height,
@@ -36,9 +36,9 @@ class GenOptimizer {
         // 
         this.scene = null
         // image and upload
-        this.images = []
-        this.imageSnapshots = []
-        this.setupBlankImage()
+        this.panels = []
+        this.panelSnapshots = []
+        this.setupBlankPanel()
         //
         this.bindUploadEvents()
         // key
@@ -57,33 +57,19 @@ class GenOptimizer {
         this.__start()
     }
 
-    defaultBlankImage() {
+    defaultBlankPanel() {
         let image = new Image()
-        image.src = this.blankImage.src
-        image.width = this.blankImage.w
-        image.height = this.blankImage.h
+        image.src = this.blankPanel.src
+        image.width = this.blankPanel.w
+        image.height = this.blankPanel.h
         image.dataset.type = 'default_blank'
         return image
     }
 
-    setupBlankImage() {
-        let blankImage = this.defaultBlankImage()
-        this.images.push(blankImage)
-        this.imageSnapshots.push(blankImage)
-    }
-
-    setupNotice() {
-        let notice = "Drag images here to start !!!"
-        this.context.save()
-        this.context.textBaseline = "top"
-        this.context.font = '24px arial'
-        let metrics = this.context.measureText(notice)
-        let w = metrics.width
-        let h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
-
-        this.context.fillStyle = "red"
-        this.context.fillText(notice, (this.canvas.width - w) / 2, (this.canvas.height - h) / 2)        
-        this.context.restore()
+    setupBlankPanel() {
+        let blankPanel = this.defaultBlankPanel()
+        this.panels.push(blankPanel)
+        this.panelSnapshots.push(blankPanel)
     }
     
     setupMouse() {
@@ -144,7 +130,7 @@ class GenOptimizer {
         let self = this
         this.scene = scene                
         // 第一次加载需要刷新的配置
-        this.scene.refreshConfig(this.images)
+        this.scene.refreshConfig(this.panels)
         // 开始运行程序
         setTimeout(function(){
             self.runloop()
@@ -154,7 +140,7 @@ class GenOptimizer {
     draw() {
         this.scene.draw()
         // update snapshot
-        this.scene.updateActiveImageSnapshot()
+        this.scene.updateActivePanelSnapshot()
     }
 
     update() {
@@ -210,7 +196,7 @@ class GenOptimizer {
             let files = Object.values(e.dataTransfer.files).filter(
                 f => f.type.includes("image")
             )
-            let tempImages = []
+            let tempPanels = []
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
                 let reader = new FileReader()
@@ -220,13 +206,13 @@ class GenOptimizer {
                     img.src = e.target.result
                     img.dataset.type = 'user_upload'
                     img.onload = function() { 
-                        tempImages.push(img)
-                        self.images.push(img)
-                        log("tempImages len, file len", self.images.length, files.length)
+                        tempPanels.push(img)
+                        self.panels.push(img)
+                        log("tempPanels len, file len", self.panels.length, files.length)
                         // 上传图片, 刷新配置
-                        if (tempImages.length == files.length) {
+                        if (tempPanels.length == files.length) {
                             log("__start")
-                            self.scene && self.scene.refreshConfig(tempImages)
+                            self.scene && self.scene.refreshConfig(tempPanels)
                         }
                     }
                 }

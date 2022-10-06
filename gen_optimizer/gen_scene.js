@@ -3,7 +3,7 @@ class GenScene {
         this.optimizer = optimizer
         this.canvas = optimizer.canvas
         this.context = optimizer.context
-        this.images = optimizer.images
+        this.panels = optimizer.panels
         this.elements = []
         this.events = {}
         this.pageClass = {}
@@ -23,7 +23,7 @@ class GenScene {
     }
 
     // 更新左边的图片快照
-    updateActiveImageSnapshot() {
+    updateActivePanelSnapshot() {
 
     }
 

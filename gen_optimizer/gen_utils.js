@@ -42,6 +42,10 @@ const sel = function(className) {
     return '.' + className
 }
 
+const id = function(idName) {
+    return '#' + idName
+}
+
 const toggleClass = function (element, className) {
     if (element.classList.contains(className)) {
         element.classList.remove(className)

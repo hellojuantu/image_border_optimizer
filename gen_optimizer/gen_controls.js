@@ -4,7 +4,7 @@ class GenControls {
         this.canvasArea = this.optimizer.canvasArea
         this.canvas = this.optimizer.canvas
         this.context = this.optimizer.context
-        this.images = this.optimizer.images
+        this.panels = this.optimizer.panels
         this.scene = scene
     }
 
@@ -98,6 +98,9 @@ class GenControls {
     }
 
     parseValueWithType(value, type) {
+        if (value == NaN) {
+            value = null
+        }
         // log("type", type)
         switch (type) {
             case 'number':

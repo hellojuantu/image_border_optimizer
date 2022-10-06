@@ -41,7 +41,7 @@ class Attribute extends GenComponent {
                     "config.shapeBorder": function(target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
-                                shape.border = parseInt(target.value)
+                                shape.border = self.parseValueWithType(target.value, 'number')
                             }
                         }
                     },

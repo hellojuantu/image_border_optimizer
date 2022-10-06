@@ -1,14 +1,15 @@
 class PageConfigControls extends GenControls {
-    constructor(scene, imageControl, penControl, textControl, shapeControl) {
+    constructor(scene, panelControl, penControl, textControl, shapeControl) {
         super(scene)
-        this.imageControl = imageControl
+        this.panelControl = panelControl
         this.penControl = penControl
         this.textControl = textControl
         this.shapeControl = shapeControl
         this.setup()
         this.setupCorsorEvent()
-        this.setupMove()
+        this.setupMoveEvent()
         this.setupDraggerEvent()
+        this.setupUploadImageEvent()
     }
 
     /**
@@ -30,13 +31,14 @@ class PageConfigControls extends GenControls {
             'imageBlock': 'image-block',
             'shapeActive': 'shape-active',
             'zoom': 'canvas-zoom',
+            'canvasHW': 'canvas-hw',
         })
 
         // 绑定组件, 全局可用
         // 右边属性组件
         sc.bindComponent('attribute', Attribute.new(this))
         // 左边图片选择组件
-        sc.bindComponent('imageSelector', ImageSelector.new(this))
+        sc.bindComponent('panelSelector', PanelSelector.new(this))
 
         // 注册全局场景事件
         sc.registerGlobalEvents([               
@@ -48,19 +50,19 @@ class PageConfigControls extends GenControls {
                     "config.preButton": function(target) {
                         // log("preButton", config.index.value)
                         if (config.index.value > 0) {
-                            self.saveImage()
+                            self.savePanel()
                             let v = config.index.value - 1
-                            self.switchImage(v)                          
+                            self.switchPanel(v)                          
                         }
                     },
                     "config.nextButton": function(target) {
                         // log("nextButton", config.index.value, self.images.length)
-                        if (config.index.value < self.images.length - 1) {
+                        if (config.index.value < self.panels.length - 1) {
                             // 保存当前图片的修改
-                            self.saveImage()
+                            self.savePanel()
                             // 更新画笔和文字
                             let v = config.index.value + 1
-                            self.switchImage(v)                          
+                            self.switchPanel(v)                          
                         }
                     },
                     "config.centerButton": function(target) {
@@ -83,12 +85,12 @@ class PageConfigControls extends GenControls {
                         clipboardImg(self.canvas.toDataURL("image/png"))
                     },
                     "action.newBlank": function(target) {
-                        let b = self.optimizer.defaultBlankImage()
-                        self.images.push(b)
-                        let tempImages = []
-                        tempImages.push(b)
-                        sc.getComponent('imageSelector').buildWith(tempImages)
-                        config.index.max = self.images.length - 1
+                        let b = self.optimizer.defaultBlankPanel()
+                        self.panels.push(b)
+                        let tempPanels = []
+                        tempPanels.push(b)
+                        sc.getComponent('panelSelector').buildWith(tempPanels)
+                        config.index.max = self.panels.length - 1
                     },
                 },
             },            
@@ -124,7 +126,7 @@ class PageConfigControls extends GenControls {
                         sc.getComponent('attribute').buildWith(att)
                     },      
                     "config.defaultPointerEnable": function(target) {
-                        sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
+                        sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
                     }
                 }
             },
@@ -133,7 +135,7 @@ class PageConfigControls extends GenControls {
                 className: sc.pageClass.zoom,
                 configToEvents: {
                     "action-zoom": function(target)  {
-                        config.zoom.value = parseInt(target.value)
+                        config.zoom.value = self.parseValueWithType(target.value, 'number')
                         let zoom = config.zoom.value / 100
                         let wrapper = e("#id-canvas-wrapper")
                         wrapper.style.height = self.canvas.height * zoom + "px"
@@ -141,12 +143,27 @@ class PageConfigControls extends GenControls {
                         self.canvas.style.transform = `scale(${zoom})`
                     },
                 },
+            },
+            {
+                eventName: 'input',
+                className: sc.pageClass.canvasHW,
+                configToEvents: {
+                    "action-canvasHW": function(target)  {
+                        log("target", target, target.dataset.prop, target.value)
+                        let prop = target.dataset.prop
+                        if (prop == 'height') {
+                            config.canvasHeight.value = self.parseValueWithType(target.value, 'number') 
+                        } else {
+                            config.canvasWidth.value = self.parseValueWithType(target.value, 'number') 
+                        }
+                    },
+                }
             }
         ])
 
         // 更新图片快照
-        sc.updateActiveImageSnapshot = function() {
-            let raw = this.images[config.index.value]
+        sc.updateActivePanelSnapshot = function() {
+            let raw = this.panels[config.index.value]
             if (raw.dataset.type == 'default_blank') {
                 e('.image-active > div > img').src = this.canvas.toDataURL("image/png")   
             }
@@ -154,20 +171,55 @@ class PageConfigControls extends GenControls {
 
         // 上传图片需要刷新的配置
         // 每次上传图片都会调用
-        sc.refreshConfig = function(tempImages) {
+        sc.refreshConfig = function(tempPanels) {
             log("refreshConfig")
-            sc.getComponent('imageSelector').buildWith(tempImages)    
-            config.index.max = self.images.length - 1
+            sc.getComponent('panelSelector').buildWith(tempPanels)    
+            config.index.max = self.panels.length - 1
         }
 
         // 使用组件构建属性
-        sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
+        sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
+    }
+
+    setupUploadImageEvent() {
+        let self = this
+        let dp = this.canvas
+    
+        dp.addEventListener('dragover', function (e) {
+            e.stopPropagation()
+            e.preventDefault()
+            e.dataTransfer.dropEffect = 'copy'
+        })
+    
+        dp.addEventListener("drop", function (e) {
+            log("e", e.offsetX, e.offsetY)
+            let x = e.offsetX
+            let y = e.offsetY
+            e.stopPropagation()
+            e.preventDefault()
+            let files = Object.values(e.dataTransfer.files).filter(
+                f => f.type.includes("image")
+            )
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i]
+                let reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = function (e) {
+                    let img = new Image()
+                    img.src = e.target.result
+                    img.dataset.type = 'user_upload'
+                    img.onload = function() { 
+                        self.shapeControl.handleImageEvent(img, x, y)
+                    }
+                }
+            }
+        })
     }
 
     /**
      * 全局对象移动事件
      */
-    setupMove() {
+     setupMoveEvent() {
         let self = this       
         let draggedShape = null
         let sc = self.scene
@@ -229,7 +281,7 @@ class PageConfigControls extends GenControls {
                 // 点击到空白的地方
                 if (element == null) {
                     log("点击到空白的地方")
-                    sc.getComponent('attribute').buildWith(self.imageControl.configAttribute())
+                    sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
                     self.shapeControl.removeDraggers()  
                     self.textControl.handleTextEvents(event, x, y)
                 } else {
@@ -269,28 +321,41 @@ class PageConfigControls extends GenControls {
     /**
      * 切换时, 需要保存图片的修改
      */
-    saveImage() {
+    savePanel() {
         let points = this.penControl.points
         let texts = this.textControl.texts
         let shapes = this.shapeControl.shapes
-        this.imageControl.saveImage(points, texts, shapes)
+        this.panelControl.save(points, texts, shapes)
     }
 
     /**
      * 切换图片, 恢复图片的修改
      */
-    switchImage(imageIndex) {
+    switchPanel(imageIndex) {        
         let self = this
         let v = imageIndex
         config.index.value = v
-        self.penControl.resetAndUpdate(self.imageControl.getImageChanges(v).points)
-        self.textControl.resetAndUpdate(self.imageControl.getImageChanges(v).texts)
-        self.shapeControl.resetAndUpdate(self.imageControl.getImageChanges(v).shapes)    
+        self.penControl.resetAndUpdate(self.panelControl.getChanges(v).points)
+        self.textControl.resetAndUpdate(self.panelControl.getChanges(v).texts)
+        self.shapeControl.resetAndUpdate(self.panelControl.getChanges(v).shapes)    
         // css
         removeClassAll('image-active')
         for (let block of es('.image-block')) {
             if (block.dataset.index == v) {
                 block.classList.add('image-active')                                
+            }
+        }
+
+        let img = self.panels[v]
+        // 重置属性
+        for (let input of es('.canvas-hw-input')) {
+            let prop = input.dataset.prop
+            if (prop == 'width') {
+                input.value = img.width
+                config.canvasWidth.value = img.width
+            } else if (prop == 'height') {
+                input.value = img.height
+                config.canvasHeight.value = img.height
             }
         }
     }
@@ -307,11 +372,10 @@ class PageConfigControls extends GenControls {
 
     pointInShapes(x, y) {
         let inText = this.textControl.pointInText(x, y)
-        let inShape = this.shapeControl.pointInShape(x, y)
-
         if (inText != null) {
             return inText
         }
+        let inShape = this.shapeControl.pointInShape(x, y)
         if (inShape != null) {
             return inShape
         }
@@ -320,19 +384,14 @@ class PageConfigControls extends GenControls {
     }
 
     pointInElement(x, y) {
-        let inText = this.textControl.pointInText(x, y)
-        let inShape = this.shapeControl.pointInShape(x, y)
+        let shapes = this.pointInShapes(x, y)       
+        if (shapes != null) {
+            return shapes
+        }       
         let dragger = this.pointInDraggers(x, y)
         if (dragger != null) {
             return dragger
         }
-        if (inText != null) {
-            return inText
-        }
-        if (inShape != null) {
-            return inShape
-        }
-        
         return null
     }
 }

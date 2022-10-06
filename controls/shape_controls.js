@@ -29,6 +29,25 @@ class ShapeControls extends GenControls {
         this.setupKey()
     }
 
+    handleImageEvent(image, x, y) {
+        let self = this
+        let sc = self.scene
+        log("handleImageEvent", image, x, y)
+        // 直接生成图片
+        let uploadImage = GenImage.new(sc, x, y, image)
+        self.shapes.unshift(uploadImage)
+
+        let w = image.width
+        let h = image.height
+        uploadImage.creating(x + w, y + h)
+
+        uploadImage.idle()
+        self.removeDraggers()
+        let att = uploadImage.activateDraggers()
+        sc.getComponent('attribute').buildWith(att)
+        uploadImage.checkStatus()
+    }
+
     handleShapeEvent(action, x, y, targetShape) {
         let self = this
         let sc = self.scene
@@ -44,7 +63,7 @@ class ShapeControls extends GenControls {
             if (targetShape == null) {
                 self.buildingShape = null
                 targetShape = self.shapeTypes[config.shapeSelect.value].new(sc, x, y)
-                self.shapes.push(targetShape)
+                self.shapes.unshift(targetShape)
                 self.buildingShape = targetShape
             }
         } else if (action == 'move') {
@@ -125,7 +144,8 @@ class ShapeControls extends GenControls {
             s.checkStatus()
             return !s.isDeleted()
         })
-        for (let shape of self.shapes) {
+        for (let i = self.shapes.length - 1; i >= 0; i--) {
+            let shape = self.shapes[i]
             shape.update()
         }
     }
@@ -139,7 +159,8 @@ class ShapeControls extends GenControls {
             s.checkStatus()
             return !s.isDeleted()
         })
-        for (let shape of self.shapes) {
+        for (let i = self.shapes.length - 1; i >= 0; i--) {
+            let shape = self.shapes[i]
             shape.draw()
         }
     }

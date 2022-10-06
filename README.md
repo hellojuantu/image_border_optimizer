@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.2.9
+## Image-Border-Optimizer v2.3.0
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hello.juantu.cn)
@@ -133,6 +133,11 @@ this.getComponent('attribute').buildWith(data)
 ```
 
 ## 更新日志
+
+### GenOptimizer v2.3.0
+- 新增了修改画布大小的功能
+- 新增了画布拖拽放入图片的功能
+- 修复了图形点按层级问题
 
 ### GenOptimizer v2.2.9
 - 优化了图形边框的逻辑

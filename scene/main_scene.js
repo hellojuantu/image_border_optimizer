@@ -5,8 +5,8 @@ class MainScene extends GenScene {
     }
 
     setup() {        
-        // 图片控制器
-        let imageControl = ImageControls.new(this).addElement()
+        // 画板控制器
+        let imageControl = PanelControls.new(this).addElement()
         // 画笔控制器
         let penControl = PenControls.new(this).addElement()
         // 文字控制器

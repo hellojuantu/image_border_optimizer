@@ -1,15 +1,15 @@
-class ImageControls extends GenControls {
+class PanelControls extends GenControls {
     constructor(scene) {
         super(scene)
         this.imageChanges = []
     }
 
-    delImage(index) {
-        this.images.splice(index, 1)
+    delete(index) {
+        this.panels.splice(index, 1)
         this.imageChanges.splice(index, 1)
     }
 
-    getImageChanges(index) { 
+    getChanges(index) { 
         return this.imageChanges[index] || {
             points: [],
             texts: [],
@@ -17,7 +17,7 @@ class ImageControls extends GenControls {
         }
     }
 
-    saveImage(points, texts, shapes) {
+    save(points, texts, shapes) {
         this.imageChanges[config.index.value] = {
             points: points,
             texts: texts,
@@ -30,14 +30,14 @@ class ImageControls extends GenControls {
         let canvas = self.canvas
         let context = self.context
         // log("image draw", self.images)
-        let img = self.images[config.index.value]
+        let img = self.panels[config.index.value]
         if (img == null) {
             return
         }
         // 空白页面, 不加阴影
         if (img.dataset.type == 'default_blank') {
-            canvas.width = img.width
-            canvas.height = img.height
+            canvas.width = config.canvasWidth.value
+            canvas.height = config.canvasHeight.value
             context.drawImage(img, 0, 0)
             return
         }
@@ -45,8 +45,8 @@ class ImageControls extends GenControls {
         let offset = config.offset.value
         let io = config.imageOffset.value
         // 
-        canvas.width = img.width + offset * 20
-        canvas.height = img.height + offset * 20
+        canvas.width = config.canvasWidth.value + offset * 20
+        canvas.height = config.canvasHeight.value + offset * 20
 
         this.drawShadow(img, io)
 
