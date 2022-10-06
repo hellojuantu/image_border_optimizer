@@ -1,7 +1,7 @@
 class GenOptimizer {
     constructor(runCallback) {
         this.runCallback = runCallback
-        window.fps = 10
+        window.fps = 120
         this.setup()
     }
 

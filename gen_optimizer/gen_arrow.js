@@ -77,10 +77,10 @@ class GenArrow extends GenShape {
     }
 
     movingByDragger(dragger, x, y) {
-        if (dragger.positionDesc == 'tail') {
+        if (dragger.name == 'tail') {
             this.fromX = x
             this.fromY = y
-        } else if (dragger.positionDesc == 'head') {
+        } else if (dragger.name == 'head') {
             this.toX = x
             this.toY = y   
         }

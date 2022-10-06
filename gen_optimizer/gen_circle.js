@@ -49,18 +49,18 @@ class GenCircle extends GenShape {
         }
     }
 
-    checkStatus() {              
+    checkStatus() {                
         let w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
         let h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
         let border = this.border || null
         // log("check status", w, h, border)
         // 无效图形直接删除
         if (w <= 0 || h <= 0 || border == null) {
-            log("******** circle delete")
+            log("rect delete")
             super.deleted()
             return
         }
-        // log("************** circle create")
+        // log("rect create")
     }
 
     creating(x, y) {
@@ -72,64 +72,51 @@ class GenCircle extends GenShape {
     }
 
     setupDraggers() {
-        let leftTop = GenDragger.new(this, 0, 0, 'crosshair', 'left-top')
+        let leftTop = GenDragger.new(this, 0, 0, 'crosshair', 'leftTop')
         leftTop.resetPosition = function() {
-            let direct = this.owner.directMatrix['leftTop']
-            this.x = this.offsetX + this.owner.position.leftTop.x - this.w / 2 + direct[0] * this.owner.border / 2
-            this.y = this.offsetY + this.owner.position.leftTop.y - this.h / 2 + direct[1] * this.owner.border / 2
+            this.x = this.offsetX + this.owner.position.leftTop.x - this.w / 2
+            this.y = this.offsetY + this.owner.position.leftTop.y - this.h / 2
         }
         this.addDragger(leftTop)
 
-        let rightTop = GenDragger.new(this, 0, 0, 'crosshair', 'right-top')
+        let rightTop = GenDragger.new(this, 0, 0, 'crosshair', 'rightTop')
         rightTop.resetPosition = function() {
-            let direct = this.owner.directMatrix['rightTop']
-            this.x = this.offsetX + this.owner.position.rightTop.x - this.w / 2 + direct[0] * this.owner.border / 2
-            this.y = this.offsetY + this.owner.position.rightTop.y - this.h / 2 + direct[1] * this.owner.border / 2
+            this.x = this.offsetX + this.owner.position.rightTop.x - this.w / 2
+            this.y = this.offsetY + this.owner.position.rightTop.y - this.h / 2
         }
         this.addDragger(rightTop)
 
-        let leftBottom = GenDragger.new(this, 0, 0, 'crosshair', 'left-bottom')
+        let leftBottom = GenDragger.new(this, 0, 0, 'crosshair', 'leftBottom')
         leftBottom.resetPosition = function() {
-            let direct = this.owner.directMatrix['leftBottom']
-            this.x = this.offsetX + this.owner.position.leftBottom.x - this.w / 2 + direct[0] * this.owner.border / 2
-            this.y = this.offsetY + this.owner.position.leftBottom.y - this.h / 2 + direct[1] * this.owner.border / 2
+            this.x = this.offsetX + this.owner.position.leftBottom.x - this.w / 2
+            this.y = this.offsetY + this.owner.position.leftBottom.y - this.h / 2
         }
         this.addDragger(leftBottom)
 
-        let rightBottom = GenDragger.new(this, 0, 0, 'crosshair', 'right-bottom')
+        let rightBottom = GenDragger.new(this, 0, 0, 'crosshair', 'rightBottom')
         rightBottom.resetPosition = function() {
-            let direct = this.owner.directMatrix['rightBottom']
-            this.x = this.offsetX + this.owner.position.rightBottom.x - this.w / 2 + direct[0] * this.owner.border / 2
-            this.y = this.offsetY + this.owner.position.rightBottom.y - this.h / 2 + direct[1] * this.owner.border / 2
+            this.x = this.offsetX + this.owner.position.rightBottom.x - this.w / 2
+            this.y = this.offsetY + this.owner.position.rightBottom.y - this.h / 2
         }
         this.addDragger(rightBottom)
     }
 
     movingByDragger(dragger, x, y) {
-        if (dragger.positionDesc == 'left-top') {
-            log("left top")            
-            this.position.leftTop.x = x
-            this.position.leftTop.y = y
-            this.position.rightTop.y = y
+        let v = this.position[dragger.name]
+        v.x = x
+        v.y = y
+        if (dragger.name == 'leftTop') {            
+            this.position.rightTop.y = y 
             this.position.leftBottom.x = x
-        } else if (dragger.positionDesc == 'right-top') {
-            log("right top")
-            this.position.rightTop.x = x
-            this.position.rightTop.y = y
-            this.position.leftTop.y = y
+        } else if (dragger.name == 'rightTop') {
+            this.position.leftTop.y = y 
             this.position.rightBottom.x = x
-        } else if (dragger.positionDesc == 'right-bottom') {
-            log('right-bottom')
-            this.position.rightBottom.x = x
+        } else if (dragger.name == 'rightBottom') {
+            this.position.leftBottom.y = y
+            this.position.rightTop.x = x 
+        } else if (dragger.name == 'leftBottom') {
             this.position.rightBottom.y = y
-            this.position.leftBottom.y = y
-            this.position.rightTop.x = x
-        } else if (dragger.positionDesc == 'left-bottom') {
-            log("left-bottom")
-            this.position.leftBottom.x = x
-            this.position.leftBottom.y = y
             this.position.leftTop.x = x
-            this.position.rightBottom.y = y
         }
     }
 
@@ -156,8 +143,8 @@ class GenCircle extends GenShape {
 
     pointInHollowFrame(px, py, border) {
         let center = this.center()
-        let xRadius = this.w / 2
-        let yRadius = this.h / 2
+        let xRadius = (this.w - this.border) / 2
+        let yRadius = (this.h - this.border) / 2
         if (xRadius <= 0 || yRadius <= 0) {
             return false
         }
@@ -186,50 +173,6 @@ class GenCircle extends GenShape {
         this.y = this.leftTopPosition().y
         this.w = Math.abs(this.position.rightBottom.x - this.position.leftTop.x)
         this.h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y) 
-        this.updateDirectMatrix()
-    }
-
-    /**
-     * 更新方向矩阵, 给 border 加减使用
-     */
-    updateDirectMatrix() {
-        if (this.fill) {
-            this.directMatrix = {
-                'leftTop': [0, 0],
-                'leftBottom': [0, 0],
-                'rightTop': [0, 0],
-                'rightBottom': [0, 0],
-            }
-            return
-        }
-        this.directMatrix = {
-            'leftTop': [-1, -1],
-            'leftBottom': [-1, 1],
-            'rightTop': [1, -1],
-            'rightBottom': [1, 1],
-        }
-        // 复制 this.position
-        let position = {}
-        for (let p of Object.keys(this.position)) {
-            position[p] = this.position[p]
-        }
-        // 计算方向矩阵
-        for (let p of Object.keys(position)) {
-            let v = position[p]
-            let direct = this.directMatrix[p]
-            let x = v.x - this.x
-            let y = v.y - this.y
-            if (x == 0) {
-                direct[0] = -1
-            } else {
-                direct[0] = x / Math.abs(x)
-            }
-            if (y == 0) {
-                direct[1] = -1
-            } else {
-                direct[1] = y / Math.abs(y)
-            }
-        }
     }
 
     draw() {
@@ -239,16 +182,24 @@ class GenCircle extends GenShape {
             this.context.beginPath()
             let w2 = this.w / 2
             let h2 = this.h / 2
-            this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, Math.PI * 2)
             if (this.fill) {
                 this.context.fillStyle = this.color
-                this.context.fill()            
+                this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, 2 * Math.PI)
+                this.context.fill()
             } else {
-                this.context.lineWidth = this.border
+                let border = this.border / 2
+                this.context.lineWidth = border * 2
+                if (this.w > 2 * this.border && this.h > 2 * this.border) {
+                    this.context.ellipse(this.x + w2, this.y + h2, w2 - border, h2 - border, 0, 0, Math.PI * 2)
+                    this.context.stroke()
+                    this.context.restore()
+                } else {                
+                    this.context.fillStyle = this.color
+                    this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, Math.PI * 2)
+                    this.context.fill()
+                }
             }
             this.context.closePath()
-            this.context.stroke()
-            this.context.restore()    
             // 绘制拖拽点
             super.draw() 
         }

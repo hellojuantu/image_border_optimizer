@@ -1,6 +1,6 @@
 class GenDragger extends GenShape {
     // dragger 的坐标是相对于 ownerShape x, y 
-    constructor(ownerShape, offsetX, offsetY, cursor='crosshair', positionDesc) {
+    constructor(ownerShape, offsetX, offsetY, cursor='crosshair', name) {
         super(ownerShape.scene)        
         this.owner = ownerShape
         this.w = 12
@@ -12,7 +12,7 @@ class GenDragger extends GenShape {
         this.active = false
         this.cursor = cursor
         this.status = this.enumStatus.idle
-        this.positionDesc = positionDesc
+        this.name = name
     }
 
     calcalateOffset(x, y) {
