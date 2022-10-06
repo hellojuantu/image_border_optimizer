@@ -24,6 +24,11 @@ class Attribute extends GenComponent {
                 },
                 configToEvents: {
                     "config.textFont": function(target) {
+                        for (let shape of control.shapeControl.shapes.filter(s => s.isText)) {
+                            if (shape.isSelected()) {
+                                shape.font = target.value
+                            }
+                        }
                         if (control.textControl.inputOpen) {
                             let sel = "#" + control.textControl.inputId
                             let input = e(sel)
@@ -32,6 +37,12 @@ class Attribute extends GenComponent {
                         }
                     },
                     "config.textColor": function(target) {
+                        log("control.shapeControl.shapes.filter(s => s.isText)", control.shapeControl.shapes.filter(s => s.isText))
+                        for (let shape of control.shapeControl.shapes.filter(s => s.isText)) {
+                            if (shape.isSelected()) {
+                                shape.color = target.value
+                            }
+                        }
                         if (control.textControl.inputOpen) {
                             let sel = "#" + control.textControl.inputId
                             let input = e(sel)

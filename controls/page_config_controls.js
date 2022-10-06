@@ -370,28 +370,16 @@ class PageConfigControls extends GenControls {
         return null
     }
 
-    pointInShapes(x, y) {
-        let inText = this.textControl.pointInText(x, y)
-        if (inText != null) {
-            return inText
-        }
-        let inShape = this.shapeControl.pointInShape(x, y)
-        if (inShape != null) {
-            return inShape
-        }
-        
-        return null
-    }
-
     pointInElement(x, y) {
-        let shapes = this.pointInShapes(x, y)       
-        if (shapes != null) {
-            return shapes
-        }       
         let dragger = this.pointInDraggers(x, y)
         if (dragger != null) {
             return dragger
         }
+        let inShape = this.shapeControl.pointInShape(x, y)
+        if (inShape != null) {
+            return inShape
+        }       
+        
         return null
     }
 }

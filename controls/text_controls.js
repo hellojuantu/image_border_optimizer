@@ -1,7 +1,8 @@
 class TextControls extends GenControls {
-    constructor(scene) {
+    constructor(scene, shapeControl) {
         super(scene)
         this.scene = scene
+        this.shapeControl = shapeControl
         this.setup()
     }
 
@@ -80,13 +81,13 @@ class TextControls extends GenControls {
     addFloatInput(x, y) {
         let self = this
         let p = self.canvasToPage(x, y)
-        self.insertInput(p.x, p.y, config.textFont.value, config.textColor.value)
+        self.insertInput(p.x, p.y, config.textFont.value, config.textColor.value, '', 20)
         // update offset
         self.textX = x
         self.textY = y
     }
 
-    insertInput(gx, gy, font, color, value='') {
+    insertInput(gx, gy, font, color, value='', defaultWith=0) {
         let self = this
         self.inputOpen = true
         //
@@ -105,8 +106,13 @@ class TextControls extends GenControls {
         input.style.top = (gy - 3) + "px"
         input.style.font = self.fixFont(font)
         input.style.color = color
-        let t = calTextWH(value, font)
-        input.style.width = t.w * zoom + 'px'
+        // 设置默认宽度
+        if (defaultWith > 0) {
+            input.style.width = defaultWith + "px"
+        } else {
+            let t = calTextWH(value, font)
+            input.style.width = t.w * zoom + 1.5 + 'px'
+        }
         input.focus()
         input.select()
         // 输入时, 自动更新宽度
@@ -161,6 +167,7 @@ class TextControls extends GenControls {
         let text = GenText.new(this.scene, content, x, y)
         text.fillProp(prop)
         text.idle()                
+        this.shapeControl.shapes.unshift(text)
         this.texts.unshift(text)
     }
 
@@ -179,14 +186,14 @@ class TextControls extends GenControls {
         return `${size}px ${family}`
     }
 
-    draw() {
-        let self = this
-        // 过滤 texts 里面的被删除的文字
-        self.texts = self.texts.filter((t) => !t.isDeleted())
-        // 倒着遍历
-        for (let i = self.texts.length - 1; i >= 0; i--) {
-            let text = self.texts[i]
-            text.draw()
-        }
-    }
+    // draw() {
+    //     let self = this
+    //     // 过滤 texts 里面的被删除的文字
+    //     self.texts = self.texts.filter((t) => !t.isDeleted())
+    //     // 倒着遍历
+    //     for (let i = self.texts.length - 1; i >= 0; i--) {
+    //         let text = self.texts[i]
+    //         text.draw()
+    //     }
+    // }
 }

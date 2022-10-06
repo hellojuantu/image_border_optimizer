@@ -15,7 +15,7 @@
     background-color: transparent;
     resize: none;
     z-index: 6;
-    border: 1px red solid;
+    border: 1px #29a1ff solid;
     outline-style: none;
     /* border-radius: 0.4pc; */
 }

@@ -12,6 +12,7 @@ class GenShape extends GenControls {
         this.status = this.enumStatus.creating
         this.cursor = 'move'
         this.isSpecial = false
+        this.isText = false
     }
 
     // -------- 拖拽相关 --------
@@ -141,11 +142,19 @@ class GenShape extends GenControls {
      */
     pointInShapeFrame(x, y) {}
 
+    /**
+     * 获取 shape 的中点坐标
+     */
     center() {
         let x = this.x + this.w / 2
         let y = this.y + this.h / 2
         return Vector.new(x, y)
     }
+
+    /** 
+     * 连接 shape 所有的连接点
+     */
+    connectDraggers() {}
 
     // -------- 画图相关 ---------
     /**
@@ -154,6 +163,18 @@ class GenShape extends GenControls {
     update() {}
     
     draw() {
+        if (this.isSelected()) {
+            this.context.save()
+            this.context.beginPath()
+            this.context.strokeStyle = '#29a1ff'
+            this.context.lineWidth = 1.5
+
+            this.connectDraggers()
+            
+            this.context.closePath()
+            this.context.stroke()
+            this.context.restore()
+        }
         for (let drag of this.draggers.filter(d => d.active)) {    
             // drag 需要跟随 rect 移动        
             drag.draw()

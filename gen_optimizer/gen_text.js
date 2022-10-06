@@ -7,6 +7,7 @@ class GenText extends GenShape {
         this.font = config.textFont.value
         this.color = config.textColor.value
         this.status = this.enumStatus.creating
+        this.isText = true
     }
     
     static configAttribute() {
@@ -34,6 +35,21 @@ class GenText extends GenShape {
         return this
     }
 
+    pointInShapeFrame(x, y) {
+        return this.pointInFrame(x, y)
+    }
+
+    connectDraggers() {
+        // 连接四个拖拽点
+        this.context.save()
+        this.context.strokeStyle = '#29a1ff'
+        let border = 1
+        let halfBorder = border / 2
+        this.context.lineWidth = halfBorder
+        this.context.strokeRect(this.x - halfBorder, this.y - halfBorder, this.w + halfBorder * 2, this.h + halfBorder * 2)
+        this.context.restore()   
+    }
+    
     draw() {
         // log("draw text", this.text, this)       
         this.context.save()
@@ -46,5 +62,8 @@ class GenText extends GenShape {
         this.context.fillStyle = this.color
         this.context.fillText(this.text, this.x, this.y)        
         this.context.restore()
+        
+        super.draw()
+       
     }
 }

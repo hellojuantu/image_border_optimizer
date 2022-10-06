@@ -7,7 +7,7 @@ class ShapeControls extends GenControls {
             'rect': GenRect,
             'arrow': GenArrow,
             'circle': GenCircle,
-            // 'line': 
+            'line': GenLine,
         }
     }
 

@@ -168,6 +168,19 @@ class GenCircle extends GenShape {
         return leftTop
     }
 
+    connectDraggers() {
+        // 连接四个拖拽点
+        let leftTop = this.position.leftTop
+        let rightTop = this.position.rightTop
+        let leftBottom = this.position.leftBottom
+        let rightBottom = this.position.rightBottom
+        this.context.moveTo(leftTop.x, leftTop.y)
+        this.context.lineTo(rightTop.x, rightTop.y)
+        this.context.lineTo(rightBottom.x, rightBottom.y)
+        this.context.lineTo(leftBottom.x, leftBottom.y)
+        this.context.lineTo(leftTop.x, leftTop.y)     
+    }
+
     update() {
         this.x = this.leftTopPosition().x
         this.y = this.leftTopPosition().y
@@ -201,7 +214,7 @@ class GenCircle extends GenShape {
             this.context.closePath()
             this.context.restore()
             // 绘制拖拽点
-            super.draw() 
+            super.draw()             
         }
     }
 }
