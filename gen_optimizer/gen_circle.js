@@ -186,13 +186,12 @@ class GenCircle extends GenShape {
                 this.context.fillStyle = this.color
                 this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, 2 * Math.PI)
                 this.context.fill()
-            } else {
-                let border = this.border / 2
-                this.context.lineWidth = border * 2
+            } else {                
                 if (this.w > 2 * this.border && this.h > 2 * this.border) {
-                    this.context.ellipse(this.x + w2, this.y + h2, w2 - border, h2 - border, 0, 0, Math.PI * 2)
+                    let halfBorder = this.border / 2
+                    this.context.lineWidth = halfBorder * 2
+                    this.context.ellipse(this.x + w2, this.y + h2, w2 - halfBorder, h2 - halfBorder, 0, 0, Math.PI * 2)
                     this.context.stroke()
-                    this.context.restore()
                 } else {                
                     this.context.fillStyle = this.color
                     this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, Math.PI * 2)
@@ -200,6 +199,7 @@ class GenCircle extends GenShape {
                 }
             }
             this.context.closePath()
+            this.context.restore()
             // 绘制拖拽点
             super.draw() 
         }

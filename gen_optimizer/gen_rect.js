@@ -154,11 +154,12 @@ class GenRect extends GenShape {
                 this.context.fillRect(this.x, this.y, this.w, this.h)               
             } else {
                 if (this.w > 2 * this.border && this.h > 2 * this.border) {
-                    this.context.fillStyle = this.color
+                    this.context.strokeStyle = this.color
                     let border = this.border / 2
                     this.context.lineWidth = border * 2
                     this.context.strokeRect(this.x + border, this.y + border, this.w - border * 2, this.h - border * 2)
                 } else {
+                    this.context.fillStyle = this.color
                     this.context.fillRect(this.x, this.y, this.w, this.h)               
                 }
             }
