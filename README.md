@@ -3,7 +3,7 @@
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hello.juantu.cn)
 
-![GenOptimizer Demo](./public/img/demo.jpg)
+![GenOptimizer Demo](./public/img/demo.jpeg)
 
 ## 项目特点
 - 纯原生 JS 开发, 无三方框架
