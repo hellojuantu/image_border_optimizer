@@ -148,6 +148,7 @@ class GenArrow extends GenShape {
             botY = headlen * Math.sin(angle2)
      
         ctx.save()
+        ctx.translate(0.5, 0.5)
         ctx.beginPath()
      
         let arrowX = fromX - topX,

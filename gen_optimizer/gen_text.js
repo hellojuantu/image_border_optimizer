@@ -43,10 +43,7 @@ class GenText extends GenShape {
         // 连接四个拖拽点
         this.context.save()
         this.context.strokeStyle = '#29a1ff'
-        let border = 1
-        let halfBorder = border / 2
-        this.context.lineWidth = halfBorder
-        this.context.strokeRect(this.x - halfBorder, this.y - halfBorder, this.w + halfBorder * 2, this.h + halfBorder * 2)
+        this.context.strokeRect(this.x, this.y, this.w, this.h)
         this.context.restore()   
     }
     
@@ -60,7 +57,8 @@ class GenText extends GenShape {
         this.h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
 
         this.context.fillStyle = this.color
-        this.context.fillText(this.text, this.x, this.y)        
+        this.context.textBaseline = "middle"
+        this.context.fillText(this.text, this.x, this.y + this.h / 2)      
         this.context.restore()
         
         super.draw()

@@ -162,6 +162,7 @@ class GenRect extends GenShape {
     draw() {
         if (this.w > 0 && this.h > 0) {
             this.context.save()
+            this.context.translate(0.5, 0.5)
             if (this.fill) {
                 this.context.fillStyle = this.color
                 this.context.fillRect(this.x, this.y, this.w, this.h)               

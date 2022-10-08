@@ -137,6 +137,7 @@ class GenLine extends GenShape {
         }
      
         ctx.save()
+        ctx.translate(0.5, 0.5)
         ctx.beginPath()
         ctx.moveTo(fromX, fromY)
         ctx.lineTo(toX, toY)

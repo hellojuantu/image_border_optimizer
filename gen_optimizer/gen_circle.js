@@ -124,10 +124,14 @@ class GenCircle extends GenShape {
         if (this.isCreating()) {
             return true
         }
-        if (this.fill) {
-            return this.pointInFrame(px, py)
+        let pointInRectDraggerLine = false
+        if (this.isSelected()) {
+            pointInRectDraggerLine = super.pointInHollowFrame(px, py, 1.5)
         }
-        return this.pointInHollowFrame(px, py, this.border)
+        if (this.fill) {
+            return this.pointInFrame(px, py) || pointInRectDraggerLine
+        }
+        return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
     }
 
     pointInFrame(px, py) {
@@ -192,6 +196,7 @@ class GenCircle extends GenShape {
         if (this.w > 0 && this.h > 0) {
             this.context.save()
             this.context.strokeStyle = this.color
+            this.context.translate(0.5, 0.5)
             this.context.beginPath()
             let w2 = this.w / 2
             let h2 = this.h / 2
