@@ -144,6 +144,19 @@ class ShapeControls extends GenControls {
             s.checkStatus()
             return !s.isDeleted()
         })
+        // 遍历 shapes 把 selected shape 的移到末尾, 其他顺序不变
+        let selectedShape = null
+        for (let i = self.shapes.length - 1; i >= 0; i--) {
+            let shape = self.shapes[i]
+            if (shape.isSelected()) {
+                selectedShape = shape
+                self.shapes.splice(i, 1)
+                break
+            }
+        }
+        if (selectedShape != null) {
+            self.shapes.unshift(selectedShape)
+        }
         for (let i = self.shapes.length - 1; i >= 0; i--) {
             let shape = self.shapes[i]
             shape.update()
@@ -159,6 +172,19 @@ class ShapeControls extends GenControls {
             s.checkStatus()
             return !s.isDeleted()
         })
+        // 遍历 shapes 把 selected shape 的移到末尾, 其他顺序不变
+        let selectedShape = null
+        for (let i = self.shapes.length - 1; i >= 0; i--) {
+            let shape = self.shapes[i]
+            if (shape.isSelected()) {
+                selectedShape = shape
+                self.shapes.splice(i, 1)
+                break
+            }
+        }
+        if (selectedShape != null) {
+            self.shapes.unshift(selectedShape)
+        }
         for (let i = self.shapes.length - 1; i >= 0; i--) {
             let shape = self.shapes[i]
             shape.draw()

@@ -55,7 +55,7 @@ class GenText extends GenShape {
         this.context.lineTo(rightTop.x, rightTop.y)
         this.context.lineTo(rightBottom.x, rightBottom.y)
         this.context.lineTo(leftBottom.x, leftBottom.y)
-        this.context.lineTo(leftTop.x, leftTop.y)   
+        this.context.lineTo(leftTop.x, leftTop.y)     
     }
     
     draw() {

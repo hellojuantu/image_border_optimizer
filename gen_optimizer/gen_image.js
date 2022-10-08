@@ -129,6 +129,19 @@ class GenImage extends GenShape {
         this.h = Math.abs(this.position.rightBottom.y - this.position.leftTop.y)
     }
 
+    connectDraggers() {
+        // 连接四个拖拽点       
+        let leftTop = this.position.leftTop
+        let rightTop = this.position.rightTop
+        let leftBottom = this.position.leftBottom
+        let rightBottom = this.position.rightBottom
+        this.context.moveTo(leftTop.x, leftTop.y)
+        this.context.lineTo(rightTop.x, rightTop.y)
+        this.context.lineTo(rightBottom.x, rightBottom.y)
+        this.context.lineTo(leftBottom.x, leftBottom.y)
+        this.context.lineTo(leftTop.x, leftTop.y)     
+    }
+    
     draw() {
         this.context.save()
         // 缩放图片
