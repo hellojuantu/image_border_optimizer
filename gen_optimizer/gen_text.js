@@ -68,8 +68,8 @@ class GenText extends GenShape {
         this.h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
 
         this.context.fillStyle = this.color
-        this.context.textBaseline = "middle"
-        this.context.fillText(this.text, this.x, this.y + this.h / 2)      
+        this.context.textBaseline = "bottom"
+        this.context.fillText(this.text, this.x, this.y + this.h)      
         this.context.restore()
         
         super.draw()
