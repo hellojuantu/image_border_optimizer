@@ -41,10 +41,21 @@ class GenText extends GenShape {
 
     connectDraggers() {
         // 连接四个拖拽点
-        this.context.save()
-        this.context.strokeStyle = '#29a1ff'
-        this.context.strokeRect(this.x, this.y, this.w, this.h)
-        this.context.restore()   
+        this.position = {
+            'leftTop': Vector.new(this.x, this.y),
+            'leftBottom': Vector.new(this.x, this.y + this.h),
+            'rightTop': Vector.new(this.x + this.w, this.y),
+            'rightBottom': Vector.new(this.x + this.w, this.y + this.h),
+        }
+        let leftTop = this.position.leftTop
+        let rightTop = this.position.rightTop
+        let leftBottom = this.position.leftBottom
+        let rightBottom = this.position.rightBottom
+        this.context.moveTo(leftTop.x, leftTop.y)
+        this.context.lineTo(rightTop.x, rightTop.y)
+        this.context.lineTo(rightBottom.x, rightBottom.y)
+        this.context.lineTo(leftBottom.x, leftBottom.y)
+        this.context.lineTo(leftTop.x, leftTop.y)   
     }
     
     draw() {
