@@ -57,7 +57,7 @@ var config = {
     },
     shadowColorAlpha: {
         _comment: "shadow color alpha",
-        value: 5,
+        value: 4,
         valueType: 'number',
         min: 0,
         max: 10,
