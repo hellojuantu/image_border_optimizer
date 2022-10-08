@@ -36,26 +36,23 @@ class PanelControls extends GenControls {
         }
         // 空白页面, 不加阴影
         if (img.dataset.type == 'default_blank') {
-            canvas.width = config.canvasWidth.value
-            canvas.height = config.canvasHeight.value
             context.drawImage(img, 0, 0)
             return
         }
         // get config
-        let offset = config.offset.value
-        let io = config.imageOffset.value
-        // 
-        canvas.width = config.canvasWidth.value + offset * 20
-        canvas.height = config.canvasHeight.value + offset * 20
+        let c_w = canvas.width / this.ratio
+        let c_h = canvas.height / this.ratio
+        let centerOffsetX = (c_w - img.width) / 2
+        let centerOffsetY = (c_h - img.height) / 2
 
-        this.drawShadow(img, io)
+        this.drawShadow(img, centerOffsetX, centerOffsetY)
 
-        context.drawImage(img, io, io)
+        context.drawImage(img, centerOffsetX * this.ratio, centerOffsetY * this.ratio, img.width * this.ratio, img.height * this.ratio)
 
-        this.drawBorder(img, io)
+        this.drawBorder(img, centerOffsetX, centerOffsetY)        
     }
 
-    drawShadow(img, io) {
+    drawShadow(img, ox, oy) {
         let shadowOffset = config.shadowOffset.value
         this.context.save()
         this.context.globalAlpha = config.shadowColorAlpha.value / 10
@@ -63,20 +60,20 @@ class PanelControls extends GenControls {
         this.context.shadowOffsetY = shadowOffset
         this.context.shadowColor = config.shadowColor.value
         this.context.shadowBlur = config.shadowBlur.value
-        this.context.fillRect(io, io, img.width, img.height)
+        this.context.fillRect(ox, oy, img.width, img.height)
         this.context.restore()
     }
 
-    drawBorder(img, io) {
+    drawBorder(img, ox, oy) {
         this.context.save()
         this.context.lineWidth = config.borderLength.value
         this.context.strokeStyle = config.borderColor.value
         this.context.beginPath()
-        this.context.moveTo(io, io)
-        this.context.lineTo(io, io + img.height)
-        this.context.lineTo(io + img.width, io + img.height)
-        this.context.lineTo(io + img.width, io)
-        this.context.lineTo(io, io)
+        this.context.moveTo(ox, oy)
+        this.context.lineTo(ox, oy + img.height)
+        this.context.lineTo(ox + img.width, oy + img.height)
+        this.context.lineTo(ox + img.width, oy)
+        this.context.lineTo(ox, oy)
         this.context.closePath()
         this.context.stroke()
         this.context.restore()
@@ -91,7 +88,6 @@ class PanelControls extends GenControls {
             "config.shadowColor": config.shadowColor,
             "config.shadowBlur": config.shadowBlur,
             "config.imageOffset": config.imageOffset,
-            "config.offset": config.offset,
         }
     }
 }

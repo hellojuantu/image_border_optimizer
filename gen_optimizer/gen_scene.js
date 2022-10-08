@@ -4,6 +4,7 @@ class GenScene {
         this.canvas = optimizer.canvas
         this.context = optimizer.context
         this.panels = optimizer.panels
+        this.ratio = this.optimizer.ratio
         this.elements = []
         this.events = {}
         this.pageClass = {}

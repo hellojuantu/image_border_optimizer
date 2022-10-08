@@ -1,7 +1,7 @@
 class GenOptimizer {
     constructor(runCallback) {
         this.runCallback = runCallback
-        window.fps = 120
+        window.fps = 60
         this.setup()
     }
 
@@ -10,8 +10,28 @@ class GenOptimizer {
         return this.i
     }
 
+    updateCanvasHW(h, w) {
+        let canvas = this.canvas
+        canvas.width = w * this.ratio
+        canvas.height = h * this.ratio 
+        canvas.style.width = w + 'px'
+        canvas.style.height = h + 'px'
+    }
+
     enableDebugMode() {
         log = console.log.bind(console)
+    }
+
+    getPixelRatio() {
+        let context = this.context
+        let backingStore = context.backingStorePixelRatio ||
+              context.webkitBackingStorePixelRatio ||
+              context.mozBackingStorePixelRatio ||
+              context.msBackingStorePixelRatio ||
+              context.oBackingStorePixelRatio ||
+              context.backingStorePixelRatio || 1
+    
+        return (window.devicePixelRatio || 1) / backingStore
     }
 
     setCursor(cursor) {
@@ -27,6 +47,7 @@ class GenOptimizer {
         this.canvasArea = e("#id-canvas-area")
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
+        this.ratio = this.getPixelRatio()
         // blank image
         this.blankPanel = {
             src: this.canvas.toDataURL("image/png"),

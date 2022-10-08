@@ -196,23 +196,22 @@ class GenCircle extends GenShape {
         if (this.w > 0 && this.h > 0) {
             this.context.save()
             this.context.strokeStyle = this.color
-            this.context.translate(0.5, 0.5)
             this.context.beginPath()
             let w2 = this.w / 2
             let h2 = this.h / 2
             if (this.fill) {
                 this.context.fillStyle = this.color
-                this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, 2 * Math.PI)
+                this.context.ellipse(this.ratio * (this.x + w2), this.ratio * (this.y + h2), w2 * this.ratio, h2 * this.ratio, 0, 0, 2 * Math.PI)
                 this.context.fill()
             } else {                
                 if (this.w > 2 * this.border && this.h > 2 * this.border) {
-                    let halfBorder = this.border / 2
-                    this.context.lineWidth = halfBorder * 2
-                    this.context.ellipse(this.x + w2, this.y + h2, w2 - halfBorder, h2 - halfBorder, 0, 0, Math.PI * 2)
+                    let halfBorder = this.border / (2 * this.ratio)
+                    this.context.lineWidth = this.border
+                    this.context.ellipse(this.ratio * (this.x + w2), this.ratio * (this.y + h2), (w2 - halfBorder * 2) * this.ratio, (h2 - halfBorder * 2) * this.ratio, 0, 0, Math.PI * 2)
                     this.context.stroke()
                 } else {                
                     this.context.fillStyle = this.color
-                    this.context.ellipse(this.x + w2, this.y + h2, w2, h2, 0, 0, Math.PI * 2)
+                    this.context.ellipse(this.ratio * (this.x + w2), this.ratio * (this.y + h2), w2 * this.ratio, h2 * this.ratio, 0, 0, 2 * Math.PI)
                     this.context.fill()
                 }
             }

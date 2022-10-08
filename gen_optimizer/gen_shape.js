@@ -168,7 +168,6 @@ class GenShape extends GenControls {
             this.context.beginPath()
             this.context.strokeStyle = '#29a1ff'
             this.context.lineWidth = 1
-            this.context.translate(0.5, 0.5)
 
             this.connectDraggers()
             

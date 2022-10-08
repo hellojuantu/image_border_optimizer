@@ -23,17 +23,9 @@ var config = {
         max: -1,
         type: "number",
     },
-    offset: {
-        _comment: "canvas offset",
-        value: 6,
-        valueType: 'number',
-        min: 2,
-        max: 30,
-        type: "number",
-    },
     imageOffset: {
         _comment: "background offset",
-        value: 60,
+        value: 160,
         valueType: 'number',
         min: -100,
         max: 100,

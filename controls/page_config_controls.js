@@ -64,16 +64,7 @@ class PageConfigControls extends GenControls {
                             let v = config.index.value + 1
                             self.switchPanel(v)                          
                         }
-                    },
-                    "config.centerButton": function(target) {
-                        let w = self.canvas.width
-                        let img = self.images[config.index.value]
-                        if (img == null) {
-                            return
-                        }
-                        let imgW = img.width
-                        self.updateControls('config.imageOffset.value', (w - imgW) / 2)
-                    },
+                    },                  
                     "config.penClearButton": function(target) {
                         // log("penClearButton")
                         self.penControl.resetAndUpdate([])
@@ -101,15 +92,11 @@ class PageConfigControls extends GenControls {
                 before: function(bindVar, target) {
                     log("drawer", bindVar, target)
                     let shapeActive = sc.pageClass.shapeActive
-                    // if (target.classList.contains(shapeActive)) {
-                    //     target.classList.remove(shapeActive)
-                    // } else {
                     removeClassAllWithCallback(shapeActive, (e) => {
                         let bindVar = e.dataset.value
                         eval(bindVar + '.value=false')
                     }) 
                     target.classList.add(shapeActive)
-                    // }
                     eval(bindVar + '.value=' + parseBoolean(target.classList.contains(shapeActive)))
                 },
                 configToEvents: {                    
@@ -156,6 +143,7 @@ class PageConfigControls extends GenControls {
                         } else {
                             config.canvasWidth.value = self.parseValueWithType(target.value, 'number') 
                         }
+                        self.optimizer.updateCanvasHW(config.canvasHeight.value, config.canvasWidth.value)
                     },
                 }
             }
@@ -347,17 +335,29 @@ class PageConfigControls extends GenControls {
         }
 
         let img = self.panels[v]
+        let ratio = self.ratio
+        let offset = 0
+        if (img.dataset.type == "user_upload") {
+            ratio = 1
+            offset = config.imageOffset.value
+        }
+
         // 重置属性
         for (let input of es('.canvas-hw-input')) {
             let prop = input.dataset.prop
             if (prop == 'width') {
-                input.value = img.width
-                config.canvasWidth.value = img.width
+                input.value = img.width / ratio
+                config.canvasWidth.value = img.width / ratio
             } else if (prop == 'height') {
-                input.value = img.height
-                config.canvasHeight.value = img.height
+                input.value = img.height / ratio
+                config.canvasHeight.value = img.height / ratio
             }
         }
+
+        // 改变画布大小
+        let w = config.canvasWidth.value + offset
+        let h = config.canvasHeight.value + offset
+        self.optimizer.updateCanvasHW(h, w)
     }
 
     // -------- 鼠标点击对象范围函数 --------

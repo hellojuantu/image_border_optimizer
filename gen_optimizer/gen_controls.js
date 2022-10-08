@@ -5,6 +5,7 @@ class GenControls {
         this.canvas = this.optimizer.canvas
         this.context = this.optimizer.context
         this.panels = this.optimizer.panels
+        this.ratio = this.optimizer.ratio
         this.scene = scene
     }
 

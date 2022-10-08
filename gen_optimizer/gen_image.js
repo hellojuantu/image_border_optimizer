@@ -145,7 +145,7 @@ class GenImage extends GenShape {
     draw() {
         this.context.save()
         // 缩放图片
-        this.context.drawImage(this.image, this.x, this.y, this.w, this.h)
+        this.context.drawImage(this.image, this.x * 2, this.y * 2, this.w * 2, this.h * 2)
         this.drawBorder()
         this.context.restore()
         // 绘制拖拽点
@@ -161,8 +161,8 @@ class GenImage extends GenShape {
         if (this.w > 2 * this.border && this.h > 2 * this.border) {
             this.context.strokeStyle = this.color
             let border = this.border / 2
-            this.context.lineWidth = border * 2
-            this.context.strokeRect(this.x + border, this.y + border, this.w - border * 2, this.h - border * 2)
+            this.context.lineWidth = border * 2 * this.ratio
+            this.context.strokeRect(this.x + border, this.y + border, this.w - this.border, this.h - this.border)
         } else {
             this.context.fillStyle = this.color
             this.context.fillRect(this.x, this.y, this.w, this.h)               

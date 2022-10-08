@@ -134,6 +134,10 @@ this.getComponent('attribute').buildWith(data)
 
 ## 更新日志
 
+### GenOptimizer v2.3.4
+- 全局 HIDPI 支持, 绘制更高清的图形
+- 修复了一些已知的 BUG
+
 ### GenOptimizer v2.3.3
 - 优化了选中图形的层级显示
 - 修复了图片拖拽边框的显示

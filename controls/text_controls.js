@@ -111,7 +111,7 @@ class TextControls extends GenControls {
             input.style.width = defaultWith + "px"
         } else {
             let t = calTextWH(value, font)
-            input.style.width = t.w * zoom + 1.5 + 'px'
+            input.style.width = t.w * zoom + 'px'
         }
         input.focus()
         input.select()

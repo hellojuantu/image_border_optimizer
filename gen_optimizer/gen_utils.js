@@ -102,15 +102,13 @@ const removeClassAllWithIndex = function (className, removedIndex) {
 }
 
 const calTextWH = function(text, font) {
-    let canvas = e("#id-canvas")
+    let canvas = document.createElement("canvas")
     let context = canvas.getContext('2d')
-    context.save()
     context.textBaseline = "top"
     context.font = font
     let metrics = context.measureText(text)
     let w = parseInt(metrics.width) + 1
     let h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
-    context.restore()
     return {
         w: w,
         h: h,

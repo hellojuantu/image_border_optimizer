@@ -62,7 +62,13 @@ class Attribute extends GenComponent {
                                 shape.color = target.value
                             }
                         }
-                    },                       
+                    },
+                    "config.imageOffset": function(target) {
+                        let offset = self.parseValueWithType(target.value, 'number')
+                        let w = config.canvasWidth.value + offset
+                        let h = config.canvasHeight.value + offset
+                        self.optimizer.updateCanvasHW(h, w)
+                    },
                 }
             },
             {
