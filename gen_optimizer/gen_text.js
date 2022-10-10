@@ -8,6 +8,7 @@ class GenText extends GenShape {
         this.color = config.textColor.value
         this.status = this.enumStatus.creating
         this.isText = true
+        this.numberOfDraggers = 2
     }
     
     static configAttribute() {
@@ -16,6 +17,23 @@ class GenText extends GenShape {
             "config.textColor": config.textColor,
         }
     }
+
+    // setupDraggers() {
+    //     // 左右两个拖拽点
+    //     let left = GenDragger.new(this, 0, 0, 'crosshair', 'left')
+    //     left.resetPosition = function() {
+    //         this.x = this.offsetX + this.owner.x - this.w / 2
+    //         this.y = this.offsetY + this.owner.y - this.h / 2 + this.owner.h / 2
+    //     }
+    //     this.addDragger(left)
+
+    //     let right = GenDragger.new(this, 0, 0, 'crosshair', 'right')
+    //     right.resetPosition = function() {
+    //         this.x = this.offsetX + this.owner.x - this.w / 2 + this.owner.w
+    //         this.y = this.offsetY + this.owner.y - this.h / 2 + this.owner.h / 2
+    //     }
+    //     this.addDragger(right)
+    // }
 
     selected() {
         super.selected()
@@ -58,21 +76,41 @@ class GenText extends GenShape {
         this.context.lineTo(leftTop.x, leftTop.y)     
     }
     
-    draw() {
-        // log("draw text", this.text, this)       
-        this.context.save()
-        this.context.textBaseline = "top"
-        this.context.font = this.font
-        let metrics = this.context.measureText(this.text)
-        this.w = metrics.width
-        this.h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+    drawtext() {
+        let lines = this.text.split('\n')
+        let max = lines[0]
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i]
+            if (!isBlank(line) && line.length > max.length) {
+                max = line
+            }
+        }
+        // 如果是多行文本, 向后遍历到第一个不为 0 的宽度就是字体框的宽度
+        this.w = calTextWH(max, this.font).w
+        // 单行文本
+        let rows = getRows(this.text, this.w, this.font)
+        for(let b = 0; b < rows.length; b++){
+            this.context.fillText(rows[b], this.x, this.y + (b + 1) * this.h)
+        }
+        // 更新高度
+        this.h = rows.length * this.h
+    }
 
+    update() {
+        let p = calTextWH(this.text, this.font)
+        this.w = p.w
+        this.h = p.h
+    }
+
+    draw() {
+        this.context.save()
+        this.context.font = this.font
         this.context.fillStyle = this.color
         this.context.textBaseline = "bottom"
-        this.context.fillText(this.text, this.x, this.y + this.h)      
+        this.drawtext()
+        // this.context.wrapText(this.text, this.x, this.y, 100, this.h)
         this.context.restore()
-        
+        // log("this.dragger", this)
         super.draw()
-       
     }
 }

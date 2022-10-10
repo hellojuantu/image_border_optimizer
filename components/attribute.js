@@ -33,7 +33,9 @@ class Attribute extends GenComponent {
                             let sel = "#" + control.textControl.inputId
                             let input = e(sel)
                             input.style.font = control.textControl.fixFont(target.value)
-                            input.style.width = calTextWH(input.value, input.style.font).w + "px"
+                            let zoom = self.parseValueWithType(e(".zoom-input").value, 'number') / 100
+                            input.style.lineHight = zoom * calTextWH(input.value, input.style.font).w + "px"
+                            // input.style.width = calTextWH(input.value, input.style.font).w + "px"
                         }
                     },
                     "config.textColor": function(target) {

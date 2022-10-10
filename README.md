@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.3.3
+## Image-Border-Optimizer v2.3.5
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hello.juantu.cn)
@@ -133,6 +133,11 @@ this.getComponent('attribute').buildWith(data)
 ```
 
 ## 更新日志
+
+### GenOptimizer v2.3.5
+- 优化了文字的多行输入, 提升了文字的输入体验
+- 修复了 Canvas 缩放滚动条过大问题
+- 修复了一些已知 BUG
 
 ### GenOptimizer v2.3.4
 - 全局 HIDPI 支持, 绘制更高清的图形

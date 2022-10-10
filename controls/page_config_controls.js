@@ -125,8 +125,8 @@ class PageConfigControls extends GenControls {
                         config.zoom.value = self.parseValueWithType(target.value, 'number')
                         let zoom = config.zoom.value / 100
                         let wrapper = e("#id-canvas-wrapper")
-                        wrapper.style.height = self.canvas.height * zoom + "px"
-                        wrapper.style.width = self.canvas.width * zoom + "px"
+                        wrapper.style.height = (self.canvas.height * zoom) / self.ratio + "px"
+                        wrapper.style.width = (self.canvas.width * zoom) / self.ratio + "px"
                         self.canvas.style.transform = `scale(${zoom})`
                     },
                 },

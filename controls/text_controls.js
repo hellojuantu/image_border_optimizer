@@ -96,38 +96,64 @@ class TextControls extends GenControls {
             return
         }
         let div = document.createElement('div');
-        div.innerHTML = `<input cols="30" value="${value}" type="text" id="${this.inputId}" class="float-input-text">`
+        div.innerHTML = `<span contenteditable="true" id="${this.inputId}" class="float-input-text"></span>`
         e("#id-canvas-area").append(div)
         // 添加样式
         let input = e(selector)
+        input.innerText = value
+        input.dataset.value = value
         let zoom = self.parseValueWithType(e(".zoom-input").value, 'number') / 100
         input.style.display = "block"
-        input.style.left = (gx - 1) + "px"
-        input.style.top = (gy - 3) + "px"
+        input.style.left = gx - 1 + "px"
+        input.style.top = gy - 1 + "px"
         input.style.font = self.fixFont(font)
         input.style.color = color
-        // 设置默认宽度
-        if (defaultWith > 0) {
-            input.style.width = defaultWith + "px"
-        } else {
-            let t = calTextWH(value, font)
-            input.style.width = t.w * zoom + 'px'
+
+        let lines = value.split('\n')
+        let max = lines[0]
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i]
+            if (!isBlank(line) && line.length > max.length) {
+                max = line
+            }
         }
+        let p = calTextWH(max, font)
+        input.style.lineHeight = p.h * zoom + "px"
+        // input.cols = calCols(max)
+        // input.rows = getRows(value, p.w, font).length
+        // input.style.height = p.h * getRows(value, p.w, font).length + 'px'
         input.focus()
-        input.select()
+        // input.select()
         // 输入时, 自动更新宽度
         bind(selector, 'input', function(event) {           
-            let t = calTextWH(event.target.value, event.target.style.font)
-            let selector = "#" + self.inputId
-            let input = e(selector)
-            input.style.width = t.w + 'px'
+            let target = event.target
+            // let value = target.dataset.value
+            target.dataset.value = target.innerText
+            // let font = target.style.font
+
+            // let lines = value.split('\n')
+            // let max = lines[0]
+            // for (let i = 0; i < lines.length; i++) {
+            //     let line = lines[i]
+            //     if (!isBlank(line) && line.length > max.length) {
+            //         max = line
+            //     }
+            // }
+            // let p = calTextWH(max, font)
+            // log("p", p)
+            // target.style.width = p.w * zoom + 'px'
+            // target.style.height = p.h * getRows(value, p.w, font).length + 'px'
+
+            // target.cols = calCols(max)
+            // target.rows = getRows(value, p.w, font).length
         })
     }
 
     closeInputAndAddText() {
         let self = this
         let closeInput = self.closeInput()
-        let textContent = closeInput.value
+        let textContent = closeInput.dataset.value
+        log("textContent", textContent)
         if (textContent.trim().length <= 0) {
             return
         }

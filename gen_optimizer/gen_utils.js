@@ -107,12 +107,51 @@ const calTextWH = function(text, font) {
     context.textBaseline = "top"
     context.font = font
     let metrics = context.measureText(text)
-    let w = parseInt(metrics.width) + 1
+    let w = parseInt(metrics.width)
     let h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
     return {
         w: w,
         h: h,
     }
+}
+
+const calCols = function(text) {
+    text = text.trim()
+    // 一个中文字符占两个长度
+    let length = 0
+    for (let i = 0; i < text.length; i++) {
+        let c = text[i]
+        if (c.charCodeAt(0) > 255) {
+            length += 2
+        } else {
+            length += 1
+        }
+    }
+    return length
+}
+
+const getRows = function(text, width, font) {
+    let chr = text.split("")
+    let temp = ""
+    let rows = []
+
+    for (let a = 0; a < chr.length; a++){
+        if (chr[a] === '\n') {
+            rows.push(temp)
+            temp = ""
+            continue
+        }
+
+        if (calTextWH(temp, font).w < width && 
+            calTextWH(temp + (chr[a]), font).w <= width) {
+            temp += chr[a]
+        } else {
+            rows.push(temp)
+            temp = chr[a]
+        }
+    }
+    rows.push(temp)
+    return rows
 }
 
 async function clipboardImg(url) {
@@ -128,4 +167,9 @@ async function clipboardImg(url) {
     } catch (err) {
         alert('复制失败')
     }
+}
+
+
+const isBlank = function(str) {
+    return (!str || /^\s*$/.test(str))
 }
