@@ -10,6 +10,23 @@ class GenOptimizer {
         return this.i
     }
 
+    async loadImageToClipboard() {
+        try {
+            this.updateAndDraw()
+            let url = this.canvas.toDataURL("image/png")
+            const data = await fetch(url)
+            const blob = await data.blob()
+            await navigator.clipboard.write([
+                new window.ClipboardItem({
+                    [blob.type]: blob
+                })
+            ])        
+            alert('复制成功')
+        } catch (err) {
+            alert('复制失败')
+        }
+    }
+
     updateCanvasHW(h, w) {
         let canvas = this.canvas
         canvas.width = w * this.ratio

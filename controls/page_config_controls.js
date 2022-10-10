@@ -80,10 +80,7 @@ class PageConfigControls extends GenControls {
                         }
                         self.shapeControl.removeDraggers()
                         let g = self.optimizer
-                        // update and draw
-                        g.updateAndDraw()
-                        // copy
-                        clipboardImg(self.canvas.toDataURL("image/png"))
+                        g.loadImageToClipboard()                    
                     },
                     "action.newBlank": function(target) {
                         let b = self.optimizer.defaultBlankPanel()

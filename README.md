@@ -14,6 +14,7 @@
 - 支持多图操作, 一键复制, 处处可用
 
 ## Optimizer 框架特点
+![GenOptimizer Structure](./public/img/structure.jpeg)
 - 事件、画图、交互 全局管理
 - 支持注册自定义组件, 可自定义配置管理
 - 基于面向对象, 高度抽象代码
@@ -36,8 +37,8 @@ GenOptimizer.instance(function(o){
     o.runWithScene(scene)
 })
 ```
-## 场景管理器
-### 事件
+## 场景管理器 (Scene)
+### 事件 (Event)
 #### 页面事件
 ```html
 ...
@@ -112,7 +113,7 @@ this.registerAction("s", status => {
     console.log("s", status)
 })
 ```
-### 组件
+### 组件 (Component)
 #### 注册组件
 ```JavaScript
 class MyComponent extends GenComponent {

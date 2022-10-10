@@ -154,22 +154,6 @@ const getRows = function(text, width, font) {
     return rows
 }
 
-async function clipboardImg(url) {
-    try {
-        const data = await fetch(url)
-        const blob = await data.blob()
-        await navigator.clipboard.write([
-            new window.ClipboardItem({
-                [blob.type]: blob
-            })
-        ])        
-        alert('复制成功')
-    } catch (err) {
-        alert('复制失败')
-    }
-}
-
-
 const isBlank = function(str) {
     return (!str || /^\s*$/.test(str))
 }
