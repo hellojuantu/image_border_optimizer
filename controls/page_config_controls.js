@@ -73,6 +73,16 @@ class PageConfigControls extends GenControls {
                     },
                     "action.copyImageButton": function(target) {
                         log("copyImageButton")
+                        // 遍历所有的 shape 变成 idle
+                        for (let i = 0; i < self.shapeControl.shapes.length; i++) {
+                            let shape = self.shapeControl.shapes[i]
+                            shape.idle()
+                        }
+                        self.shapeControl.removeDraggers()
+                        let g = self.optimizer
+                        // update and draw
+                        g.updateAndDraw()
+                        // copy
                         clipboardImg(self.canvas.toDataURL("image/png"))
                     },
                     "action.newBlank": function(target) {

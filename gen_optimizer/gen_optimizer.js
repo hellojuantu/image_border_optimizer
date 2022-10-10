@@ -168,6 +168,16 @@ class GenOptimizer {
         this.scene.update()
     }
 
+    updateAndDraw() {
+        let g = this
+        // update
+        g.update()
+        // clear
+        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)        
+        // draw
+        g.draw()  
+    }
+
     runloop() {
         // log(window.fps)
         // events
@@ -186,11 +196,7 @@ class GenOptimizer {
             }           
         }                    
         // update
-        g.update()
-        // clear
-        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)        
-        // draw
-        g.draw()                
+        g.updateAndDraw()            
         // next run loop
         setTimeout(function(){
             g.runloop()

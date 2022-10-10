@@ -72,9 +72,9 @@ class GenShape extends GenControls {
     /**
      * shape 的默认形态 (按下 Shilft up 触发)
      */
-     makeNormal() {
+    makeNormal() {
         this.isSpecial = false
-     }
+    }
 
     // -------- shape 生命周期相关 ---------
     /**
