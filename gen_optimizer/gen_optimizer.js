@@ -59,9 +59,18 @@ class GenOptimizer {
         return this.canvas.style.cursor
     }
 
+    setupWrapper() {
+        let self = this
+        let zoom = config.zoom.value / 100
+        let wrapper = this.canvasWrapper
+        wrapper.style.height = (self.canvas.height * zoom) / self.ratio + "px"
+        wrapper.style.width = (self.canvas.width * zoom) / self.ratio + "px"
+    }
+
     setup() {
         // canvas
         this.canvasArea = e("#id-canvas-area")
+        this.canvasWrapper = e("#id-canvas-wrapper")
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
         this.ratio = this.getPixelRatio()
@@ -92,6 +101,8 @@ class GenOptimizer {
         // mouse
         this.mouseActions = []
         this.setupMouse()
+        // setup wrapper width and height
+        this.setupWrapper()
         this.__start()
     }
 

@@ -316,6 +316,8 @@
 	padding: 15px 40px;
 	white-space: nowrap;
 	overflow-x: auto;
+	position: relative;
+	z-index: 999;
 	background: #fff;
 	border-bottom: 1px solid #ddd
 }
@@ -516,6 +518,11 @@
     border-right: 2px solid #ddd;
 }
 
+.right {
+	background: white;
+    z-index: 999;
+}
+
 .home main .right {
 	position: absolute;
 	height: 100%;
@@ -565,4 +572,9 @@
 	background: rgb(255, 255, 255);
 	transform-origin: left top;
 	display: block;
+}
+
+#id-canvas-wrapper {
+	position: relative;
+	overflow: hidden;
 }

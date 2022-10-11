@@ -12,6 +12,27 @@ class TextControls extends GenControls {
         this.setupInput()
         // 双击编辑文字
         this.setupChangeText()
+        // scroll
+        this.setupScrollEvent()
+    }
+
+    setupScrollEvent() {
+        this.optimizer.canvasArea.addEventListener('scroll', event => {            
+            // 更新文字的位置
+            let selector = "#id-text"
+            let input = e(selector)
+            if (input == null) {
+                return
+            }
+            // 计算滚动条的位置
+            let x = input.dataset.x
+            let y = input.dataset.y
+            let zoom = config.zoom.value / 100
+            let left = x * zoom + this.canvas.offsetLeft
+            let top = y * zoom + this.canvas.offsetTop
+            input.style.left = left + 'px'
+            input.style.top = top + 'px'
+        })
     }
 
     setupInput() {
@@ -120,18 +141,19 @@ class TextControls extends GenControls {
         }
         let div = document.createElement('div');
         div.innerHTML = `<span contenteditable="true" id="${this.inputId}" class="float-input-text"></span>`
-        e("#id-canvas-area").append(div)
-        // 添加样式
+        self.optimizer.canvasWrapper.append(div)
+        // 添加数据
         let input = e(selector)   
         input.innerText = value     
         input.dataset.value = value
         input.dataset.x = text.x
         input.dataset.y = text.y
         input.dataset.font = font
+        // 添加样式
         let zoom = config.zoom.value / 100
         input.style.display = "inline"
-        input.style.left = gx - 1 + "px"
-        input.style.top = gy - 1 + "px"
+        input.style.left = (gx - 1) + self.canvasArea.scrollLeft + "px"
+        input.style.top = (gy - 1) + self.canvasArea.scrollTop + "px"
         input.style.font = self.fixFont(font)
         input.style.color = color
         input.style.lineHeight = calHeightLine(value, font, zoom) + "px"
@@ -139,6 +161,7 @@ class TextControls extends GenControls {
         input.focus()
         selectAll(self.inputId)        
     
+        // 绑定事件
         input.addEventListener('keypress', function(event) {
             // enter keycode is 13
             if (event.keyCode == 13 && event.shiftKey == false) {
@@ -164,13 +187,12 @@ class TextControls extends GenControls {
     closeInputAndAddText() {
         let self = this
         let closeInput = self.closeInput()
-        let htmlText = closeInput.innerHTML
         let textContent = closeInput.dataset.value
         log("textContent", textContent)
         if (textContent.trim().length <= 0) {
             return
         }
-        self.addText(textContent, self.textX, self.textY, htmlText)
+        self.addText(textContent, self.textX, self.textY)
     }
 
     closeInput() {
@@ -202,9 +224,8 @@ class TextControls extends GenControls {
         return null
     }
 
-    addText(content, x, y, html) {
-        let text = GenText.new(this.scene, content, x, y, html)
-        // text.fillProp(prop)
+    addText(content, x, y) {
+        let text = GenText.new(this.scene, content, x, y)
         text.idle()                
         this.shapeControl.shapes.unshift(text)
         this.texts.unshift(text)
