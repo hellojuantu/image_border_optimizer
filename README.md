@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.3.5
+## Image-Border-Optimizer v2.3.6
 ## 轻量化的图片编辑器
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://hello.juantu.cn)
@@ -134,6 +134,11 @@ this.getComponent('attribute').buildWith(data)
 ```
 
 ## 更新日志
+
+### GenOptimizer v2.3.6
+- 修复了文字多行输入空格异常问题
+- 修复了文字粘贴带富文本的问题
+- 优化了整体文字输入体验
 
 ### GenOptimizer v2.3.5
 - 优化了文字的多行输入, 提升了文字的输入体验

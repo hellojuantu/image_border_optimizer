@@ -9,42 +9,7 @@
     <link rel="stylesheet" href="./public/styles/app.css"/>
     <link rel="stylesheet" href="./public/styles/optimzer.css"/>
     <link rel="stylesheet" href="./public/styles/elementUI.css"/>
-    <script src="./public/lib/hidpi-canvas.min.js"></script>
-    <script>
-        CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {	
-            if (typeof text != 'string' || typeof x != 'number' || typeof y != 'number') {	
-                return;	
-            }	
-                
-            var context = this;	
-            var canvas = context.canvas;	
-                
-            if (typeof maxWidth == 'undefined') {	
-                maxWidth = (canvas && canvas.width) || 300;	
-            }	
-            if (typeof lineHeight == 'undefined') {	
-                lineHeight = (canvas && parseInt(window.getComputedStyle(canvas).lineHeight)) || parseInt(window.getComputedStyle(document.body).lineHeight);	
-            }	
-                
-            // 字符分隔为数组	
-            var arrText = text.split('');	
-            var line = '';	
-                
-            for (var n = 0; n < arrText.length; n++) {	
-                var testLine = line + arrText[n];	
-                var metrics = context.measureText(testLine);	
-                var testWidth = metrics.width;	
-                if (testWidth > maxWidth && n > 0) {	
-                    context.fillText(line, x, y);	
-                    line = arrText[n];	
-                    y += lineHeight;	
-                } else {	
-                    line = testLine;	
-                }	
-            }	
-            context.fillText(line, x, y);	
-        };
-    </script>
+    <script src="./public/lib/hidpi-canvas.min.js"></script>    
 </head>
 <body>
     <div class="home">
@@ -53,7 +18,6 @@
             <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
             <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
             <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
-            <!-- <button type="button" data-type="button" data-value="config.centerButton" class="gen-auto-button el-button el-button--default el-button--small">背景居中</button> -->
             <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
             <div class="canvas-config canvas-hw">
                 <span>画布大小</span>

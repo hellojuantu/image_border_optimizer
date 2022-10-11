@@ -130,27 +130,56 @@ const calCols = function(text) {
     return length
 }
 
+const selectAll = function(id) {
+    if (document.selection) {
+        var range = document.body.createTextRange()
+        range.moveToElementText(document.getElementById(id))
+        range.select()
+    } else if (window.getSelection) {
+        var range = document.createRange()
+        range.selectNodeContents(document.getElementById(id))
+        window.getSelection().removeAllRanges()
+        window.getSelection().addRange(range)
+    }
+}
+
+const calHeightLine = function(value, font, zoom) {
+    let lines = value.split('\n')
+    let max = lines[0]
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i]
+        if (!isBlank(line) && line.length > max.length) {
+            max = line
+        }
+    }
+    let p = calTextWH(max, font)
+    return p.h * zoom
+}
+
 const getRows = function(text, width, font) {
     let chr = text.split("")
     let temp = ""
     let rows = []
 
     for (let a = 0; a < chr.length; a++){
-        if (chr[a] === '\n') {
+        let c = chr[a]
+        if (c === '\n') {
             rows.push(temp)
             temp = ""
             continue
         }
 
         if (calTextWH(temp, font).w < width && 
-            calTextWH(temp + (chr[a]), font).w <= width) {
-            temp += chr[a]
+            calTextWH(temp + (c), font).w <= width) {
+            temp += c
+            if (a === chr.length - 1 && c !== "\n") {
+                rows.push(temp)
+            }
         } else {
             rows.push(temp)
-            temp = chr[a]
+            temp = c
         }
     }
-    rows.push(temp)
     return rows
 }
 

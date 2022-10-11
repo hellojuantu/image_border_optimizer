@@ -65,9 +65,8 @@ class TextControls extends GenControls {
                 self.textX = targetText.x
                 self.textY = targetText.y
                 // 打开 input
-                let p = self.canvasToPage(self.textX, self.textY)
                 log("targetText", targetText)
-                self.insertInput(p.x, p.y, targetText.font, targetText.color, targetText.text)
+                self.insertInput(GenText.new(self.scene, targetText.text, self.textX, self.textY))
                 // 设置字体属性到配置栏
                 self.updateControls("config.textFont.value", targetText.font)
                 self.updateControls("config.textColor.value", targetText.color)
@@ -80,15 +79,23 @@ class TextControls extends GenControls {
 
     addFloatInput(x, y) {
         let self = this
-        let p = self.canvasToPage(x, y)
-        self.insertInput(p.x, p.y, config.textFont.value, config.textColor.value, '', 20)
+        self.insertInput(GenText.new(self.scene, '', x, y))
         // update offset
         self.textX = x
         self.textY = y
     }
 
-    insertInput(gx, gy, font, color, value='', defaultWith=0) {
+    insertInput(text) {
+        // gx, gy, font, color, value=''
         let self = this
+        // 坐标转换
+        let pos = self.canvasToPage(text.x, text.y)
+        let gx = pos.x
+        let gy = pos.y
+        let font = text.font
+        let color = text.color
+        let value = text.text
+        //
         self.inputOpen = true
         //
         let selector = "#" + self.inputId
@@ -99,65 +106,51 @@ class TextControls extends GenControls {
         div.innerHTML = `<span contenteditable="true" id="${this.inputId}" class="float-input-text"></span>`
         e("#id-canvas-area").append(div)
         // 添加样式
-        let input = e(selector)
-        input.innerText = value
+        let input = e(selector)   
+        input.innerText = value     
         input.dataset.value = value
         let zoom = self.parseValueWithType(e(".zoom-input").value, 'number') / 100
-        input.style.display = "block"
+        input.style.display = "inline"
         input.style.left = gx - 1 + "px"
         input.style.top = gy - 1 + "px"
         input.style.font = self.fixFont(font)
         input.style.color = color
-
-        let lines = value.split('\n')
-        let max = lines[0]
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i]
-            if (!isBlank(line) && line.length > max.length) {
-                max = line
-            }
-        }
-        let p = calTextWH(max, font)
-        input.style.lineHeight = p.h * zoom + "px"
-        // input.cols = calCols(max)
-        // input.rows = getRows(value, p.w, font).length
-        // input.style.height = p.h * getRows(value, p.w, font).length + 'px'
+        input.style.lineHeight = calHeightLine(value, font, zoom) + "px"
         input.focus()
-        // input.select()
-        // 输入时, 自动更新宽度
+        selectAll(self.inputId)        
+    
+        input.addEventListener('keypress', function(event) {
+            // enter keycode is 13
+            if (event.keyCode == 13 && event.shiftKey == false) {
+                event.preventDefault()
+                document.execCommand("insertLineBreak")
+            } 
+        })
+
         bind(selector, 'input', function(event) {           
             let target = event.target
-            // let value = target.dataset.value
-            target.dataset.value = target.innerText
-            // let font = target.style.font
+            let text = target.innerText
+            target.dataset.value = text
+        })
 
-            // let lines = value.split('\n')
-            // let max = lines[0]
-            // for (let i = 0; i < lines.length; i++) {
-            //     let line = lines[i]
-            //     if (!isBlank(line) && line.length > max.length) {
-            //         max = line
-            //     }
-            // }
-            // let p = calTextWH(max, font)
-            // log("p", p)
-            // target.style.width = p.w * zoom + 'px'
-            // target.style.height = p.h * getRows(value, p.w, font).length + 'px'
-
-            // target.cols = calCols(max)
-            // target.rows = getRows(value, p.w, font).length
+        bind(selector, 'paste', async function(event) {
+            // 过滤 html 标签
+            event.preventDefault()
+            let text = (event.originalEvent || event).clipboardData.getData('text/plain')
+            document.execCommand("insertText", false, text)
         })
     }
-
+    
     closeInputAndAddText() {
         let self = this
         let closeInput = self.closeInput()
+        let htmlText = closeInput.innerHTML
         let textContent = closeInput.dataset.value
         log("textContent", textContent)
         if (textContent.trim().length <= 0) {
             return
         }
-        self.addText(textContent, self.textX, self.textY, closeInput.style.font, closeInput.style.color)
+        self.addText(textContent, self.textX, self.textY, htmlText)
     }
 
     closeInput() {
@@ -189,9 +182,9 @@ class TextControls extends GenControls {
         return null
     }
 
-    addText(content, x, y, prop={}) {
-        let text = GenText.new(this.scene, content, x, y)
-        text.fillProp(prop)
+    addText(content, x, y, html) {
+        let text = GenText.new(this.scene, content, x, y, html)
+        // text.fillProp(prop)
         text.idle()                
         this.shapeControl.shapes.unshift(text)
         this.texts.unshift(text)
@@ -211,15 +204,4 @@ class TextControls extends GenControls {
         let family = font.split(' ')[1]
         return `${size}px ${family}`
     }
-
-    // draw() {
-    //     let self = this
-    //     // 过滤 texts 里面的被删除的文字
-    //     self.texts = self.texts.filter((t) => !t.isDeleted())
-    //     // 倒着遍历
-    //     for (let i = self.texts.length - 1; i >= 0; i--) {
-    //         let text = self.texts[i]
-    //         text.draw()
-    //     }
-    // }
 }
