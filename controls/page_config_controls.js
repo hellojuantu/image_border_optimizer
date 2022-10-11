@@ -135,6 +135,8 @@ class PageConfigControls extends GenControls {
                         wrapper.style.height = (self.canvas.height * zoom) / self.ratio + "px"
                         wrapper.style.width = (self.canvas.width * zoom) / self.ratio + "px"
                         self.canvas.style.transform = `scale(${zoom})`
+                        // 需要更新输入框的位置
+                        self.textControl.updateFloatTextPosition(zoom)
                     },
                 },
             },

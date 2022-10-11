@@ -85,6 +85,22 @@ class TextControls extends GenControls {
         self.textY = y
     }
 
+    updateFloatTextPosition(zoom) {
+        let self = this
+        let selector = "#" + self.inputId
+        let input = e(selector)
+        if (input == null) {
+            return
+        }
+        let x = input.dataset.x
+        let y = input.dataset.y
+        let pos = self.canvasToPage(x, y)
+        input.style.left = pos.x - 1 + 'px'
+        input.style.top = pos.y - 1 + 'px'
+        input.style.font = self.fixFont(input.dataset.font)
+        input.style.lineHeight = calHeightLine(input.dataset.value, input.dataset.font, zoom) + "px"
+    }
+
     insertInput(text) {
         // gx, gy, font, color, value=''
         let self = this
@@ -109,13 +125,17 @@ class TextControls extends GenControls {
         let input = e(selector)   
         input.innerText = value     
         input.dataset.value = value
-        let zoom = self.parseValueWithType(e(".zoom-input").value, 'number') / 100
+        input.dataset.x = text.x
+        input.dataset.y = text.y
+        input.dataset.font = font
+        let zoom = config.zoom.value / 100
         input.style.display = "inline"
         input.style.left = gx - 1 + "px"
         input.style.top = gy - 1 + "px"
         input.style.font = self.fixFont(font)
         input.style.color = color
         input.style.lineHeight = calHeightLine(value, font, zoom) + "px"
+        // focus
         input.focus()
         selectAll(self.inputId)        
     
@@ -200,6 +220,7 @@ class TextControls extends GenControls {
     fixFont(font) {
         font = font.trim()
         let zoom = config.zoom.value / 100
+        log("zoom", zoom)
         let size = this.parseValueWithType(font.split(' ')[0].replace('px', ''), 'number') * zoom
         let family = font.split(' ')[1]
         return `${size}px ${family}`
