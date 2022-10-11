@@ -578,3 +578,12 @@
 	position: relative;
 	overflow: hidden;
 }
+
+.github-icons {
+	padding: 20px;
+    padding-top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+	cursor: pointer;
+}
