@@ -3,7 +3,7 @@
 ## 在线 DEMO
 - [GenOptimizer 在线演示地址](https://genoptimizer.cn)
 
-![GenOptimizer Demo](./public/img/demo.jpeg)
+![GenOptimizer Demo](https://genoptimizer.cn/public/img/demo.jpeg)
 
 ## 项目特点
 - 纯原生 JS 开发, 无三方框架
@@ -14,7 +14,7 @@
 - 支持多图操作, 一键复制, 处处可用
 
 ## Optimizer 框架特点
-![GenOptimizer Structure](./public/img/structure.jpeg)
+![GenOptimizer Structure](https://genoptimizer.cn/public/img/structure.jpeg)
 - 事件、画图、交互 全局管理
 - 支持注册自定义组件, 可自定义配置管理
 - 基于面向对象, 高度抽象代码
