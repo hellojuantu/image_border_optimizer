@@ -1,7 +1,7 @@
 ## Image-Border-Optimizer v2.3.6
 ## 轻量化的图片编辑器
 ## 在线 DEMO
-- [GenOptimizer 在线演示地址](https://hello.juantu.cn)
+- [GenOptimizer 在线演示地址](https://genoptimizer.cn)
 
 ![GenOptimizer Demo](./public/img/demo.jpeg)
 
