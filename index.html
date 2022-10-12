@@ -14,21 +14,23 @@
 <body>
     <div class="home">
         <div class="toolbar">
-            <button type="button" data-type="button" data-value="action.newBlank" class="gen-auto-button el-button el-button--default el-button--small">新建空白</button>
-            <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
-            <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
-            <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
-            <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
-            <div class="canvas-config canvas-hw">
-                <span>画布大小</span>
-                <input value="1000" class="canvas-hw-input" type="number" data-prop="width" data-value="action-canvasHW"> ×
-                <input value="800" class="canvas-hw-input" type="number" data-prop="height" data-value="action-canvasHW" style="margin-left: 0px;">
-            </div>
-            <div class="canvas-config canvas-zoom">
-                <span>画布比例</span>
-                <input value="100" class="zoom-input" type="number" data-value="action-zoom"> % 
-            </div>                        
-            <div style="float: right;">  
+            <div>
+                <button type="button" data-type="button" data-value="action.newBlank" class="gen-auto-button el-button el-button--default el-button--small">新建空白</button>
+                <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
+                <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
+                <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
+                <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
+                <div class="canvas-config canvas-hw">
+                    <span>画布大小</span>
+                    <input value="1000" class="canvas-hw-input" type="number" data-prop="width" data-value="action-canvasHW"> ×
+                    <input value="800" class="canvas-hw-input" type="number" data-prop="height" data-value="action-canvasHW" style="margin-left: 0px;">
+                </div>
+                <div class="canvas-config canvas-zoom">
+                    <span>画布比例</span>
+                    <input value="100" class="zoom-input" type="number" data-value="action-zoom"> % 
+                </div>      
+            </div>                              
+            <div style="margin-left: 20px;">  
                 <span data-value="config.defaultPointerEnable" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yidong_huaban1 shape-active"></span>
                 <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-huabi_huaban1"></span>
                 <span data-value="config.textInputEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenzi_huaban1"></span>
@@ -45,6 +47,18 @@
                 </div>
             </section>
             <section class="center">  
+                <div class="center-star-area">
+                    <div class="notice">请使用 PC 以便获取完整的体验</div>
+                    <div class="github-icons">
+                        <a href="https://github.com/hellojuantu/image_border_optimizer" target="_blank">
+                            <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/hellojuantu/image_border_optimizer?style=social">                
+                        </a>
+                        <a href="https://gitee.com/sanbuqu/image_border_optimizer" target="_blank">
+                            <img src="https://gitee.com/sanbuqu/image_border_optimizer/badge/star.svg?theme=white" alt="star">
+                        </a>
+                    </div>
+                    <div class="notice">当然也希望给个 Star 呀</div>
+                </div>
                 <div class="content" id="id-canvas-area">
                     <div id="id-canvas-wrapper">
                         <canvas class="editor edit canvas-area" id="id-canvas" width="1000" height="800"></canvas>  

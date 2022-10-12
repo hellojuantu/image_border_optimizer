@@ -1,3 +1,33 @@
+@media (max-width: 700px) {
+	.right {
+		display: none;
+	}
+	.left {
+		display: none;
+	}
+	.center {
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+	}
+	.center-star-area {
+		display: block !important;
+	}
+}
+
+.center-star-area {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 999;
+	transform: translate(-50%, -50%);
+}
+
+.notice {
+	margin-bottom: 20px;
+    text-align: center;
+}
+
 .hide {
 	display: none;
 }
@@ -319,7 +349,10 @@
 	position: relative;
 	z-index: 999;
 	background: #fff;
-	border-bottom: 1px solid #ddd
+	border-bottom: 1px solid #ddd;
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .toolbar .canvas-config {
@@ -434,9 +467,8 @@
 
 .gen-attribute-list {
     color: #303133;
-    overflow: visible;
-    height: 98%;
-    overflow-y: scroll;
+	height: calc(100% - 55px);
+	overflow: auto;
 }
 
 .gen-attribute {
@@ -508,11 +540,11 @@
 }
 
 .image-list {
-	height: 92%;
-    overflow-y: scroll;
+	height: calc(100% - 55px);
+    overflow: auto;
 }
 
-.image-list>div {
+.image-list > div {
 	border-bottom: 2px solid #ddd;
     border-left: 2px solid #ddd;
     border-right: 2px solid #ddd;
