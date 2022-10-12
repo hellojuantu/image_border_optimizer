@@ -472,6 +472,9 @@
     color: #303133;
 	height: calc(100% - 55px);
 	overflow: auto;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .gen-attribute {
