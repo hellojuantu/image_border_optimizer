@@ -36,6 +36,10 @@ class PanelControls extends GenControls {
         }
         // 空白页面, 不加阴影
         if (img.dataset.type == 'default_blank') {
+            // 实时更新画布大小
+            let w = config.canvasWidth.value
+            let h = config.canvasHeight.value
+            self.optimizer.updateCanvasHW(h, w)
             context.drawImage(img, 0, 0)
             return
         }
