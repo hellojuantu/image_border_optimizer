@@ -360,9 +360,7 @@
 	z-index: 999;
 	background: #fff;
 	border-bottom: 1px solid #ddd;
-	display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+	display: -webkit-box;
 }
 
 .toolbar .canvas-config {
