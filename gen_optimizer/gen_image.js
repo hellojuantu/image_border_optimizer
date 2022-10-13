@@ -145,7 +145,7 @@ class GenImage extends GenShape {
     draw() {
         this.context.save()
         // 缩放图片
-        this.context.drawImage(this.image, this.x * 2, this.y * 2, this.w * 2, this.h * 2)
+        this.context.drawImage(this.image, this.x * this.ratio, this.y * this.ratio, this.w * this.ratio, this.h * this.ratio)
         this.drawBorder()
         this.context.restore()
         // 绘制拖拽点

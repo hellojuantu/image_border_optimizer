@@ -40,6 +40,17 @@ class PanelControls extends GenControls {
             return
         }
         // get config
+        let offset = config.imageOffset.value
+        // 改变画布大小
+        let w = config.canvasWidth.value + offset
+        let h = config.canvasHeight.value + offset
+        self.optimizer.updateCanvasHW(h, w)
+        // wrapper 大小
+        let wrapper = e("#id-canvas-wrapper")
+        let zoom = config.zoom.value / 100
+        wrapper.style.height = (self.canvas.height * zoom) / self.ratio + "px"
+        wrapper.style.width = (self.canvas.width * zoom) / self.ratio + "px"
+        //
         let c_w = canvas.width / this.ratio
         let c_h = canvas.height / this.ratio
         let centerOffsetX = (c_w - img.width) / 2

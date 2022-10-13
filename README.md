@@ -1,7 +1,7 @@
 ## Image-Border-Optimizer v2.3.6
 ## 一款纯 JS 实现的轻量化图片编辑器
 
-![GenOptimizer Demo](https://genoptimizer.cn/public/img/demo.jpeg)
+![GenOptimizer Demo](./public/img/demo.jpeg)
 
 - [GenOptimizer 在线演示地址](https://genoptimizer.cn)
 ## 项目介绍
@@ -16,7 +16,7 @@
 最后抽象出了一个框架 (GenOptimizer), 以一种十分简洁易用的方式写出了整个项目
 
 ## Optimizer 框架特点
-![GenOptimizer Structure](https://genoptimizer.cn/public/img/structure.jpeg)
+![GenOptimizer Structure](./public/img/structure.jpeg)
 - 事件、画图、交互 全局管理
 - 支持注册自定义组件, 可自定义配置管理
 - 基于面向对象, 高度抽象代码
