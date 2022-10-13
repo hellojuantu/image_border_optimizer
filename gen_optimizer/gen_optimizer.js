@@ -28,9 +28,12 @@ class GenOptimizer {
     }
 
     updateCanvasHW(h, w) {
+        // wrapper 大小
+        this.setupWrapper()
+        //
         let canvas = this.canvas
-        canvas.width = w * this.ratio
         canvas.height = h * this.ratio 
+        canvas.width = w * this.ratio
         canvas.style.width = w + 'px'
         canvas.style.height = h + 'px'
     }
