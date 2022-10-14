@@ -60,11 +60,16 @@ class ShapeControls extends GenControls {
         if (action == 'down') {
             log("shape", action, self.shapes, targetShape)
             // 鼠标没有点到其他 shape
-            if (targetShape == null) {
+            if (targetShape == null) {  
+                self.removeDraggers()     
+                //            
                 self.buildingShape = null
-                targetShape = self.shapeTypes[config.shapeSelect.value].new(sc, x, y)
+                let shape = self.shapeTypes[config.shapeSelect.value]
+                targetShape = shape.new(sc, x, y)
                 self.shapes.unshift(targetShape)
                 self.buildingShape = targetShape
+                //      
+                sc.getComponent('attribute').buildWith(shape.defaultConfigAttribute())        
             }
         } else if (action == 'move') {
             log("shape", action, self.shapes, self.buildingShape)
@@ -75,9 +80,10 @@ class ShapeControls extends GenControls {
             log("shape", action, self.shapes, self.buildingShape)
             if (self.buildingShape != null) {
                 self.buildingShape.idle()
-                self.removeDraggers()
                 let att = self.buildingShape.activateDraggers()
                 sc.getComponent('attribute').buildWith(att)
+                // TODO 切换到选择状态
+                                
                 self.buildingShape.checkStatus()
                 log("+++shapes", self.shapes)
                 self.buildingShape = null

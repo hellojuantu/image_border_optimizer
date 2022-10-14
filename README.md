@@ -1,4 +1,4 @@
-## Image-Border-Optimizer v2.3.6
+## Image-Border-Optimizer v2.3.7
 ## 一款纯 JS 实现的轻量化图片编辑器
 
 ![GenOptimizer Demo](https://genoptimizer.cn/public/img/demo.jpeg)
@@ -143,6 +143,16 @@ this.getComponent('attribute').buildWith(data)
 这个例子就是我的思考, 希望能给于你一点灵感或启发.
 
 ## 更新日志
+
+### GenOptimizer v2.3.7
+- 新增图形坐标, 长宽属性配置
+- 优化了创建图形属性显示逻辑
+- 优化了手机版访问时的体验, 使布局清晰
+- 修复了缩放问题而导致的文字缩放异常的问题
+- 修复了画布滚动时, 文字框的位置异常的问题
+- 修复了空白画布调整大小没反应的问题
+- 修复了图片背景缩放问题
+- 修复了缩放或调整画布大小时背景图片闪动的问题
 
 ### GenOptimizer v2.3.6
 - 修复了文字多行输入空格异常问题

@@ -17,6 +17,8 @@ class GenArrow extends GenShape {
         return {
             "config.shapeBorder": config.shapeBorder,
             "config.shapeColor": config.shapeColor,
+            "config.shapeX": config.shapeX,
+            "config.shapeY": config.shapeY,
         }
     }
 
@@ -24,6 +26,8 @@ class GenArrow extends GenShape {
         super.selected()
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
+        config.shapeX.value = this.x
+        config.shapeY.value = this.y
         return GenArrow.configAttribute()
     }
 
@@ -41,6 +45,7 @@ class GenArrow extends GenShape {
         //
         this.toX = x + this.ox2
         this.toY = y + this.oy2
+        this.scene.getComponent("attribute").buildWith(this.selected())
     }
 
     pointInShapeFrame(x, y) {
@@ -172,6 +177,10 @@ class GenArrow extends GenShape {
         ctx.stroke()
         ctx.restore()
 
+        this.drawDraggers()
+    }
+
+    drawDraggers() {
         super.draw()
     }
 }

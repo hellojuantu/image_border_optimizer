@@ -1,7 +1,9 @@
 class GenImage extends GenShape {
     constructor(scene, x, y, image) {
         super(scene)
-        this.image = image
+        this.image = image   
+        this.x = x
+        this.y = y     
         this.w = image.width
         this.h = image.height
         this.border = config.shapeBorder.value
@@ -21,6 +23,10 @@ class GenImage extends GenShape {
         return {
             "config.shapeBorder": config.shapeBorder,
             "config.shapeColor": config.shapeColor,
+            "config.shapeWidth": config.shapeWidth,
+            "config.shapeHeight": config.shapeHeight,
+            "config.shapeX": config.shapeX,
+            "config.shapeY": config.shapeY,
         }
     }
 
@@ -28,6 +34,10 @@ class GenImage extends GenShape {
         super.selected()
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
+        config.shapeHeight.value = this.h
+        config.shapeWidth.value = this.w
+        config.shapeX.value = this.x
+        config.shapeY.value = this.y
         return GenImage.configAttribute()
     }
 
@@ -37,6 +47,7 @@ class GenImage extends GenShape {
             v.x = x + this.positionOffset[p].x
             v.y = y + this.positionOffset[p].y
         }
+        this.scene.getComponent("attribute").buildWith(this.selected())
     }
 
     calcalateOffset(x, y) {
@@ -104,6 +115,7 @@ class GenImage extends GenShape {
             this.position.rightBottom.y = y
             this.position.leftTop.x = x
         }
+
     }
 
     pointInShapeFrame(x, y) {
@@ -120,6 +132,17 @@ class GenImage extends GenShape {
             }
         }
         return leftTop
+    }
+
+    rightBottomDragger() {
+        // 遍历寻找 x 相加 y 最大的点, 就是右下角的
+        let rightBottom = this.draggers[0]
+        for (let d of this.draggers) {
+            if (d.x + d.y > rightBottom.x + rightBottom.y) {
+                rightBottom = d
+            }
+        }
+        return rightBottom
     }
 
     update() {

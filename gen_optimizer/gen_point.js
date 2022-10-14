@@ -1,5 +1,6 @@
-class GenPoint {
-    constructor(x, y, status) {
+class GenPoint extends GenShape {
+    constructor(scene, x, y, status) {
+        super(scene)
         this.x = x
         this.y = y
         this.status = status

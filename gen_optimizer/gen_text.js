@@ -15,6 +15,8 @@ class GenText extends GenShape {
         return {
             "config.textFont": config.textFont,
             "config.textColor": config.textColor,
+            "config.shapeX": config.shapeX,
+            "config.shapeY": config.shapeY,            
         }
     }
 
@@ -35,10 +37,19 @@ class GenText extends GenShape {
     //     this.addDragger(right)
     // }
 
+    moving(x, y) {
+        super.moving(x, y)
+        config.shapeX.value = this.x
+        config.shapeY.value = this.y
+        this.scene.getComponent("attribute").buildWith(this.selected())
+    }
+
     selected() {
         super.selected()
         this.updateControls("config.textFont.value", this.font)
         this.updateControls("config.textColor.value", this.color)
+        config.shapeX.value = this.x
+        config.shapeY.value = this.y
         return GenText.configAttribute()
     }
     

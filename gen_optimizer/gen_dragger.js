@@ -30,10 +30,13 @@ class GenDragger extends GenShape {
 
     moving(x, y) {
         if (this.optimizer.getCursor() == 'move') {
+            // TODO 好像没用这个
             this.owner.moving(x, y)
         } else if (this.optimizer.getCursor() == this.cursor) {
             this.owner.movingByDragger(this, x, y)
         }
+        // 
+        this.scene.getComponent("attribute").buildWith(this.owner.selected())
     }
 
     resetPosition() {

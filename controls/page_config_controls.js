@@ -108,19 +108,19 @@ class PageConfigControls extends GenControls {
                 },
                 configToEvents: {                    
                     "config.penEnabled": function(target) {
-                        sc.getComponent('attribute').buildWith(GenPoint.configAttribute())
+                        sc.getComponent('attribute').buildWith(GenPoint.defaultConfigAttribute())
                     },
                     "config.textInputEnabled": function(target) {
-                        sc.getComponent('attribute').buildWith(GenText.configAttribute())                
+                        sc.getComponent('attribute').buildWith(GenText.defaultConfigAttribute())                
                     },
                     "config.shapeEnabled": function(target) {
                         let shape = config.shapeSelect.value = target.dataset.shape                                                         
                         // 显示右边属性 
-                        let att = self.shapeControl.shapeTypes[shape].configAttribute()
+                        let att = self.shapeControl.shapeTypes[shape].defaultConfigAttribute()
                         sc.getComponent('attribute').buildWith(att)
                     },      
                     "config.defaultPointerEnable": function(target) {
-                        sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
+                        sc.getComponent('attribute').buildWith(self.panelControl.defaultConfigAttribute())
                     }
                 }
             },
@@ -195,7 +195,7 @@ class PageConfigControls extends GenControls {
             e.preventDefault()
             let files = Object.values(e.dataTransfer.files).filter(
                 f => f.type.includes("image")
-            )
+            )            
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
                 let reader = new FileReader()
@@ -204,8 +204,11 @@ class PageConfigControls extends GenControls {
                     let img = new Image()
                     img.src = e.target.result
                     img.dataset.type = 'user_upload'
-                    img.onload = function() { 
-                        self.shapeControl.handleImageEvent(img, x, y)
+                    img.onload = () => {     
+                        img.src = self.optimizer.compressImage(img)
+                        img.onload = () => {
+                            self.shapeControl.handleImageEvent(img, x, y)
+                        }
                     }
                 }
             }

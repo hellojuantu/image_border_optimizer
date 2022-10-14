@@ -115,7 +115,6 @@ class GenControls {
         }
     }
 
-    static configAttribute() {}
     
     draw() {
     }

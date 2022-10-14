@@ -25,6 +25,15 @@ class GenShape extends GenControls {
         }
     }
 
+    getDragger(name) {
+        for (let drag of this.draggers) {
+            if (drag.name == name) {
+                return drag
+            }
+        }
+        return null
+    }
+
     /** 
      * idle 中初始化所有的 dragger
      */
@@ -161,6 +170,21 @@ class GenShape extends GenControls {
      * draw 之前需要更新的所有数据
      */
     update() {}
+
+    /**
+     * 配置 shape 的属性
+     */
+    static defaultConfigAttribute() {
+        let config = this.configAttribute()
+        Object.values(config).forEach((c) => {
+            c['value'] = c['default']
+        })
+        return config 
+    }
+
+    static configAttribute() {
+        return {}
+    }
     
     draw() {
         if (this.isSelected()) {

@@ -65,6 +65,90 @@ class Attribute extends GenComponent {
                             }
                         }
                     },
+                    "config.shapeWidth": function(target) {
+                        for (let shape of control.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                let w = self.parseValueWithType(target.value, 'number')
+                                let offset = w - shape.w
+                                let d = shape.rightBottomDragger()  
+                                let x = d.w / 2 + d.x + offset
+                                let y = d.h / 2 + d.y
+                                shape.movingByDragger(d, x, y)
+                            }
+                        }
+                    },
+                    "config.shapeHeight": function(target) {
+                        for (let shape of control.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                let h = self.parseValueWithType(target.value, 'number')
+                                let offset = h - shape.h
+                                let d = shape.rightBottomDragger() 
+                                let x = d.w / 2 + d.x
+                                let y = d.h / 2 + d.y + offset
+                                shape.movingByDragger(d, x, y)
+                            }
+                        }
+                    },
+                    "config.shapeX": function(target) {
+                        for (let shape of control.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                let x = self.parseValueWithType(target.value, 'number')
+                                if (shape.isText) {
+                                    shape.x = x
+                                    continue
+                                }
+                                let offset = x - shape.x
+                                // 遍历 4 个点, 都移动
+                                for (let d of shape.draggers) {
+                                    let dx = d.w / 2 + d.x + offset
+                                    let dy = d.h / 2 + d.y
+                                    shape.movingByDragger(d, dx, dy)
+                                }
+                            }
+                        }
+                    },
+                    "config.shapeY": function(target) {
+                        for (let shape of control.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                let y = self.parseValueWithType(target.value, 'number')
+                                if (shape.isText) {
+                                    shape.y = y
+                                    continue
+                                }
+                                let offset = y - shape.y
+                                // 遍历 4 个点, 都移动
+                                for (let d of shape.draggers) {
+                                    let dx = d.w / 2 + d.x
+                                    let dy = d.h / 2 + d.y + offset
+                                    shape.movingByDragger(d, dx, dy)
+                                }
+                            }
+                        }
+                    },
+                    "config.shapeRadiusX": function(target) {
+                        for (let shape of control.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                let w = self.parseValueWithType(target.value, 'number') * 2
+                                let offset = w - shape.w
+                                let d = shape.rightBottomDragger()  
+                                let x = d.w / 2 + d.x + offset
+                                let y = d.h / 2 + d.y
+                                shape.movingByDragger(d, x, y)
+                            }
+                        }
+                    },
+                    "config.shapeRadiusY": function(target) {
+                        for (let shape of control.shapeControl.shapes) {
+                            if (shape.isSelected()) {
+                                let h = self.parseValueWithType(target.value, 'number') * 2
+                                let offset = h - shape.h
+                                let d = shape.rightBottomDragger() 
+                                let x = d.w / 2 + d.x
+                                let y = d.h / 2 + d.y + offset
+                                shape.movingByDragger(d, x, y)
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -111,7 +195,10 @@ class Attribute extends GenComponent {
         let form = e(".gen-attribute")
         for (let bindVar of Object.keys(attributeMap)) {
             // log("bindVar", bindVar)
-            let attribute = attributeMap[bindVar]            
+            let attribute = attributeMap[bindVar]    
+            if (attribute.default == null && attribute.value == null) {
+                continue
+            }
             let html = this.template(bindVar, attribute)
             appendHtml(form, html)
         }
@@ -142,8 +229,8 @@ class Attribute extends GenComponent {
 
     template(bindVar, attribute) {
         let minAndMax = `
-            max = ${attribute.max}
-            min = ${attribute.min}
+            max = ${attribute.max || 1000}
+            min = ${attribute.min || 1}
         `
         let t = `
         <div class="el-form-item el-form-item--small">

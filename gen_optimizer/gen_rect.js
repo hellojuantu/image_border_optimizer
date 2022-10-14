@@ -1,6 +1,8 @@
 class GenRect extends GenShape {
     constructor(scene, x, y) {
         super(scene)
+        this.x = x
+        this.y = y
         this.border = config.shapeBorder.value
         this.color = config.shapeColor.value    
         this.fill = parseBoolean(config.shapeFill.value)
@@ -20,6 +22,10 @@ class GenRect extends GenShape {
             "config.shapeBorder": config.shapeBorder,
             "config.shapeColor": config.shapeColor,
             "config.shapeFill": config.shapeFill,
+            "config.shapeWidth": config.shapeWidth,
+            "config.shapeHeight": config.shapeHeight,
+            "config.shapeX": config.shapeX,
+            "config.shapeY": config.shapeY,
         }
     }
 
@@ -28,6 +34,10 @@ class GenRect extends GenShape {
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
         this.updateControls("config.shapeFill.value", this.fill)
+        config.shapeHeight.value = this.h
+        config.shapeWidth.value = this.w
+        config.shapeX.value = this.x
+        config.shapeY.value = this.y
         return GenRect.configAttribute()
     }
 
@@ -37,6 +47,7 @@ class GenRect extends GenShape {
             v.x = x + this.positionOffset[p].x
             v.y = y + this.positionOffset[p].y
         }
+        this.scene.getComponent("attribute").buildWith(this.selected())
     }
 
     calcalateOffset(x, y) {
@@ -121,10 +132,12 @@ class GenRect extends GenShape {
     }
 
     pointInShapeFrame(x, y) {
-        if (this.fill) {
-            return this.pointInFrame(x, y)
-        }
-        return this.pointInHollowFrame(x, y, this.border)
+        return this.pointInFrame(x, y)
+        // 统一使用 frame 来判断
+        // if (this.fill) {
+        //     return this.pointInFrame(x, y)
+        // }
+        // return this.pointInHollowFrame(x, y, this.border)
     }
 
     leftTopPosition() {
@@ -139,6 +152,17 @@ class GenRect extends GenShape {
         return leftTop
     }
 
+    rightBottomDragger() {
+        // 遍历寻找 x 相加 y 最大的点, 就是右下角的
+        let rightBottom = this.draggers[0]
+        for (let d of this.draggers) {
+            if (d.x + d.y > rightBottom.x + rightBottom.y) {
+                rightBottom = d
+            }
+        }
+        return rightBottom
+    }
+    
     connectDraggers() {
         // 连接四个拖拽点
         let leftTop = this.position.leftTop

@@ -27,6 +27,40 @@ class GenOptimizer {
         }
     }
 
+    compressImage(img) {
+        let canvas = document.createElement('canvas');
+        let context = canvas.getContext('2d');
+        // 压缩图片
+        let originWidth = img.width
+        let originHeight = img.height
+        let maxWidth = this.canvasWrapper.clientWidth
+        let maxHeight = this.canvasWrapper.clientHeight
+        let targetWidth = originWidth, targetHeight = originHeight
+        if (originWidth > maxWidth || originHeight > maxHeight) {
+            if (originWidth / originHeight > maxWidth / maxHeight) {
+                targetWidth = maxWidth
+                targetHeight = Math.round(maxWidth * (originHeight / originWidth))
+            } else {
+                targetHeight = maxHeight
+                targetWidth = Math.round(maxHeight * (originWidth / originHeight))
+            }
+        }
+
+        canvas.width = targetWidth
+        canvas.height = targetHeight
+
+        context.clearRect(0, 0, targetWidth, targetHeight)
+        context.drawImage(img, 0, 0, targetWidth, targetHeight)
+        // 计算压缩比
+        let base64 = canvas.toDataURL('image/jpeg')
+        let size = base64.length / 1024
+        let ratio = 1
+        if (size > 100) {
+            ratio = 100 / size
+        }       
+        return canvas.toDataURL("image/png", ratio)
+    }
+
     updateCanvasHW(h, w) {
         // wrapper 大小
         this.setupWrapper()

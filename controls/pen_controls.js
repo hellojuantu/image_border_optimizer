@@ -35,6 +35,7 @@ class PenControls extends GenControls {
                 const lastTwoPoints = windowOfPoints.slice(-2)
                 const controlPoint = lastTwoPoints[0]
                 const endPoint = GenPoint.new(
+                    this.scene,
                     (lastTwoPoints[0].x + lastTwoPoints[1].x) / 2,
                     (lastTwoPoints[0].y + lastTwoPoints[1].y) / 2,
                     'move'
@@ -74,7 +75,7 @@ class PenControls extends GenControls {
     }
 
     addPoint(x, y, status) {
-        this.points.push(GenPoint.new(x, y, status))
+        this.points.push(GenPoint.new(this.scene, x, y, status))
     }
 
     resetAndUpdate(points) {

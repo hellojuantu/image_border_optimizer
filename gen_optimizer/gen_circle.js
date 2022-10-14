@@ -20,6 +20,10 @@ class GenCircle extends GenShape {
             "config.shapeBorder": config.shapeBorder,
             "config.shapeColor": config.shapeColor,
             "config.shapeFill": config.shapeFill,
+            "config.shapeRadiusX": config.shapeRadiusX,
+            "config.shapeRadiusY": config.shapeRadiusY,
+            "config.shapeX": config.shapeX,
+            "config.shapeY": config.shapeY,
         }
     }
 
@@ -28,6 +32,10 @@ class GenCircle extends GenShape {
         this.updateControls("config.shapeBorder.value", parseInt(this.border))
         this.updateControls("config.shapeColor.value", this.color)
         this.updateControls("config.shapeFill.value", this.fill)
+        config.shapeX.value = this.x
+        config.shapeY.value = this.y
+        config.shapeRadiusX.value = this.w / 2
+        config.shapeRadiusY.value = this.h / 2
         return GenCircle.configAttribute()
     }
 
@@ -37,6 +45,12 @@ class GenCircle extends GenShape {
             v.x = x + this.positionOffset[p].x
             v.y = y + this.positionOffset[p].y
         }
+        // let lp = this.leftTopPosition()
+        // config.shapeX.value = lp.x
+        // config.shapeY.value = lp.y
+        // config.shapeRadiusX.value = this.w / 2
+        // config.shapeRadiusY.value = this.h / 2
+        this.scene.getComponent("attribute").buildWith(this.selected())
     }
 
     calcalateOffset(x, y) {
@@ -128,10 +142,11 @@ class GenCircle extends GenShape {
         if (this.isSelected()) {
             pointInRectDraggerLine = super.pointInHollowFrame(px, py, 1.5)
         }
-        if (this.fill) {
-            return this.pointInFrame(px, py) || pointInRectDraggerLine
-        }
-        return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
+        return this.pointInFrame(px, py) || pointInRectDraggerLine
+        // if (this.fill) {
+        //     return this.pointInFrame(px, py) || pointInRectDraggerLine
+        // }
+        // return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
     }
 
     pointInFrame(px, py) {
@@ -183,6 +198,17 @@ class GenCircle extends GenShape {
         this.context.lineTo(rightBottom.x, rightBottom.y)
         this.context.lineTo(leftBottom.x, leftBottom.y)
         this.context.lineTo(leftTop.x, leftTop.y)     
+    }
+
+    rightBottomDragger() {
+        // 遍历寻找 x 相加 y 最大的点, 就是右下角的
+        let rightBottom = this.draggers[0]
+        for (let d of this.draggers) {
+            if (d.x + d.y > rightBottom.x + rightBottom.y) {
+                rightBottom = d
+            }
+        }
+        return rightBottom
     }
 
     update() {
