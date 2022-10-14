@@ -45,11 +45,6 @@ class GenCircle extends GenShape {
             v.x = x + this.positionOffset[p].x
             v.y = y + this.positionOffset[p].y
         }
-        // let lp = this.leftTopPosition()
-        // config.shapeX.value = lp.x
-        // config.shapeY.value = lp.y
-        // config.shapeRadiusX.value = this.w / 2
-        // config.shapeRadiusY.value = this.h / 2
         this.scene.getComponent("attribute").buildWith(this.selected())
     }
 
@@ -140,13 +135,12 @@ class GenCircle extends GenShape {
         }
         let pointInRectDraggerLine = false
         if (this.isSelected()) {
-            pointInRectDraggerLine = super.pointInHollowFrame(px, py, 1.5)
+            pointInRectDraggerLine = super.pointInHollowFrame(px, py, 1)
         }
-        return this.pointInFrame(px, py) || pointInRectDraggerLine
-        // if (this.fill) {
-        //     return this.pointInFrame(px, py) || pointInRectDraggerLine
-        // }
-        // return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
+        if (this.fill) {
+            return this.pointInFrame(px, py) || pointInRectDraggerLine
+        }
+        return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
     }
 
     pointInFrame(px, py) {

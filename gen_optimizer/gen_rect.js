@@ -132,12 +132,10 @@ class GenRect extends GenShape {
     }
 
     pointInShapeFrame(x, y) {
-        return this.pointInFrame(x, y)
-        // 统一使用 frame 来判断
-        // if (this.fill) {
-        //     return this.pointInFrame(x, y)
-        // }
-        // return this.pointInHollowFrame(x, y, this.border)
+        if (this.fill) {
+            return this.pointInFrame(x, y)
+        }
+        return this.pointInHollowFrame(x, y, this.border)
     }
 
     leftTopPosition() {
