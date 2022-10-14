@@ -1,10 +1,14 @@
 ## Image-Border-Optimizer v2.3.7
 ## 一款纯 JS 实现的轻量化图片编辑器
 
-![GenOptimizer Demo](https://genoptimizer.cn/public/img/demo.jpeg)
+![GenOptimizer Demo](https://genoptimizer.cn/public/img/use_demo.gif)
 
 - [GenOptimizer 在线演示地址](https://genoptimizer.cn)
+
 ## 项目介绍
+
+![GenOptimizer Demo](https://genoptimizer.cn/public/img/demo.jpeg)
+
 - 支持多图操作
 - 支持图片拖拽添加
 - 支持所有属性的动态配置
