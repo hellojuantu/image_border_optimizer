@@ -88,6 +88,14 @@ class PanelControls extends GenControls {
         this.context.restore()
     }
 
+    static defaultConfigAttribute() {
+        let config = this.configAttribute()
+        Object.values(config).forEach((c) => {
+            c['value'] = c['default']
+        })
+        return config 
+    }
+
     configAttribute() {
         return {
             "config.borderLength": config.borderLength, 
