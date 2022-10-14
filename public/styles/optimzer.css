@@ -632,3 +632,58 @@
     justify-content: space-evenly;
 	cursor: pointer;
 }
+
+.visual-loading-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 999999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	color: #333;
+	font-size: 12px;
+}
+
+.visual-circle-path {
+	stroke: #5cb6ff;
+	stroke-width: 4;
+	stroke-dasharray: 95, 126;
+	stroke-dashoffset: 0;
+	animation: visual-loading-dash 1.5s ease-in-out infinite;
+}
+
+@keyframes visual-loading-dash {
+	0% {
+		stroke-dasharray: 1, 126;
+		stroke-dashoffset: 0;
+	}
+
+	50% {
+		stroke-dasharray: 95, 126;
+		stroke-dashoffset: -31px
+	}
+
+	to {
+		stroke-dasharray: 6, 120;
+		stroke-dashoffset: -120px;
+	}
+}
+
+.visual-loading-svg {
+	width: 3em;
+	height: 3em;
+	max-width: 70px;
+	max-height: 70px;
+	animation: visual-loading-rotate 1.5s infinite ease-in-out;
+}
+
+@keyframes visual-loading-rotate {
+	to {
+		transform: rotate(1turn);
+	}
+}

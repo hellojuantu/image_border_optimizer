@@ -12,6 +12,7 @@ class GenScene {
         this.inUsedComponentNames = []
         this.pointInScene = false
         this.setupMouseleave()
+        this.pageLoading()
     }
 
     static new(...args) {
@@ -25,6 +26,11 @@ class GenScene {
 
     // 更新左边的图片快照
     updateActivePanelSnapshot() {
+
+    }
+
+    // 页面加载之前
+    pageLoading() {
 
     }
 

@@ -1,4 +1,4 @@
-function __main() {  
+function __main() {     
     GenOptimizer.instance(function(o) {
         // o.enableDebugMode()
         // MainScene

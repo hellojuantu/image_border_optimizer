@@ -16,4 +16,13 @@ class MainScene extends GenScene {
         // 页面控制器
         PageConfigControls.new(this, imageControl, penControl, textControl, shapeControl)
     }
+
+    pageLoading() {
+        document.onreadystatechange = () => {
+            if (document.readyState == "complete") {
+                log('____ complete')
+                e('#id-loading-area').remove()
+            }
+        }
+    }
 }
