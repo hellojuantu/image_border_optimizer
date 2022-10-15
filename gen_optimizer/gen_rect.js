@@ -132,6 +132,9 @@ class GenRect extends GenShape {
     }
 
     pointInShapeFrame(x, y) {
+        if (this.isCreating()) {
+            return true
+        }
         if (this.fill) {
             return this.pointInFrame(x, y)
         }
