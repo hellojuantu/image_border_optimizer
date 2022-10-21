@@ -135,10 +135,11 @@ class GenRect extends GenShape {
         if (this.isCreating()) {
             return true
         }
-        if (this.fill) {
-            return this.pointInFrame(x, y)
-        }
-        return this.pointInHollowFrame(x, y, this.border)
+        return this.pointInFrame(x, y)
+        // if (this.fill) {
+        //     return this.pointInFrame(x, y)
+        // }
+        // return this.pointInHollowFrame(x, y, this.border)
     }
 
     leftTopPosition() {

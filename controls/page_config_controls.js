@@ -105,6 +105,7 @@ class PageConfigControls extends GenControls {
                     }) 
                     target.classList.add(shapeActive)
                     eval(bindVar + '.value=' + parseBoolean(target.classList.contains(shapeActive)))
+                    self.shapeControl.removeDraggers()
                 },
                 configToEvents: {                    
                     "config.penEnabled": function(target) {

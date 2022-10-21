@@ -7,6 +7,7 @@ class GenControls {
         this.panels = this.optimizer.panels
         this.ratio = this.optimizer.ratio
         this.scene = scene
+        this.draggerLineWidth = 1
     }
 
     static new(...args) {

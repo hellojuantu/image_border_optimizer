@@ -133,14 +133,15 @@ class GenCircle extends GenShape {
         if (this.isCreating()) {
             return true
         }
-        let pointInRectDraggerLine = false
-        if (this.isSelected()) {
-            pointInRectDraggerLine = super.pointInHollowFrame(px, py, 1)
-        }
-        if (this.fill) {
-            return this.pointInFrame(px, py) || pointInRectDraggerLine
-        }
-        return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
+        return super.pointInFrame(px, py)
+        // let pointInRectDraggerLine = false
+        // if (this.isSelected()) {
+        //     pointInRectDraggerLine = super.pointInRectLineFrame(px, py)
+        // }
+        // if (this.fill) {
+        //     return this.pointInFrame(px, py) || pointInRectDraggerLine
+        // }
+        // return this.pointInHollowFrame(px, py, this.border) || pointInRectDraggerLine
     }
 
     pointInFrame(px, py) {
