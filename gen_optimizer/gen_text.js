@@ -90,9 +90,9 @@ class GenText extends GenShape {
     drawtext() {
         let lines = this.text.split('\n')
         let max = lines[0]
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
-            if (!isBlank(line) && line.length > max.length) {
+            if (!isBlank(line) && calCols(line) > calCols(max)) {
                 max = line
             }
         }
