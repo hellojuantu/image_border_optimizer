@@ -31,6 +31,7 @@ class PanelSelector extends GenComponent {
                         let delId = parseInt(outer.dataset.index)
                         // only one can't delete
                         if (es(imageBlock).length <= 1) {
+                            alert("这是最后一个 panel 了, 留下 ta 好吗 ?")
                             return
                         }
                         removeWithCondition(imageBlock, (e) => {

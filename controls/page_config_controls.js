@@ -90,6 +90,14 @@ class PageConfigControls extends GenControls {
                         sc.getComponent('panelSelector').buildWith(tempPanels)
                         config.index.max = self.panels.length - 1
                     },
+                    "action.downloadImagesButton": function(target) {            
+                        try {
+                            self.optimizer.downloadAllImages("imgs-" + now())
+                            alert('开始导出')
+                        } catch (err) {
+                            alert('导出失败')
+                        }
+                    }
                 },
             },            
             // 右上角按钮事件

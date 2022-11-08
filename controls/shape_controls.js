@@ -110,6 +110,18 @@ class ShapeControls extends GenControls {
             }
         })
 
+        this.optimizer.registerAction("Delete", status => {
+            if (!this.scene.pointInScene) {
+                return
+            }
+            log("Backspace", status)
+            for (let shape of this.shapes) {
+                if (shape.isSelected()) {
+                    shape.deleted()
+                }
+            }
+        })
+
         // TODO
         // this.optimizer.registerAction("Shift", status => {
         //     if (!this.scene.pointInScene) {

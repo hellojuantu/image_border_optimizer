@@ -61,6 +61,10 @@ class GenOptimizer {
         return canvas.toDataURL("image/png", ratio)
     }
 
+    async downloadAllImages(zipName) {
+        downloadZip(this.panels, zipName)
+    }
+
     updateCanvasHW(h, w) {
         // wrapper 大小
         this.setupWrapper()
@@ -218,9 +222,7 @@ class GenOptimizer {
         // 第一次加载需要刷新的配置
         this.scene.refreshConfig(this.panels)
         // 开始运行程序
-        setTimeout(function(){
-            self.runloop()
-        }, 1000 / window.fps)
+        self.runloop()
     }
 
     draw() {
