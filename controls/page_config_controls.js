@@ -92,7 +92,8 @@ class PageConfigControls extends GenControls {
                     },
                     "action.downloadImagesButton": function(target) {            
                         try {
-                            self.optimizer.downloadAllImages("imgs-" + now())
+                            let tag = new Date().Format("MM-dd");
+                            self.optimizer.downloadAllImages("archive-" + tag)
                             alert('开始导出')
                         } catch (err) {
                             alert('导出失败')
