@@ -92,7 +92,7 @@ class GenText extends GenShape {
         let max = lines[0]
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
-            if (!isBlank(line) && calCols(line) > calCols(max)) {
+            if (!isBlank(line) && calTextWH(line, this.font).w > calTextWH(max, this.font).w) {
                 max = line
             }
         }
