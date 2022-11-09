@@ -44,9 +44,9 @@ class PanelSelector extends GenComponent {
                         for (let i = 0; i < bs.length; i++) {
                             bs[i].dataset.index = i                            
                         }
-                        // 删除自己跳转到 index 0
+                        // 删除自己跳转到上一个
                         if (delId == config.index.value) {
-                            control.switchPanel(0)
+                            control.switchPanel(delId - 1 <= 0 ? 0 : delId - 1)
                         } else if (delId < config.index.value) {
                             config.index.value -= 1
                         }

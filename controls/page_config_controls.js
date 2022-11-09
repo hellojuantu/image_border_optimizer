@@ -90,14 +90,28 @@ class PageConfigControls extends GenControls {
                         sc.getComponent('panelSelector').buildWith(tempPanels)
                         config.index.max = self.panels.length - 1
                     },
-                    "action.downloadImagesButton": function(target) {            
-                        try {
-                            let tag = new Date().Format("MM-dd");
-                            self.optimizer.downloadAllImages("archive-" + tag)
-                            alert('开始导出')
-                        } catch (err) {
-                            alert('导出失败')
-                        }
+                    "action.downloadImagesButton": function(target) {   
+                        toggleClass(e("#id-loading-area"), "hide")  
+                        setTimeout(() => {
+                            self.optimizer.downloading = true
+                            let len = self.panels.length
+                            console.log("len", len)
+                            for (let i = 0; i < len; i++) {
+                                self.savePanel()
+                                self.switchPanel(i)  
+                                self.optimizer.saveCurrent()
+                            }
+
+                            try {
+                                let tag = new Date().Format("MM-dd")
+                                downloadZip(self.optimizer.savedImages, "archive-" + tag, () => {
+                                    toggleClass(e("#id-loading-area"), "hide")
+                                })
+                                self.optimizer.downloading = false
+                            } catch (err) {
+                                alert('导出失败')
+                            }  
+                        }, 1000)                                                        
                     }
                 },
             },            
@@ -180,7 +194,10 @@ class PageConfigControls extends GenControls {
         sc.refreshConfig = function(tempPanels) {
             log("refreshConfig")
             sc.getComponent('panelSelector').buildWith(tempPanels)    
-            config.index.max = self.panels.length - 1
+            let max = self.panels.length - 1
+            config.index.max = max
+            self.savePanel()
+            self.switchPanel(max)
         }
 
         // 使用组件构建属性
@@ -209,6 +226,7 @@ class PageConfigControls extends GenControls {
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
                 let reader = new FileReader()
+                let offset = i * 20
                 reader.readAsDataURL(file)
                 reader.onload = function (e) {
                     let img = new Image()
@@ -217,7 +235,7 @@ class PageConfigControls extends GenControls {
                     img.onload = () => {     
                         img.src = self.optimizer.compressImage(img)
                         img.onload = () => {
-                            self.shapeControl.handleImageEvent(img, x, y)
+                            self.shapeControl.handleImageEvent(img, x + offset, y + offset)
                         }
                     }
                 }

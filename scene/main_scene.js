@@ -21,7 +21,8 @@ class MainScene extends GenScene {
         document.onreadystatechange = () => {
             if (document.readyState == "complete") {
                 log('____ complete')
-                e('#id-loading-area').remove()
+                // e('#id-loading-area').remove()
+                toggleClass(e("#id-loading-area"), "hide")
             }
         }
     }

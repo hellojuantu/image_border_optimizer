@@ -187,20 +187,19 @@ const isBlank = function(str) {
     return (!str || /^\s*$/.test(str))
 }
 
-const downloadZip = async (srcImgs, zipName) => {
+const downloadZip = async (srcImgs, zipName, callback) => {
     const zip = new JSZip()
     const fileFolder = zip.folder(zipName)
     for (let i = 0; i < srcImgs.length; i++) {
-        let img = srcImgs[i]
-        img.setAttribute("crossOrigin", "Anonymous")
-        let src = img.src.replace(/^data:image\/(png|jpg);base64,/, "")
+        let src = srcImgs[i].replace(/^data:image\/(png|jpg);base64,/, "")
         fileFolder.file(i + ".png", src, {base64: true})
     }
 
     zip.generateAsync({
         type: "blob",
     }).then((content) => {
-        saveAs(content, zipName + ".zip");
+        saveAs(content, zipName + ".zip")
+        callback()
     }).catch(msg => {
         log(msg)
     })
@@ -208,13 +207,13 @@ const downloadZip = async (srcImgs, zipName) => {
 
 Date.prototype.Format = function (fmt) {
     var o = {
-        "M+": this.getMonth() + 1, //鏈堜唤
-        "d+": this.getDate(), //鏃�
-        "h+": this.getHours(), //灏忔椂
-        "m+": this.getMinutes(), //鍒�
-        "s+": this.getSeconds(), //绉�
-        "q+": Math.floor((this.getMonth() + 3) / 3), //瀛ｅ害
-        "S": this.getMilliseconds() //姣
+        "M+": this.getMonth() + 1,
+        "d+": this.getDate(),
+        "h+": this.getHours(),
+        "m+": this.getMinutes(),
+        "s+": this.getSeconds(),
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        "S": this.getMilliseconds()
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
@@ -224,4 +223,19 @@ Date.prototype.Format = function (fmt) {
 
 const now = function () {
     return new Date().Format("yyyy/MM/dd hh:mm:ss");
+}
+
+const scrollToBottom = function(domWrapper) {
+    (function smoothscroll() {
+        // 已经被卷掉的高度
+        const currentScroll = domWrapper.scrollTop
+        // 容器高度
+        const clientHeight = domWrapper.offsetHeight
+        // 内容总高度
+        const scrollHeight = domWrapper.scrollHeight
+        if (scrollHeight - 10 > currentScroll + clientHeight) {
+            window.requestAnimationFrame(smoothscroll)
+            domWrapper.scrollTo(0, currentScroll + (scrollHeight - currentScroll - clientHeight) / 2)
+        }
+    })()
 }

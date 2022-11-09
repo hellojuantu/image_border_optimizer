@@ -39,7 +39,7 @@
 }
 
 .hide {
-	display: none;
+	display: none !important;
 }
 
 .shape-active {
@@ -633,6 +633,22 @@
 	cursor: pointer;
 }
 
+.visual-loading-panels-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: inherit;
+	height: inherit;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 999999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	color: #333;
+	font-size: 12px;
+}
+
 .visual-loading-container {
 	position: fixed;
 	top: 0;
@@ -687,3 +703,4 @@
 		transform: rotate(1turn);
 	}
 }
+

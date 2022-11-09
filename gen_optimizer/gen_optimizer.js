@@ -27,9 +27,17 @@ class GenOptimizer {
         }
     }
 
+    saveCurrent() {
+        // saveImage
+        if (this.downloading) {
+            this.updateAndDraw()
+            this.savedImages[config.index.value] = this.canvas.toDataURL("image/png")           
+        }
+    }
+
     compressImage(img) {
-        let canvas = document.createElement('canvas');
-        let context = canvas.getContext('2d');
+        let canvas = document.createElement('canvas')
+        let context = canvas.getContext('2d')
         // 压缩图片
         let originWidth = img.width
         let originHeight = img.height
@@ -59,10 +67,6 @@ class GenOptimizer {
             ratio = 100 / size
         }       
         return canvas.toDataURL("image/png", ratio)
-    }
-
-    async downloadAllImages(zipName) {
-        downloadZip(this.panels, zipName)
     }
 
     updateCanvasHW(h, w) {
@@ -127,6 +131,9 @@ class GenOptimizer {
         this.panels = []
         this.panelSnapshots = []
         this.setupBlankPanel()
+        //
+        this.downloading = false
+        this.savedImages = []
         //
         this.bindUploadEvents()
         // key
@@ -284,10 +291,11 @@ class GenOptimizer {
             e.dataTransfer.dropEffect = 'copy'
         })
     
-        dp.addEventListener("drop", function (e) {
-            e.stopPropagation()
-            e.preventDefault()
-            let files = Object.values(e.dataTransfer.files).filter(
+        dp.addEventListener("drop", function (event) {            
+            event.stopPropagation()
+            event.preventDefault()
+            toggleClass(e("#id-loading-panels-area"), "hide")
+            let files = Object.values(event.dataTransfer.files).filter(
                 f => f.type.includes("image")
             )
             let tempPanels = []
@@ -295,9 +303,9 @@ class GenOptimizer {
                 let file = files[i]
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
-                reader.onload = function (e) {
+                reader.onload = function (event) {
                     let img = new Image()
-                    img.src = e.target.result
+                    img.src = event.target.result
                     img.dataset.type = 'user_upload'
                     img.onload = function() { 
                         tempPanels.push(img)
@@ -307,6 +315,8 @@ class GenOptimizer {
                         if (tempPanels.length == files.length) {
                             log("__start")
                             self.scene && self.scene.refreshConfig(tempPanels)
+                            toggleClass(e("#id-loading-panels-area"), "hide")  
+                            setTimeout(scrollToBottom(e('.image-list')), 100)                      
                         }
                     }
                 }
