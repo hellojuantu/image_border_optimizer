@@ -29,10 +29,8 @@ class GenOptimizer {
 
     saveCurrent() {
         // saveImage
-        if (this.downloading) {
-            this.updateAndDraw()
-            this.savedImages[config.index.value] = this.canvas.toDataURL("image/png")           
-        }
+        this.updateAndDraw()        
+        return this.canvas.toDataURL("image/png")  
     }
 
     compressImage(img) {
@@ -131,9 +129,6 @@ class GenOptimizer {
         this.panels = []
         this.panelSnapshots = []
         this.setupBlankPanel()
-        //
-        this.downloading = false
-        this.savedImages = []
         //
         this.bindUploadEvents()
         // key
@@ -294,10 +289,12 @@ class GenOptimizer {
         dp.addEventListener("drop", function (event) {            
             event.stopPropagation()
             event.preventDefault()
-            toggleClass(e("#id-loading-panels-area"), "hide")
             let files = Object.values(event.dataTransfer.files).filter(
                 f => f.type.includes("image")
             )
+            if (files.length > 0) {
+                toggleClass(e("#id-loading-panels-area"), "hide")
+            }
             let tempPanels = []
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]

@@ -93,25 +93,67 @@ class PageConfigControls extends GenControls {
                     "action.downloadImagesButton": function(target) {   
                         toggleClass(e("#id-loading-area"), "hide")  
                         setTimeout(() => {
-                            self.optimizer.downloading = true
+                            let cur = config.index.value
                             let len = self.panels.length
-                            console.log("len", len)
+                            let savedImages = []                        
                             for (let i = 0; i < len; i++) {
+                                for (let i = 0; i < self.shapeControl.shapes.length; i++) {
+                                    let shape = self.shapeControl.shapes[i]
+                                    shape.idle()
+                                }
+                                self.shapeControl.removeDraggers()
                                 self.savePanel()
                                 self.switchPanel(i)  
-                                self.optimizer.saveCurrent()
+                                savedImages.push(self.optimizer.saveCurrent())
                             }
 
+                            self.savePanel()
+                            self.switchPanel(cur)
+                            
                             try {
                                 let tag = new Date().Format("MM-dd")
-                                downloadZip(self.optimizer.savedImages, "archive-" + tag, () => {
+                                downloadZip(savedImages, "archive-" + tag, () => {
                                     toggleClass(e("#id-loading-area"), "hide")
                                 })
-                                self.optimizer.downloading = false
                             } catch (err) {
                                 alert('导出失败')
                             }  
                         }, 1000)                                                        
+                    },
+                    "action.loadFromClipboard": async function(target) {
+                        try {
+                            let clipboardItems = await navigator.clipboard.read()
+                            let hasImage = false
+                            clipboardItems.forEach(item => {
+                                hasImage = item.types.filter(i => i.includes('image')).length > 0
+                            }) 
+                            if (!hasImage) {
+                                return
+                            }
+                            toggleClass(e("#id-loading-panels-area"), "hide")
+                            console.log("clipboardItems", clipboardItems)
+                            for (let item of clipboardItems) {
+                                for (let type of item.types.filter(i => i.includes('image'))) {                                    
+                                    let blob = await item.getType(type)
+                                    var reader = new FileReader()
+                                    reader.readAsDataURL(blob)
+                                    reader.onload = function (event) {
+                                        log(event.target.result)
+                                        let img = new Image()
+                                        img.src = event.target.result
+                                        img.dataset.type = 'user_upload'
+                                        img.onload = function() { 
+                                            self.optimizer.panels.push(img)
+                                            sc && sc.refreshConfig([img])
+                                            toggleClass(e("#id-loading-panels-area"), "hide")
+                                            setTimeout(scrollToBottom(e('.image-list')), 100)
+                                        }
+                                    }
+                                }   
+                            }
+                        } catch (err) {
+                            alert("从剪贴板导入图片失败")
+                        }
                     }
                 },
             },            
