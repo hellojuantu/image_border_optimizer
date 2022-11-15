@@ -56,11 +56,21 @@ class PanelControls extends GenControls {
 
         this.drawShadow(img, centerOffsetX, centerOffsetY)
 
-        context.drawImage(img, centerOffsetX * this.ratio, centerOffsetY * this.ratio, img.width * this.ratio, img.height * this.ratio)
+        this.drawWhiteBg(img, centerOffsetX, centerOffsetY)
 
+        context.drawImage(img, centerOffsetX * this.ratio, centerOffsetY * this.ratio, img.width * this.ratio, img.height * this.ratio)        
+        
         this.drawBorder(img, centerOffsetX, centerOffsetY)        
     }
 
+    drawWhiteBg(img, x, y) {
+        let context = this.context
+        context.save()
+        context.fillStyle = "#fff"
+        context.fillRect(x, y, img.width, img.height)
+        context.restore()
+    }
+    
     drawShadow(img, ox, oy) {
         let shadowOffset = config.shadowOffset.value
         this.context.save()
