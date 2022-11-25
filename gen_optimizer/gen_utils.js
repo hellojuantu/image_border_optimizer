@@ -187,24 +187,6 @@ const isBlank = function(str) {
     return (!str || /^\s*$/.test(str))
 }
 
-const downloadZip = async (srcImgs, zipName, callback) => {
-    const zip = new JSZip()
-    const fileFolder = zip.folder(zipName)
-    for (let i = 0; i < srcImgs.length; i++) {
-        let src = srcImgs[i].replace(/^data:image\/(png|jpg);base64,/, "")
-        fileFolder.file(i + ".png", src, {base64: true})
-    }
-
-    zip.generateAsync({
-        type: "blob",
-    }).then((content) => {
-        saveAs(content, zipName + ".zip")
-        callback()
-    }).catch(msg => {
-        log(msg)
-    })
-}
-
 Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1,

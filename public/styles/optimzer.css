@@ -665,42 +665,57 @@
 	font-size: 12px;
 }
 
-.visual-circle-path {
-	stroke: #5cb6ff;
-	stroke-width: 4;
-	stroke-dasharray: 95, 126;
-	stroke-dashoffset: 0;
-	animation: visual-loading-dash 1.5s ease-in-out infinite;
+.spinner {
+	width: 40px;
+	height: 40px;
+  
+	position: relative;
+	margin: 100px auto;
 }
 
-@keyframes visual-loading-dash {
-	0% {
-		stroke-dasharray: 1, 126;
-		stroke-dashoffset: 0;
-	}
-
-	50% {
-		stroke-dasharray: 95, 126;
-		stroke-dashoffset: -31px
-	}
-
-	to {
-		stroke-dasharray: 6, 120;
-		stroke-dashoffset: -120px;
+.double-bounce1, .double-bounce2 {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background-color: #5cb6ff;
+	opacity: 0.6;
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	-webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+	animation: sk-bounce 2.0s infinite ease-in-out;
+}
+  
+.double-bounce2 {
+	-webkit-animation-delay: -1.0s;
+	animation-delay: -1.0s;
+}
+  
+@-webkit-keyframes sk-bounce {
+	0%, 100% { -webkit-transform: scale(0.0) }
+	50% { -webkit-transform: scale(1.0) }
+}
+  
+@keyframes sk-bounce {
+	0%, 100% { 
+	  transform: scale(0.0);
+	  -webkit-transform: scale(0.0);
+	} 50% { 
+	  transform: scale(1.0);
+	  -webkit-transform: scale(1.0);
 	}
 }
-
-.visual-loading-svg {
-	width: 3em;
-	height: 3em;
-	max-width: 70px;
-	max-height: 70px;
-	animation: visual-loading-rotate 1.5s infinite ease-in-out;
+  
+.progress {
+	width:0%;
+	height:5px;
+	overflow:hidden;
+	background-color:#5cb6ff;
+	position:fixed;
+	top:0;
+	left:0;
+	z-index:1000;
+	-moz-animation:progressing 2s ease-out;
+	-webkit-animation:progressing 2s ease-out;
 }
-
-@keyframes visual-loading-rotate {
-	to {
-		transform: rotate(1turn);
-	}
-}
-

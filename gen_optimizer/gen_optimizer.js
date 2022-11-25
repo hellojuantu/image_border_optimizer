@@ -27,12 +27,6 @@ class GenOptimizer {
         }
     }
 
-    saveCurrent() {
-        // saveImage
-        this.updateAndDraw()        
-        return this.canvas.toDataURL("image/png")  
-    }
-
     compressImage(img) {
         let canvas = document.createElement('canvas')
         let context = canvas.getContext('2d')
@@ -293,7 +287,7 @@ class GenOptimizer {
                 f => f.type.includes("image")
             )
             if (files.length > 0) {
-                toggleClass(e("#id-loading-panels-area"), "hide")
+                toggleClass(e("#id-loading-area"), "hide")
             }
             let tempPanels = []
             for (let i = 0; i < files.length; i++) {
@@ -312,7 +306,7 @@ class GenOptimizer {
                         if (tempPanels.length == files.length) {
                             log("__start")
                             self.scene && self.scene.refreshConfig(tempPanels)
-                            toggleClass(e("#id-loading-panels-area"), "hide")  
+                            toggleClass(e("#id-loading-area"), "hide")  
                             setTimeout(scrollToBottom(e('.image-list')), 100)                      
                         }
                     }

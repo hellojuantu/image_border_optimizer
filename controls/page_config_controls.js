@@ -90,35 +90,8 @@ class PageConfigControls extends GenControls {
                         sc.getComponent('panelSelector').buildWith(tempPanels)
                         config.index.max = self.panels.length - 1
                     },
-                    "action.downloadImagesButton": function(target) {   
-                        toggleClass(e("#id-loading-area"), "hide")  
-                        setTimeout(() => {
-                            let cur = config.index.value
-                            let len = self.panels.length
-                            let savedImages = []                        
-                            for (let i = 0; i < len; i++) {
-                                for (let i = 0; i < self.shapeControl.shapes.length; i++) {
-                                    let shape = self.shapeControl.shapes[i]
-                                    shape.idle()
-                                }
-                                self.shapeControl.removeDraggers()
-                                self.savePanel()
-                                self.switchPanel(i)  
-                                savedImages.push(self.optimizer.saveCurrent())
-                            }
-
-                            self.savePanel()
-                            self.switchPanel(cur)
-                            
-                            try {
-                                let tag = new Date().Format("MM-dd")
-                                downloadZip(savedImages, "archive-" + tag, () => {
-                                    toggleClass(e("#id-loading-area"), "hide")
-                                })
-                            } catch (err) {
-                                alert('导出失败')
-                            }  
-                        }, 1000)                                                        
+                    "action.downloadImagesButton": async function(target) { 
+                        self.createImg()                                                           
                     },
                     "action.loadFromClipboard": async function(target) {
                         try {
@@ -244,6 +217,46 @@ class PageConfigControls extends GenControls {
 
         // 使用组件构建属性
         sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
+    }
+
+    async addToZip(canvas, zip, name) {
+        return new Promise((resolve, reject) => {
+            canvas.toBlob(function (blob) {
+                // 将每次不同的canvas数据添加到zip文件中
+                zip.file(name, blob)
+                resolve()
+            })
+        })
+    }
+
+    async createImg() {
+        let self = this
+        toggleClass(e("#id-loading-area"), "hide")  
+        var zip = new JSZip()
+        let cur = config.index.value
+        let len = self.panels.length
+        for (let i = 0; i < len; i++) {
+            for (let i = 0; i < self.shapeControl.shapes.length; i++) {
+                let shape = self.shapeControl.shapes[i]
+                shape.idle()
+            }
+            self.shapeControl.removeDraggers()
+            self.savePanel()
+            self.switchPanel(i)  
+            let idx = i + 1
+            await self.addToZip(self.canvas, zip, idx + '.png')
+            e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
+        }
+
+        self.savePanel()
+        self.switchPanel(cur)            
+        zip.generateAsync({ type: 'blob' }, (metadata) => {
+            e(".progress").style.width = metadata.percent.toFixed(0) + "%"
+        }).then(function (content) {
+            let name = "archive-" + new Date().Format("MM-dd")
+            saveAs(content, name)
+            toggleClass(e("#id-loading-area"), "hide")  
+        })
     }
 
     setupUploadImageEvent() {

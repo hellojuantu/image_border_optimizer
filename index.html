@@ -11,13 +11,15 @@
     <link rel="stylesheet" href="./public/styles/elementUI.css"/>
     <script src="./public/lib/hidpi-canvas.min.js"></script>    
     <script src="./public/lib/jszip.min.js"></script>
-    <script src="./public/lib/filesaver.min.js"></script>
+    <script src="./public/lib/filesaver.min.js"></script>   
 </head>
 <body>
-    <div id="id-loading-area" class="visual-loading-container">
-        <svg viewBox="0 0 50 50" class="visual-loading-svg">
-            <circle cx="25" cy="25" r="20" fill="none" class="visual-circle-path"></circle>
-        </svg>
+    <div id="id-loading-area" class="visual-loading-container">   
+        <p class="progress"></p>    
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
     </div>
     <div class="home">
         <div class="toolbar">
@@ -26,8 +28,8 @@
                 <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
                 <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
                 <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
-                <button type="button" data-type="button" data-value="action.loadFromClipboard" class="gen-auto-button el-button el-button--default el-button--small">从剪贴板导入</button>
-                <button type="button" data-type="button" data-value="action.downloadImagesButton" class="gen-auto-button el-button el-button--default el-button--small">全部导出</button>
+                <button type="button" data-type="button" data-value="action.loadFromClipboard" class="gen-auto-button el-button el-button--default el-button--small"><i class="el-icon-s-opportunity" style="color: red;"></i>从剪贴板导入</button>
+                <button type="button" data-type="button" data-value="action.downloadImagesButton" class="gen-auto-button el-button el-button--default el-button--small"><i class="el-icon-s-flag" style="color: red;"></i>全部导出</button>
                 <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
                 <div class="canvas-config canvas-hw">
                     <span>画布大小</span>
@@ -50,12 +52,7 @@
             </div>
         </div>
         <main>
-            <section class="left">
-                <div id="id-loading-panels-area" class="hide visual-loading-panels-container">
-                    <svg viewBox="0 0 50 50" class="visual-loading-svg">
-                        <circle cx="25" cy="25" r="20" fill="none" class="visual-circle-path"></circle>
-                    </svg>
-                </div>
+            <section class="left">              
                 <p class="title">画布列表 (拖拽放入)</p>
                 <div class="image-list">                    
                 </div>
