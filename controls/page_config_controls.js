@@ -231,7 +231,8 @@ class PageConfigControls extends GenControls {
 
     async createImg() {
         let self = this
-        toggleClass(e("#id-loading-area"), "hide")  
+        toggleClass(e("#id-loading-area"), "hide") 
+        e(".progress").style.width = "0%" 
         var zip = new JSZip()
         let cur = config.index.value
         let len = self.panels.length
@@ -244,8 +245,8 @@ class PageConfigControls extends GenControls {
             self.savePanel()
             self.switchPanel(i)  
             let idx = i + 1
-            await self.addToZip(self.canvas, zip, idx + '.png')
             e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
+            await self.addToZip(self.canvas, zip, idx + '.png')
         }
 
         self.savePanel()
@@ -256,6 +257,7 @@ class PageConfigControls extends GenControls {
             let name = "archive-" + new Date().Format("MM-dd")
             saveAs(content, name)
             toggleClass(e("#id-loading-area"), "hide")  
+            e(".progress").style.width = "0%"
         })
     }
 
