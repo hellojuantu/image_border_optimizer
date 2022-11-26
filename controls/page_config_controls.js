@@ -108,7 +108,7 @@ class PageConfigControls extends GenControls {
                             if (!hasImage) {
                                 return
                             }
-                            toggleClass(e("#id-loading-panels-area"), "hide")
+                            toggleClass(e("#id-loading-area"), "hide")
                             console.log("clipboardItems", clipboardItems)
                             for (let item of clipboardItems) {
                                 for (let type of item.types.filter(i => i.includes('image'))) {                                    
@@ -123,7 +123,7 @@ class PageConfigControls extends GenControls {
                                         img.onload = function() { 
                                             self.optimizer.panels.push(img)
                                             sc && sc.refreshConfig([img])
-                                            toggleClass(e("#id-loading-panels-area"), "hide")
+                                            toggleClass(e("#id-loading-area"), "hide")
                                             setTimeout(scrollToBottom(e('.image-list')), 100)
                                         }
                                     }
