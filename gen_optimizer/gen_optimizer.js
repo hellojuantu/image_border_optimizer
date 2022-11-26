@@ -202,6 +202,18 @@ class GenOptimizer {
                 a(event, 'mouseenter')
             }
         })
+        window.addEventListener('click', event => {
+            moving = false
+            if (event.target == this.canvas) {
+                for (const a of self.mouseActions) {
+                    a(event, 'clickinscene')
+                }
+            } else {
+                for (const a of self.mouseActions) {
+                    a(event, 'clickoutscene')
+                }
+            }           
+        })
     }
     
     registerAction(key, callback) {

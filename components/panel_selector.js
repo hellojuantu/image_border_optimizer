@@ -21,6 +21,7 @@ class PanelSelector extends GenComponent {
                     "config.index": function(target) {
                         let imageBlock = sel(sc.pageClass.imageBlock)
                         let index = target.closest(imageBlock).dataset.index
+                        control.shapeControl.removeDraggers()
                         control.savePanel()
                         let v = parseInt(index)
                         control.switchPanel(v)

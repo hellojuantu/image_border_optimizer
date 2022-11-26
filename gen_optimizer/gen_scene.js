@@ -11,6 +11,7 @@ class GenScene {
         this.components = {}
         this.inUsedComponentNames = []
         this.pointInScene = false
+        this.clickInScene = false
         this.setupMouseleave()
         this.pageLoading()
     }
@@ -37,7 +38,7 @@ class GenScene {
     /**
      * 注册鼠标是否在场景事件
      */
-     setupMouseleave() {
+    setupMouseleave() {
         this.optimizer.resgisterMouse((event, action) => {     
             if (action == 'mouseleave') {
                 this.pointInScene = false
@@ -45,6 +46,10 @@ class GenScene {
             } else if (action == 'mouseenter') {
                 this.pointInScene = true
                 log("mouseenter canvas", this.pointInScene)
+            } else if (action == 'clickinscene') {
+                this.clickInScene = true
+            } else if (action == 'clickoutscene') {
+                this.clickInScene = false
             }
         })
     }

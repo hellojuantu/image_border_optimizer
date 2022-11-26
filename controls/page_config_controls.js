@@ -89,6 +89,11 @@ class PageConfigControls extends GenControls {
                         tempPanels.push(b)
                         sc.getComponent('panelSelector').buildWith(tempPanels)
                         config.index.max = self.panels.length - 1
+                        // switch to newBlank
+                        self.shapeControl.removeDraggers()
+                        self.savePanel()
+                        let v = config.index.max
+                        self.switchPanel(v)   
                     },
                     "action.downloadImagesButton": async function(target) { 
                         self.createImg()                                                           
@@ -236,14 +241,11 @@ class PageConfigControls extends GenControls {
         var zip = new JSZip()
         let cur = config.index.value
         let len = self.panels.length
-        for (let i = 0; i < len; i++) {
-            for (let i = 0; i < self.shapeControl.shapes.length; i++) {
-                let shape = self.shapeControl.shapes[i]
-                shape.idle()
-            }
+        for (let i = 0; i < len; i++) {          
             self.shapeControl.removeDraggers()
             self.savePanel()
             self.switchPanel(i)  
+            self.optimizer.updateAndDraw()
             let idx = i + 1
             e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
             await self.addToZip(self.canvas, zip, idx + '.png')
