@@ -38,7 +38,7 @@ class PageConfigControls extends GenControls {
         // 右边属性组件
         sc.bindComponent('attribute', Attribute.new(this))
         // 左边图片选择组件
-        let panelWitdh = 196
+        let panelWitdh = 192
         let panelHeight = 100
         sc.bindComponent('panelSelector', PanelSelector.new(this, panelWitdh, panelHeight))
 
