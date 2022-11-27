@@ -136,6 +136,7 @@ class PageConfigControls extends GenControls {
                                 }   
                             }
                         } catch (err) {
+                            console.log("err", err)
                             toggleClass(e("#id-loading-area"), "hide")
                             sc.message.error('从剪贴板导入图片失败')
                         }
@@ -246,7 +247,8 @@ class PageConfigControls extends GenControls {
                 toggleClass(e("#id-loading-area"), "hide") 
                 self.scene.message.success('复制成功')
             })
-        } catch(err) {
+        } catch (err) {
+            console.log("copy err", err)
             toggleClass(e("#id-loading-area"), "hide") 
             self.scene.message.error('复制失败')
         }
