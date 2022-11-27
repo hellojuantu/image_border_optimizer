@@ -12,6 +12,7 @@ class GenScene {
         this.inUsedComponentNames = []
         this.pointInScene = false
         this.clickInScene = false
+        this.message = new GenMessage()
         this.setupMouseleave()
         this.pageLoading()
     }

@@ -70,17 +70,11 @@ class PageConfigControls extends GenControls {
                         self.penControl.resetAndUpdate([])
                         self.textControl.resetAndUpdate([])
                         self.shapeControl.resetAndUpdate([])
+                        self.scene.message.success('清空成功')
                     },
                     "action.copyImageButton": function(target) {
-                        log("copyImageButton")
-                        // 遍历所有的 shape 变成 idle
-                        for (let i = 0; i < self.shapeControl.shapes.length; i++) {
-                            let shape = self.shapeControl.shapes[i]
-                            shape.idle()
-                        }
-                        self.shapeControl.removeDraggers()
-                        let g = self.optimizer
-                        g.loadImageToClipboard()                    
+                        // self.copyImage()   
+                        sc.message.warning('请使用右键进行复制')
                     },
                     "action.newBlank": function(target) {
                         let b = self.optimizer.defaultBlankPanel()
@@ -93,7 +87,8 @@ class PageConfigControls extends GenControls {
                         self.shapeControl.removeDraggers()
                         self.savePanel()
                         let v = config.index.max
-                        self.switchPanel(v)   
+                        self.switchPanel(v) 
+                        self.scene.message.success('新建成功')  
                     },
                     "action.downloadImagesButton": async function(target) { 
                         self.createImg()                                                           
@@ -101,15 +96,16 @@ class PageConfigControls extends GenControls {
                     "action.loadFromClipboard": async function(target) {
                         try {
                             let clipboardItems = await navigator.clipboard.read()
+                            console.log("clipboardItems", clipboardItems)
                             let hasImage = false
                             clipboardItems.forEach(item => {
                                 hasImage = item.types.filter(i => i.includes('image')).length > 0
                             }) 
                             if (!hasImage) {
+                                sc.message.warning('请重试 剪贴板里没有图片')
                                 return
                             }
                             toggleClass(e("#id-loading-area"), "hide")
-                            console.log("clipboardItems", clipboardItems)
                             for (let item of clipboardItems) {
                                 for (let type of item.types.filter(i => i.includes('image'))) {                                    
                                     let blob = await item.getType(type)
@@ -125,12 +121,13 @@ class PageConfigControls extends GenControls {
                                             sc && sc.refreshConfig([img])
                                             toggleClass(e("#id-loading-area"), "hide")
                                             setTimeout(scrollToBottom(e('.image-list')), 100)
+                                            self.scene.message.success('导入成功')
                                         }
                                     }
                                 }   
                             }
                         } catch (err) {
-                            alert("从剪贴板导入图片失败")
+                            sc.message.error('从剪贴板导入图片失败')
                         }
                     }
                 },
@@ -260,6 +257,7 @@ class PageConfigControls extends GenControls {
             saveAs(content, name)
             toggleClass(e("#id-loading-area"), "hide")  
             e(".progress").style.width = "0%"
+            self.scene.message.success('导出成功')
         })
     }
 
@@ -472,5 +470,23 @@ class PageConfigControls extends GenControls {
         }       
         
         return null
+    }
+
+    // @deplicated
+    async copyImage() {
+        let self = this
+        try {
+            toggleClass(e("#id-loading-area"), "hide") 
+            self.shapeControl.removeDraggers()
+            await self.optimizer.canvas.toBlob(function(blob) { 
+                const item = new ClipboardItem({ "image/png": blob })
+                navigator.clipboard.write([item])
+                toggleClass(e("#id-loading-area"), "hide") 
+                self.scene.message.success('复制成功')
+            })
+        } catch(e) {
+            toggleClass(e("#id-loading-area"), "hide") 
+            self.scene.message.error('复制失败')
+        }
     }
 }

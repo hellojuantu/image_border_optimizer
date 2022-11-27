@@ -319,7 +319,8 @@ class GenOptimizer {
                             log("__start")
                             self.scene && self.scene.refreshConfig(tempPanels)
                             toggleClass(e("#id-loading-area"), "hide")  
-                            setTimeout(scrollToBottom(e('.image-list')), 100)                      
+                            scrollToBottom(e('.image-list'))
+                            self.scene && self.scene.message.success('导入成功', 1000)
                         }
                     }
                 }

@@ -8,6 +8,7 @@
     <title>GenOptimizer</title>
     <link rel="stylesheet" href="./public/styles/app.css"/>
     <link rel="stylesheet" href="./public/styles/optimzer.css"/>
+    <link rel="stylesheet" href="./public/styles/message.css"/>
     <link rel="stylesheet" href="./public/styles/elementUI.css"/>
     <script src="./public/lib/hidpi-canvas.min.js"></script>    
     <script src="./public/lib/jszip.min.js"></script>
@@ -30,7 +31,7 @@
                 <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
                 <button type="button" data-type="button" data-value="action.loadFromClipboard" class="gen-auto-button el-button el-button--default el-button--small"><i class="el-icon-s-opportunity" style="color: red;"></i>从剪贴板导入</button>
                 <button type="button" data-type="button" data-value="action.downloadImagesButton" class="gen-auto-button el-button el-button--default el-button--small"><i class="el-icon-s-flag" style="color: red;"></i>全部导出</button>
-                <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
+                <!-- <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button> -->
                 <div class="canvas-config canvas-hw">
                     <span>画布大小</span>
                     <input value="1000" class="canvas-hw-input" type="number" data-prop="width" data-value="action-canvasHW"> ×
@@ -115,6 +116,7 @@
     <script src="./gen_optimizer/gen_image.js"></script>
     <script src="./gen_optimizer/gen_line.js"></script>
     <script src="./gen_optimizer/gen_dragger.js"></script>
+    <script src="./gen_optimizer/gen_message.js"></script> 
     <!-- 组件 -->
     <script src="./components/attribute.js"></script>
     <script src="./components/panel_selector.js"></script>

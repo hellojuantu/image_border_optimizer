@@ -31,8 +31,8 @@ class PanelSelector extends GenComponent {
                         let outer = target.closest(imageBlock)
                         let delId = parseInt(outer.dataset.index)
                         // only one can't delete
-                        if (es(imageBlock).length <= 1) {
-                            alert("这是最后一个 panel 了, 留下 ta 好吗 ?")
+                        if (es(imageBlock).length <= 1) {                        
+                            sc.message.info('这是最后一个 panel 了, 留下 ta 好吗')
                             return
                         }
                         removeWithCondition(imageBlock, (e) => {
@@ -51,6 +51,7 @@ class PanelSelector extends GenComponent {
                         } else if (delId < config.index.value) {
                             config.index.value -= 1
                         }
+                        sc.message.success('删除成功')
                     }
                 }
             },
