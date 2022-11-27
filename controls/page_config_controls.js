@@ -89,7 +89,8 @@ class PageConfigControls extends GenControls {
                         self.savePanel()
                         let v = config.index.max
                         self.switchPanel(v) 
-                        self.scene.message.success('新建成功')  
+                        scrollToBottom(e('.image-list'))
+                        self.scene.message.success('新建成功')
                     },
                     "action.downloadImagesButton": async function(target) { 
                         self.createImg()                                                           
@@ -211,7 +212,7 @@ class PageConfigControls extends GenControls {
 
         // 更新图片快照
         sc.updateActivePanelSnapshot = function() {
-            if (this.canvas.width > 0 && this.canvas.height > 0) {
+            if (this.panels[config.index.value].dataset.type == 'default_blank' && this.canvas.width > 0 && this.canvas.height > 0) {
                 let ps = sc.getComponent('panelSelector')
                 let canvas = e('.image-active > div > canvas')
                 canvas.width = ps.w
