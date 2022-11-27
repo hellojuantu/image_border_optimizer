@@ -10,6 +10,7 @@ class GenOptimizer {
         return this.i
     }
 
+    // @Deprecated
     async loadImageToClipboard() {
         try {
             this.updateAndDraw()

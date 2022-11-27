@@ -309,7 +309,8 @@ class PageConfigControls extends GenControls {
             toggleClass(e("#id-loading-area"), "hide")
             let files = Object.values(event.dataTransfer.files).filter(
                 f => f.type.includes("image")
-            )            
+            )      
+            let tempFiles = []
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
                 if (file.size > uploadConfig.max_size) {
@@ -324,14 +325,15 @@ class PageConfigControls extends GenControls {
                     let img = new Image()
                     img.src = event.target.result
                     img.dataset.type = 'user_upload'
-                    img.onload = () => {     
-                        // img.src = self.optimizer.compressImage(img)
-                        // img.onload = () => {
+                    img.onload = () => {
+                        tempFiles.push(img)
                         self.shapeControl.handleImageEvent(img, x + offset, y + offset)
-                        toggleClass(e("#id-loading-area"), "hide")
-                        self.scene.message.success('导入成功')
-                        // }
-                    }
+                        if (tempFiles.length == files.length) {
+                            log("tempFiles", tempFiles, files)
+                            toggleClass(e("#id-loading-area"), "hide")
+                            self.scene.message.success('导入成功')
+                        }
+                    }                    
                 }
             }
         })
