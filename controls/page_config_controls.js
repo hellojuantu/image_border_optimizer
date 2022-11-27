@@ -38,7 +38,9 @@ class PageConfigControls extends GenControls {
         // 右边属性组件
         sc.bindComponent('attribute', Attribute.new(this))
         // 左边图片选择组件
-        sc.bindComponent('panelSelector', PanelSelector.new(this))
+        let panelWitdh = 196
+        let panelHeight = 100
+        sc.bindComponent('panelSelector', PanelSelector.new(this, panelWitdh, panelHeight))
 
         // 注册全局场景事件
         sc.registerGlobalEvents([               
@@ -73,8 +75,7 @@ class PageConfigControls extends GenControls {
                         self.scene.message.success('清空成功')
                     },
                     "action.copyImageButton": function(target) {
-                        // self.copyImage()   
-                        sc.message.warning('请使用右键进行复制')
+                        self.copyImage()
                     },
                     "action.newBlank": function(target) {
                         let b = self.optimizer.defaultBlankPanel()
@@ -95,20 +96,28 @@ class PageConfigControls extends GenControls {
                     },
                     "action.loadFromClipboard": async function(target) {
                         try {
+                            toggleClass(e("#id-loading-area"), "hide")
                             let clipboardItems = await navigator.clipboard.read()
                             console.log("clipboardItems", clipboardItems)
                             let hasImage = false
                             clipboardItems.forEach(item => {
+                                console.log("tiem", item)
                                 hasImage = item.types.filter(i => i.includes('image')).length > 0
-                            }) 
+                            })
                             if (!hasImage) {
+                                toggleClass(e("#id-loading-area"), "hide")
                                 sc.message.warning('请重试 剪贴板里没有图片')
                                 return
                             }
-                            toggleClass(e("#id-loading-area"), "hide")
                             for (let item of clipboardItems) {
                                 for (let type of item.types.filter(i => i.includes('image'))) {                                    
                                     let blob = await item.getType(type)
+                                    console.log("blob", blob)
+                                    if (blob.size > uploadConfig.max_size) {
+                                        toggleClass(e("#id-loading-area"), "hide")
+                                        sc.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
+                                        break
+                                    }
                                     var reader = new FileReader()
                                     reader.readAsDataURL(blob)
                                     reader.onload = function (event) {
@@ -127,6 +136,7 @@ class PageConfigControls extends GenControls {
                                 }   
                             }
                         } catch (err) {
+                            toggleClass(e("#id-loading-area"), "hide")
                             sc.message.error('从剪贴板导入图片失败')
                         }
                     }
@@ -200,10 +210,14 @@ class PageConfigControls extends GenControls {
 
         // 更新图片快照
         sc.updateActivePanelSnapshot = function() {
-            let raw = this.panels[config.index.value]
-            if (raw.dataset.type == 'default_blank') {
-                e('.image-active > div > img').src = this.canvas.toDataURL("image/png")   
-            }
+            if (this.canvas.width > 0 && this.canvas.height > 0) {
+                let ps = sc.getComponent('panelSelector')
+                let canvas = e('.image-active > div > canvas')
+                canvas.width = ps.w
+                canvas.height = ps.h
+                let ctx = canvas.getContext('2d')           
+                ctx.drawImage(this.canvas, 0, 0, ps.w * 2, ps.h * 2)
+            }            
         }
 
         // 上传图片需要刷新的配置
@@ -221,10 +235,26 @@ class PageConfigControls extends GenControls {
         sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
     }
 
+    async copyImage() {
+        let self = this
+        try {
+            toggleClass(e("#id-loading-area"), "hide") 
+            self.shapeControl.removeDraggers()
+            await self.optimizer.canvas.toBlob(function(blob) { 
+                const item = new ClipboardItem({ "image/png": blob })
+                navigator.clipboard.write([item])
+                toggleClass(e("#id-loading-area"), "hide") 
+                self.scene.message.success('复制成功')
+            })
+        } catch(err) {
+            toggleClass(e("#id-loading-area"), "hide") 
+            self.scene.message.error('复制失败')
+        }
+    }
+    
     async addToZip(canvas, zip, name) {
         return new Promise((resolve, reject) => {
             canvas.toBlob(function (blob) {
-                // 将每次不同的canvas数据添加到zip文件中
                 zip.file(name, blob)
                 resolve()
             })
@@ -271,29 +301,36 @@ class PageConfigControls extends GenControls {
             e.dataTransfer.dropEffect = 'copy'
         })
     
-        dp.addEventListener("drop", function (e) {
-            log("e", e.offsetX, e.offsetY)
-            let x = e.offsetX
-            let y = e.offsetY
-            e.stopPropagation()
-            e.preventDefault()
-            let files = Object.values(e.dataTransfer.files).filter(
+        dp.addEventListener("drop", function (event) {
+            let x = event.offsetX
+            let y = event.offsetY
+            event.stopPropagation()
+            event.preventDefault()
+            toggleClass(e("#id-loading-area"), "hide")
+            let files = Object.values(event.dataTransfer.files).filter(
                 f => f.type.includes("image")
             )            
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
+                if (file.size > uploadConfig.max_size) {
+                    toggleClass(e("#id-loading-area"), "hide")
+                    self.scene.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
+                    break
+                }
                 let reader = new FileReader()
                 let offset = i * 20
                 reader.readAsDataURL(file)
-                reader.onload = function (e) {
+                reader.onload = function (event) {
                     let img = new Image()
-                    img.src = e.target.result
+                    img.src = event.target.result
                     img.dataset.type = 'user_upload'
                     img.onload = () => {     
-                        img.src = self.optimizer.compressImage(img)
-                        img.onload = () => {
-                            self.shapeControl.handleImageEvent(img, x + offset, y + offset)
-                        }
+                        // img.src = self.optimizer.compressImage(img)
+                        // img.onload = () => {
+                        self.shapeControl.handleImageEvent(img, x + offset, y + offset)
+                        toggleClass(e("#id-loading-area"), "hide")
+                        self.scene.message.success('导入成功')
+                        // }
                     }
                 }
             }
@@ -323,6 +360,7 @@ class PageConfigControls extends GenControls {
                     let attributeMap = draggedShape.selected()
                     log("attributeMap", attributeMap)
                     sc.getComponent('attribute').buildWith(attributeMap)
+                    
                 }
             } else if (action == 'move') {
                 if (draggedShape != null && draggedShape.isSelected()) {
@@ -470,23 +508,5 @@ class PageConfigControls extends GenControls {
         }       
         
         return null
-    }
-
-    // @deplicated
-    async copyImage() {
-        let self = this
-        try {
-            toggleClass(e("#id-loading-area"), "hide") 
-            self.shapeControl.removeDraggers()
-            await self.optimizer.canvas.toBlob(function(blob) { 
-                const item = new ClipboardItem({ "image/png": blob })
-                navigator.clipboard.write([item])
-                toggleClass(e("#id-loading-area"), "hide") 
-                self.scene.message.success('复制成功')
-            })
-        } catch(e) {
-            toggleClass(e("#id-loading-area"), "hide") 
-            self.scene.message.error('复制失败')
-        }
     }
 }

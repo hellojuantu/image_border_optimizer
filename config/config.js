@@ -245,3 +245,8 @@ var config = {
         type: "number",
     },
 }
+
+var uploadConfig = {
+    max_size: 10 * 1024 * 1024,
+    max_size_desc: "10MB"
+}

@@ -27,6 +27,7 @@ class GenOptimizer {
         }
     }
 
+    // @Deprecated
     compressImage(img) {
         let canvas = document.createElement('canvas')
         let context = canvas.getContext('2d')
@@ -304,6 +305,11 @@ class GenOptimizer {
             let tempPanels = []
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
+                if (file.size > uploadConfig.max_size) {
+                    toggleClass(e("#id-loading-area"), "hide")
+                    self.scene.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
+                    break
+                }
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = function (event) {

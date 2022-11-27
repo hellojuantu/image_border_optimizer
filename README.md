@@ -1,5 +1,5 @@
-## Image-Border-Optimizer v2.3.7
-## 一款纯 JS 实现的轻量化图片编辑器
+## Image-Border-Optimizer v2.5.0
+## 轻量化图片编辑器
 
 ![GenOptimizer Demo](https://genoptimizer.cn/public/img/use_demo.gif)
 
@@ -15,7 +15,7 @@
 - 支持一键复制修改后的结果
 - 支持画笔、文字、矩形、圆形、箭头、线条、图像的添加
 
-这个项目没有依赖于任何的第三方框架, 以纯 JS 实现
+这个项目没有依赖于前端框架, 以纯 JS 实现
 
 最后抽象出了一个框架 (GenOptimizer), 以一种十分简洁易用的方式写出了整个项目
 
@@ -147,6 +147,14 @@ this.getComponent('attribute').buildWith(data)
 这个例子就是我的思考, 希望能给于你一点灵感或启发.
 
 ## 更新日志
+### GenOptimizer v2.5.0
+- 大幅度提升图片加载速度, 大幅度提升用户使用体验
+- 新增了剪贴板导入图片功能
+- 新增了一键导出图片功能
+- 新增了基于 ele 的 alert 样式
+- 优化了拖拽图形体验, 拖拽不卡顿
+- 优化了一键导出图片进度显示
+- 优化了 loading 卡顿问题
 
 ### GenOptimizer v2.3.7
 - 新增图形坐标, 长宽属性配置
