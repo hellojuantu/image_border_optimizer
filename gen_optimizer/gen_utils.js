@@ -1,48 +1,48 @@
 const e = sel => document.querySelector(sel)
 
-let log = function() {
-    
+let log = function () {
+
 }
 
 const es = sel => document.querySelectorAll(sel)
 
-const bindAll = function(sel, eventName, callback, useCapture=false) {
+const bindAll = function (sel, eventName, callback, useCapture = false) {
     let l = es(sel)
-    for (let i = 0; i < l.length; i++ ) {
+    for (let i = 0; i < l.length; i++) {
         let input = l[i]
-        input.addEventListener(eventName, function(event) {
+        input.addEventListener(eventName, function (event) {
             callback(event)
         }, useCapture)
     }
 }
 
-const bind = function(sel, eventName, callback) {
-    e(sel).addEventListener(eventName, function(event) {
+const bind = function (sel, eventName, callback) {
+    e(sel).addEventListener(eventName, function (event) {
         callback(event)
     })
 }
 
-const parseBoolean = function(booleanString) {
+const parseBoolean = function (booleanString) {
     return JSON.parse(booleanString)
 }
 
-const appendHtml = function(div, html) {
+const appendHtml = function (div, html) {
     div.insertAdjacentHTML('beforeend', html)
 }
 
-const uuid = function() {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-		let r = Math.random() * 16 | 0
-	    let v = (c == 'x' ? r : (r & 0x3 | 0x8))
-		return v.toString(16)
-	});
+const uuid = function () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        let r = Math.random() * 16 | 0
+        let v = (c == 'x' ? r : (r & 0x3 | 0x8))
+        return v.toString(16)
+    });
 }
 
-const sel = function(className) {
+const sel = function (className) {
     return '.' + className
 }
 
-const id = function(idName) {
+const id = function (idName) {
     return '#' + idName
 }
 
@@ -80,7 +80,7 @@ const removeClassAllWithCallback = function (className, callback) {
     }
 }
 
-const removeWithCondition = function(selector, condition) {
+const removeWithCondition = function (selector, condition) {
     let elements = es(selector)
     for (let e of elements) {
         if (condition(e)) {
@@ -101,7 +101,7 @@ const removeClassAllWithIndex = function (className, removedIndex) {
     }
 }
 
-const calTextWH = function(text, font) {
+const calTextWH = function (text, font) {
     let canvas = document.createElement("canvas")
     let context = canvas.getContext('2d')
     context.textBaseline = "top"
@@ -115,7 +115,7 @@ const calTextWH = function(text, font) {
     }
 }
 
-const calCols = function(text) {
+const calCols = function (text) {
     text = text.trim()
     // 一个中文字符占两个长度
     let length = 0
@@ -130,7 +130,7 @@ const calCols = function(text) {
     return length
 }
 
-const selectAll = function(id) {
+const selectAll = function (id) {
     if (document.selection) {
         var range = document.body.createTextRange()
         range.moveToElementText(document.getElementById(id))
@@ -143,7 +143,7 @@ const selectAll = function(id) {
     }
 }
 
-const calHeightLine = function(value, font, zoom) {
+const calHeightLine = function (value, font, zoom) {
     let lines = value.split('\n')
     let max = lines[0]
     for (let i = 0; i < lines.length; i++) {
@@ -156,12 +156,12 @@ const calHeightLine = function(value, font, zoom) {
     return p.h * zoom
 }
 
-const getRows = function(text, width, font) {
+const getRows = function (text, width, font) {
     let chr = text.split("")
     let temp = ""
     let rows = []
 
-    for (let a = 0; a < chr.length; a++){
+    for (let a = 0; a < chr.length; a++) {
         let c = chr[a]
         if (c === '\n') {
             rows.push(temp)
@@ -169,7 +169,7 @@ const getRows = function(text, width, font) {
             continue
         }
 
-        if (calTextWH(temp, font).w < width && 
+        if (calTextWH(temp, font).w < width &&
             calTextWH(temp + (c), font).w <= width) {
             temp += c
             if (a === chr.length - 1 && c !== "\n") {
@@ -183,7 +183,7 @@ const getRows = function(text, width, font) {
     return rows
 }
 
-const isBlank = function(str) {
+const isBlank = function (str) {
     return (!str || /^\s*$/.test(str))
 }
 
@@ -207,7 +207,7 @@ const now = function () {
     return new Date().Format("yyyy/MM/dd hh:mm:ss");
 }
 
-const scrollToBottom = function(domWrapper) {
+const scrollToBottom = function (domWrapper) {
     (function smoothscroll() {
         // 已经被卷掉的高度
         const currentScroll = domWrapper.scrollTop
@@ -220,4 +220,14 @@ const scrollToBottom = function(domWrapper) {
             domWrapper.scrollTo(0, currentScroll + (scrollHeight - currentScroll - clientHeight) / 2)
         }
     })()
+}
+
+const genRandomString = function (n) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < n; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }

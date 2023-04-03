@@ -38,7 +38,7 @@ class PageConfigControls extends GenControls {
         // 右边属性组件
         sc.bindComponent('attribute', Attribute.new(this))
         // 左边图片选择组件
-        let panelWitdh = 100
+        let panelWitdh = 196
         let panelHeight = 100
         sc.bindComponent('panelSelector', PanelSelector.new(this, panelWitdh, panelHeight))
 
@@ -260,7 +260,7 @@ class PageConfigControls extends GenControls {
             canvas.toBlob(function (blob) {
                 zip.file(name, blob)
                 resolve()
-            })
+            }, 'image/webp', 0.95)
         })
     }
 
@@ -286,7 +286,7 @@ class PageConfigControls extends GenControls {
         zip.generateAsync({ type: 'blob' }, (metadata) => {
             e(".progress").style.width = metadata.percent.toFixed(0) + "%"
         }).then(function (content) {
-            let name = "archive-" + new Date().Format("MM-dd")
+            let name = "archive-" + genRandomString(5) + "-" + new Date().Format("MM-dd")
             saveAs(content, name)
             toggleClass(e("#id-loading-area"), "hide")  
             e(".progress").style.width = "0%"
