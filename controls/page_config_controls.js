@@ -405,8 +405,8 @@ class PageConfigControls extends GenControls {
                 if (element != null && element.isDeleted()) {
                     element = null
                 }
-                // 点击到空白的地方
-                if (element == null) {
+                // 点击到空白的地方, 并且所以 text 是 idle 状态
+                if (element == null && self.shapeControl.allTextIdled()) {
                     log("点击到空白的地方")
                     sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
                     self.shapeControl.removeDraggers()  

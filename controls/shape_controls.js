@@ -97,6 +97,15 @@ class ShapeControls extends GenControls {
         }
     }
 
+    allTextIdled() {
+        for (let shape of this.shapes.filter(s => s.isText)) {
+            if (shape.status == 'selected') {
+                return false
+            }
+        } 
+        return true
+    }
+
     setupKey() {
         this.optimizer.registerAction("Backspace", status => {
             if (!this.scene.pointInScene) {

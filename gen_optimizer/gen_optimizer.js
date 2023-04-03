@@ -79,6 +79,11 @@ class GenOptimizer {
     }
 
     getPixelRatio() {
+        const urlParams = new URLSearchParams(window.location.search)
+        if (!urlParams.has('hidpi') || urlParams.get('hidpi') !== 'true') {
+            return 1
+        }
+
         let context = this.context
         let backingStore = context.backingStorePixelRatio ||
               context.webkitBackingStorePixelRatio ||
@@ -113,6 +118,7 @@ class GenOptimizer {
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
         this.ratio = this.getPixelRatio()
+        console.log("ration", this.ratio)
         // blank image
         this.blankPanel = {
             src: this.canvas.toDataURL("image/png"),
