@@ -1,10 +1,10 @@
 class PanelSelector extends GenComponent {
-    constructor(control, w, h, margin=10) {
+    constructor(control, w, h) {
         super(control.scene)
         this.control = control
         this.w = w
         this.h = h
-        this.margin = margin
+        this.ratio = this.scene.optimizer.ratio
     }
 
     static new(...args) {
@@ -72,10 +72,10 @@ class PanelSelector extends GenComponent {
             appendHtml(list, html)
             // render panel canvas
             let canvas = es('.panel-canvas')[image.dataset.index]
-            canvas.width = this.w - this.margin * 2
-            canvas.height = this.h - this.margin * 2
-            let ctx = canvas.getContext('2d')           
-            ctx.drawImage(image, 0, 0, this.w * 2, this.h * 2)
+            canvas.width = this.w 
+            canvas.height = this.h
+            let ctx = canvas.getContext('2d')
+            ctx.drawImage(image, 0, 0, this.w * this.ratio, this.h * this.ratio)
         }       
         //
         removeClassAll('image-active')
@@ -93,7 +93,7 @@ class PanelSelector extends GenComponent {
         let t = `
         <div class="block image-block" data-value="config.index" data-index="${index}" data-type="${type}">
             <div class="el-image" data-value="config.index" style="width: ${this.w}px; height: ${this.h}px; display: block; margin: auto;">
-                <canvas data-value="config.index" style="margin: ${this.margin}px; width: ${this.w}; height: ${this.h}; object-fit: scale-down;" class="el-image__inner editor edit canvas-area panel-canvas"></canvas>  
+                <canvas data-value="config.index" style="margin: ${this.margin}px; object-fit: scale-down;" class="el-image__inner editor edit canvas-area panel-canvas"></canvas>  
             </div>
             <div class="image-delete" data-value="action.delete">
                 <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>

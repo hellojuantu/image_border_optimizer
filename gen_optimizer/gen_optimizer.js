@@ -118,7 +118,6 @@ class GenOptimizer {
         this.canvas = e("#id-canvas")
         this.context = this.canvas.getContext('2d')
         this.ratio = this.getPixelRatio()
-        console.log("ration", this.ratio)
         // blank image
         this.blankPanel = {
             src: this.canvas.toDataURL("image/png"),
