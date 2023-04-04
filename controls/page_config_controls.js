@@ -218,7 +218,7 @@ class PageConfigControls extends GenControls {
                 canvas.width = ps.w
                 canvas.height = ps.h
                 let ctx = canvas.getContext('2d')           
-                ctx.drawImage(this.canvas, 0, 0, ps.w * 2, ps.h * 2)
+                ctx.drawImage(this.canvas, 0, 0, ps.w * ps.ratio, ps.h * ps.ratio)
             }            
         }
 
