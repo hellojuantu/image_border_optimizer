@@ -260,7 +260,7 @@ class PageConfigControls extends GenControls {
             canvas.toBlob(function (blob) {
                 zip.file(name, blob)
                 resolve()
-            }, 'image/webp', 0.95)
+            })
         })
     }
 
