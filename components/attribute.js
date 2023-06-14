@@ -12,18 +12,18 @@ class Attribute extends GenComponent {
         let control = this.control
         let self = this
         let sc = self.scene
-        sc.registerGlobalEvents([     
+        sc.registerGlobalEvents([
             // 属性的事件       
             {
-                eventName: "input",
+                eventName: "focusout",
                 className: sc.pageClass.attribute,
-                after: function(bindVar, target) {
+                after: function (bindVar, target) {
                     log("input", bindVar, target)
                     let v = target.value
                     control.updateControls(bindVar + '.value', v)
                 },
                 configToEvents: {
-                    "config.textFont": function(target) {
+                    "config.textFont": function (target) {
                         for (let shape of control.shapeControl.shapes.filter(s => s.isText)) {
                             if (shape.isSelected()) {
                                 shape.font = target.value
@@ -38,7 +38,7 @@ class Attribute extends GenComponent {
                             // input.style.width = calTextWH(input.value, input.style.font).w + "px"
                         }
                     },
-                    "config.textColor": function(target) {
+                    "config.textColor": function (target) {
                         log("control.shapeControl.shapes.filter(s => s.isText)", control.shapeControl.shapes.filter(s => s.isText))
                         for (let shape of control.shapeControl.shapes.filter(s => s.isText)) {
                             if (shape.isSelected()) {
@@ -51,45 +51,45 @@ class Attribute extends GenComponent {
                             input.style.color = target.value
                         }
                     },
-                    "config.shapeBorder": function(target) {
+                    "config.shapeBorder": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 shape.border = self.parseValueWithType(target.value, 'number')
                             }
                         }
                     },
-                    "config.shapeColor": function(target) {
+                    "config.shapeColor": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 shape.color = target.value
                             }
                         }
                     },
-                    "config.shapeWidth": function(target) {
+                    "config.shapeWidth": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 let w = self.parseValueWithType(target.value, 'number')
                                 let offset = w - shape.w
-                                let d = shape.rightBottomDragger()  
+                                let d = shape.rightBottomDragger()
                                 let x = d.w / 2 + d.x + offset
                                 let y = d.h / 2 + d.y
                                 shape.movingByDragger(d, x, y)
                             }
                         }
                     },
-                    "config.shapeHeight": function(target) {
+                    "config.shapeHeight": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 let h = self.parseValueWithType(target.value, 'number')
                                 let offset = h - shape.h
-                                let d = shape.rightBottomDragger() 
+                                let d = shape.rightBottomDragger()
                                 let x = d.w / 2 + d.x
                                 let y = d.h / 2 + d.y + offset
                                 shape.movingByDragger(d, x, y)
                             }
                         }
                     },
-                    "config.shapeX": function(target) {
+                    "config.shapeX": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 let x = self.parseValueWithType(target.value, 'number')
@@ -107,7 +107,7 @@ class Attribute extends GenComponent {
                             }
                         }
                     },
-                    "config.shapeY": function(target) {
+                    "config.shapeY": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 let y = self.parseValueWithType(target.value, 'number')
@@ -125,24 +125,24 @@ class Attribute extends GenComponent {
                             }
                         }
                     },
-                    "config.shapeRadiusX": function(target) {
+                    "config.shapeRadiusX": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 let w = self.parseValueWithType(target.value, 'number') * 2
                                 let offset = w - shape.w
-                                let d = shape.rightBottomDragger()  
+                                let d = shape.rightBottomDragger()
                                 let x = d.w / 2 + d.x + offset
                                 let y = d.h / 2 + d.y
                                 shape.movingByDragger(d, x, y)
                             }
                         }
                     },
-                    "config.shapeRadiusY": function(target) {
+                    "config.shapeRadiusY": function (target) {
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 let h = self.parseValueWithType(target.value, 'number') * 2
                                 let offset = h - shape.h
-                                let d = shape.rightBottomDragger() 
+                                let d = shape.rightBottomDragger()
                                 let x = d.w / 2 + d.x
                                 let y = d.h / 2 + d.y + offset
                                 shape.movingByDragger(d, x, y)
@@ -155,18 +155,18 @@ class Attribute extends GenComponent {
                 eventName: "mousedown",
                 className: sc.pageClass.attribute,
                 configToEvents: {
-                    "config.shapeFill": function(target) {
+                    "config.shapeFill": function (target) {
                         toggleClass(e('#id-icon-config-shapeFill'), "is-reverse")
                         toggleClass(e('#id-select-config-shapeFill'), "hide")
                     },
-                    "read.option.shapeFill": function(target) {
+                    "read.option.shapeFill": function (target) {
                         let v = target.innerText
                         log("read", v)
                         for (let shape of control.shapeControl.shapes) {
                             if (shape.isSelected()) {
                                 shape.fill = parseBoolean(v)
                             }
-                        }     
+                        }
                         control.updateControls("config.shapeFill.value", v)
                     }
                 },
@@ -176,17 +176,17 @@ class Attribute extends GenComponent {
                 eventName: "focusout",
                 className: sc.pageClass.attribute,
                 configToEvents: {
-                    "config.shapeFill": function(target) {
+                    "config.shapeFill": function (target) {
                         log('target', target)
                         toggleClass(e('#id-icon-config-shapeFill'), "is-reverse")
                         toggleClass(e('#id-select-config-shapeFill'), "hide")
-                    },                   
+                    },
                 },
                 // useCapture: true,
             },
         ])
     }
-    
+
     builder(attributeMap) {
         log("attributeMap", attributeMap)
         Array.from(es(".el-form-item")).forEach(element => {
@@ -195,7 +195,7 @@ class Attribute extends GenComponent {
         let form = e(".gen-attribute")
         for (let bindVar of Object.keys(attributeMap)) {
             // log("bindVar", bindVar)
-            let attribute = attributeMap[bindVar]    
+            let attribute = attributeMap[bindVar]
             if (attribute.default == null && attribute.value == null) {
                 continue
             }
@@ -211,8 +211,8 @@ class Attribute extends GenComponent {
                 <div class="el-select-dropdown__wrap el-scrollbar__wrap el-scrollbar__wrap--hidden-default">
                     <ul class="el-scrollbar__view el-select-dropdown__list">
                         ${attribute.options.map(option => {
-                            return `<li data-value="read.option.shapeFill" class="el-select-dropdown__item">${option}</li>`
-                        }).join("\n")}
+            return `<li data-value="read.option.shapeFill" class="el-select-dropdown__item">${option}</li>`
+        }).join("\n")}
                     </ul>
                 </div>
                 <div class="el-scrollbar__bar is-horizontal">

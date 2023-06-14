@@ -69,12 +69,12 @@ var config = {
     },
     borderLength: {
         _comment: "border length:",
-        value: 0.25,
-        default: 0.25,
+        value: 1,
+        default: 1,
         valueType: 'number',
-        min: 0,
-        max: 30,
-        type: "number",
+        // min: 0,
+        // max: 30,
+        // type: "number",
     },
     borderColor: {
         _comment: "border color",
@@ -139,7 +139,7 @@ var config = {
         value: 'rect',
         default: null,
         valueType: 'string',
-        type: "text",        
+        type: "text",
     },
     shapeColor: {
         _comment: "shape color",
@@ -165,7 +165,7 @@ var config = {
         type: "text",
         options: [
             'false',
-            'true', 
+            'true',
         ],
     },
     shapeWidth: {
@@ -183,7 +183,7 @@ var config = {
         valueType: 'number',
         min: 1,
         type: "number",
-    },    
+    },
     shapeX: {
         _comment: "shape x",
         value: 0,

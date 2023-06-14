@@ -106,7 +106,7 @@ class GenControls {
         // log("type", type)
         switch (type) {
             case 'number':
-                return parseInt(value || 0)
+                return parseFloat(value || 0)
             case 'string':
                 return String(value || '')
             case 'boolean':

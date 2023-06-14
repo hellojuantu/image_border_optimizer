@@ -72,7 +72,7 @@ class GenScene {
             // 初始化组件的事件
             this.components[name].setupEvents()
         }
-        log("inUsedComponentNames", this.inUsedComponentNames)
+        // log("inUsedComponentNames", this.inUsedComponentNames)
         return this.components[name]
     }
 

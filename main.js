@@ -1,5 +1,5 @@
-function __main() {     
-    GenOptimizer.instance(function(o) {
+function __main() {
+    GenOptimizer.instance(function (o) {
         // o.enableDebugMode()
         // MainScene
         let scene = MainScene.new(o)
