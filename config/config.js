@@ -69,8 +69,8 @@ var config = {
     },
     borderLength: {
         _comment: "border length:",
-        value: 1,
-        default: 1,
+        value: 0.25,
+        default: 0.25,
         valueType: 'number',
         min: 0,
         max: 30,
