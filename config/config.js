@@ -35,8 +35,8 @@ var config = {
     },
     shadowOffset: {
         _comment: "shadow offset",
-        value: 18,
-        default: 18,
+        value: 10,
+        default: 10,
         valueType: 'number',
         min: -50,
         max: 50,
