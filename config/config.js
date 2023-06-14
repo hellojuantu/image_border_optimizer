@@ -26,8 +26,8 @@ var config = {
     },
     imageOffset: {
         _comment: "background offset",
-        value: 80,
-        default: 80,
+        value: 50,
+        default: 50,
         valueType: 'number',
         min: -100,
         max: 100,

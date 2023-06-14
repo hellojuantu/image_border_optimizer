@@ -51,8 +51,10 @@ class PanelControls extends GenControls {
         //
         let c_w = canvas.width / this.ratio
         let c_h = canvas.height / this.ratio
-        let centerOffsetX = (c_w - img.width) / 2
-        let centerOffsetY = (c_h - img.height) / 2
+        // temp fix, other version will kill
+        let otherOffset = config.shadowOffset.value
+        let centerOffsetX = (c_w - img.width - otherOffset) / 2
+        let centerOffsetY = (c_h - img.height - otherOffset) / 2
 
         this.drawShadow(img, centerOffsetX, centerOffsetY)
 
