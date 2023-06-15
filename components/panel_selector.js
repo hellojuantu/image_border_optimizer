@@ -4,6 +4,7 @@ class PanelSelector extends GenComponent {
         this.control = control
         this.w = w
         this.h = h
+        this.margin = 1
         this.ratio = this.scene.optimizer.ratio
     }
 
