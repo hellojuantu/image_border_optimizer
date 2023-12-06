@@ -26,8 +26,8 @@ var config = {
     },
     imageOffset: {
         _comment: "background offset",
-        value: 50,
-        default: 50,
+        value: 24,
+        default: 24,
         valueType: 'number',
         min: -100,
         max: 100,
@@ -35,8 +35,8 @@ var config = {
     },
     shadowOffset: {
         _comment: "shadow offset",
-        value: 9,
-        default: 9,
+        value: 7,
+        default: 7,
         valueType: 'number',
         min: -50,
         max: 50,
@@ -53,8 +53,8 @@ var config = {
     },
     shadowColorAlpha: {
         _comment: "shadow color alpha",
-        value: 4,
-        default: 4,
+        value: 3,
+        default: 3,
         valueType: 'number',
         min: 0,
         max: 10,
