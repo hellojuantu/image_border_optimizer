@@ -35,8 +35,8 @@ var config = {
     },
     shadowOffset: {
         _comment: "shadow offset",
-        value: 7,
-        default: 7,
+        value: 5,
+        default: 5,
         valueType: 'number',
         min: -50,
         max: 50,
@@ -44,8 +44,8 @@ var config = {
     },
     shadowBlur: {
         _comment: "shadow blur level",
-        value: 12,
-        default: 12,
+        value: 8,
+        default: 8,
         valueType: 'number',
         min: 0,
         max: 30,
