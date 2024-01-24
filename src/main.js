@@ -1,4 +1,3 @@
-import tinify from "tinify";
 function __main() {
     GenOptimizer.instance(function (o) {
         o.enableDebugMode()
