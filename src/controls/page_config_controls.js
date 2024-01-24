@@ -258,7 +258,8 @@ class PageConfigControls extends GenControls {
     async addToZip(canvas, zip, name) {
         return new Promise((resolve, reject) => {
             canvas.toBlob(function (blob) {
-                zip.file(name, blob)
+                compressImg(blob)
+                // zip.file(name, blob)
                 resolve()
             })
         })

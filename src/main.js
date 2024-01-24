@@ -1,6 +1,7 @@
+import tinify from "tinify";
 function __main() {
     GenOptimizer.instance(function (o) {
-        // o.enableDebugMode()
+        o.enableDebugMode()
         // MainScene
         let scene = MainScene.new(o)
         o.runWithScene(scene)
@@ -8,3 +9,4 @@ function __main() {
 }
 
 __main()
+

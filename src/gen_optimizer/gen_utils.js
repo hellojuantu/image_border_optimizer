@@ -231,3 +231,52 @@ const genRandomString = function (n) {
     }
     return result;
 }
+
+
+
+async function compressImage(imageFilePath) {
+    // try {
+    //     // 读取图像文件的二进制数据
+    //     // const imageBinary = await readFile(imageFilePath, 'binary');
+    //
+    //     // 构建HTTP请求的配置
+    //     const headers = new Headers();
+    //     headers.append('Authorization', `Basic ${btoa(`api:lxK7FQVrlmm2WbQ5c2nlRMzx9RJ5MYXc`)}`);
+    //     // headers.append('Content-Type', 'image/jpeg'); // 根据实际图像类型进行设置
+    //
+    //     const options = {
+    //         method: 'POST',
+    //         mode: 'no-cors',
+    //         credentials: 'include',
+    //         headers: headers,
+    //         body: 0x1123
+    //     };
+    //
+    //     // 发送HTTP POST请求到TinyPNG API
+    //     const response = await fetch('https://api.tinify.com/shrink', options);
+    //
+    //     // 处理响应数据
+    //     const imageUrl = response.headers.get('location');
+    //     console.log('压缩后的图像URL:', imageUrl);
+    // } catch (error) {
+    //     console.error('压缩图像时发生错误:', error);
+    // }
+    ajax('POST', 'https://api.tinify.com/shrink', 0x123, (r) => {
+        log('hhh', r)
+    })
+}
+
+
+function ajax(method, path, data, reseponseCallback) {
+    var r = new XMLHttpRequest()
+    r.open(method, path, true)
+    r.setRequestHeader('Content-Type', 'application/json');
+    r.setRequestHeader('Authorization', `Basic ${btoa(`api:lxK7FQVrlmm2WbQ5c2nlRMzx9RJ5MYXc`)}`);
+    r.setRequestHeader("Access-Control-Allow-Origin", "*")
+    r.onreadystatechange = function () {
+        if (r.readyState === 4) {
+            reseponseCallback(r)
+        }
+    }
+    r.send(data)
+}

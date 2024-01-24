@@ -4,15 +4,45 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" href="./public/img/favicon.ico">
+    <link rel="icon" href="public/img/favicon.ico">
     <title>GenOptimizer</title>
-    <link rel="stylesheet" href="./public/styles/app.css"/>
-    <link rel="stylesheet" href="./public/styles/optimzer.css"/>
-    <link rel="stylesheet" href="./public/styles/message.css"/>
-    <link rel="stylesheet" href="./public/styles/elementUI.css"/>
-    <script src="./public/lib/hidpi-canvas.min.js"></script>    
-    <script src="./public/lib/jszip.min.js"></script>
-    <script src="./public/lib/filesaver.min.js"></script>   
+    <link rel="stylesheet" href="public/styles/app.css"/>
+    <link rel="stylesheet" href="public/styles/optimzer.css"/>
+    <link rel="stylesheet" href="public/styles/message.css"/>
+    <link rel="stylesheet" href="public/styles/elementUI.css"/>
+    <script src="lib/hidpi-canvas.min.js"></script>
+    <script src="lib/jszip.min.js"></script>
+    <script src="lib/filesaver.min.js"></script>
+    <!-- 配置文件 -->
+    <script src="config/config.js"></script>
+    <!-- optimizer 框架 -->
+    <script src="gen_optimizer/gen_utils.js"></script>
+    <script src="gen_optimizer/gen_vector.js"></script>
+    <script src="gen_optimizer/gen_optimizer.js"></script>
+    <script src="gen_optimizer/gen_controls.js"></script>
+    <script src="gen_optimizer/gen_component.js"></script>
+    <script src="gen_optimizer/gen_scene.js"></script>
+    <script src="gen_optimizer/gen_shape.js"></script>
+    <script src="gen_optimizer/gen_point.js"></script>
+    <script src="gen_optimizer/gen_text.js"></script>
+    <script src="gen_optimizer/gen_rect.js"></script>
+    <script src="gen_optimizer/gen_arrow.js"></script>
+    <script src="gen_optimizer/gen_circle.js"></script>
+    <script src="gen_optimizer/gen_image.js"></script>
+    <script src="gen_optimizer/gen_line.js"></script>
+    <script src="gen_optimizer/gen_dragger.js"></script>
+    <script src="gen_optimizer/gen_message.js"></script>
+    <!-- 组件 -->
+    <script src="components/attribute.js"></script>
+    <script src="components/panel_selector.js"></script>
+    <!-- 控制器 -->
+    <script src="controls/shape_controls.js"></script>
+    <script src="controls/pen_controls.js"></script>
+    <script src="controls/panel_controls.js"></script>
+    <script src="controls/page_config_controls.js"></script>
+    <script src="controls/text_controls.js"></script>
+    <!-- 场景 -->
+    <script src="scene/main_scene.js"></script>
 </head>
 <body>
     <div id="id-loading-area" class="visual-loading-container">   
@@ -61,7 +91,7 @@
             <section class="center">  
                 <div class="center-star-area">
                     <div class="notice" style="width: 300px;">
-                        <img src="./public/img/demo.jpeg" class="demo-img">
+                        <img src="public/img/demo.jpeg" class="demo-img">
                     </div>
                     <div class="notice">请使用 PC 以便获取完整的体验</div>
                     <div class="github-icons">
@@ -98,37 +128,5 @@
             </section>
         </main>
     </div>
-    <!-- 配置文件 -->
-    <script src="./config/config.js"></script>
-    <!-- optimizer 框架 -->
-    <script src="./gen_optimizer/gen_utils.js"></script>
-    <script src="./gen_optimizer/gen_vector.js"></script>
-    <script src="./gen_optimizer/gen_optimizer.js"></script>
-    <script src="./gen_optimizer/gen_controls.js"></script>
-    <script src="./gen_optimizer/gen_component.js"></script>
-    <script src="./gen_optimizer/gen_scene.js"></script>
-    <script src="./gen_optimizer/gen_shape.js"></script>
-    <script src="./gen_optimizer/gen_point.js"></script>
-    <script src="./gen_optimizer/gen_text.js"></script>
-    <script src="./gen_optimizer/gen_rect.js"></script>
-    <script src="./gen_optimizer/gen_arrow.js"></script>
-    <script src="./gen_optimizer/gen_circle.js"></script>
-    <script src="./gen_optimizer/gen_image.js"></script>
-    <script src="./gen_optimizer/gen_line.js"></script>
-    <script src="./gen_optimizer/gen_dragger.js"></script>
-    <script src="./gen_optimizer/gen_message.js"></script> 
-    <!-- 组件 -->
-    <script src="./components/attribute.js"></script>
-    <script src="./components/panel_selector.js"></script>
-    <!-- 控制器 -->
-    <script src="./controls/shape_controls.js"></script>
-    <script src="./controls/pen_controls.js"></script>
-    <script src="./controls/panel_controls.js"></script>
-    <script src="./controls/page_config_controls.js"></script>
-    <script src="./controls/text_controls.js"></script>
-    <!-- 场景 -->
-    <script src="./scene/main_scene.js"></script>
-    <!-- 程序入口 -->
-    <script src="./main.js"></script>
 </body>
 </html>

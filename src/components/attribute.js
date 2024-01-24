@@ -15,7 +15,7 @@ class Attribute extends GenComponent {
         sc.registerGlobalEvents([
             // 属性的事件       
             {
-                eventName: "focusout",
+                eventName: "input",
                 className: sc.pageClass.attribute,
                 after: function (bindVar, target) {
                     log("input", bindVar, target)
