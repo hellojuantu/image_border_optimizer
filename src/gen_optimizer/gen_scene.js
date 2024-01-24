@@ -1,4 +1,7 @@
-class GenScene {
+import GenMessage from "./gen_message";
+import {bindAll, log, sel} from "./gen_utils";
+
+export default class GenScene {
     constructor(optimizer) {
         this.optimizer = optimizer
         this.canvas = optimizer.canvas

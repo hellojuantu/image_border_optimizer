@@ -1,4 +1,6 @@
-class GenComponent extends GenControls {
+import GenControls from "./gen_controls";
+
+export default class GenComponent extends GenControls {
     constructor(scene) {
         super(scene)
         this.scene = scene

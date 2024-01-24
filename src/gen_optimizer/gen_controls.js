@@ -1,4 +1,7 @@
-class GenControls {
+import {es, log, parseBoolean, sel} from "./gen_utils";
+import {config} from "../config/config";
+
+export default class GenControls {
     constructor(scene) {
         this.optimizer = scene.optimizer
         this.canvasArea = this.optimizer.canvasArea
@@ -88,6 +91,7 @@ class GenControls {
             let slide = sliders[i]
             let bindVar = slide.dataset.value
             if (bindVar == `config.${bind}`) {
+                log("========", updateValue, config, config[bind]['valueType'])
                 let parsedValue = this.parseValueWithType(updateValue, config[bind]['valueType'])
                 log(bindVar, "parsedValue", parsedValue)
                 // update config

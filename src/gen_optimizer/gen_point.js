@@ -1,4 +1,7 @@
-class GenPoint extends GenShape {
+import GenShape from "./gen_shape";
+import {config} from "../config/config";
+
+export default class GenPoint extends GenShape {
     constructor(scene, x, y, status) {
         super(scene)
         this.x = x

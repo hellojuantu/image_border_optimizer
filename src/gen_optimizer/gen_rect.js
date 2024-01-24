@@ -1,4 +1,10 @@
-class GenRect extends GenShape {
+import GenShape from "./gen_shape";
+import {config} from "../config/config";
+import {log, parseBoolean} from "./gen_utils";
+import Vector from "./gen_vector";
+import GenDragger from "./gen_dragger";
+
+export default class GenRect extends GenShape {
     constructor(scene, x, y) {
         super(scene)
         this.x = x
@@ -116,7 +122,7 @@ class GenRect extends GenShape {
         let v = this.position[dragger.name]
         v.x = x
         v.y = y
-        if (dragger.name == 'leftTop') {            
+        if (dragger.name == 'leftTop') {
             this.position.rightTop.y = y 
             this.position.leftBottom.x = x
         } else if (dragger.name == 'rightTop') {

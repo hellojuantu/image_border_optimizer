@@ -1,4 +1,6 @@
-class GenShape extends GenControls {
+import GenControls from "./gen_controls";
+
+export default class GenShape extends GenControls {
     constructor(scene) {
         super(scene)
         this.draggers = []

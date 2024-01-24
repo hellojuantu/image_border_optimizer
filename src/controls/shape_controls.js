@@ -1,4 +1,13 @@
-class ShapeControls extends GenControls {
+import GenControls from "../gen_optimizer/gen_controls";
+import GenRect from "../gen_optimizer/gen_rect";
+import GenArrow from "../gen_optimizer/gen_arrow";
+import GenCircle from "../gen_optimizer/gen_circle";
+import GenLine from "../gen_optimizer/gen_line";
+import {log, parseBoolean} from "../gen_optimizer/gen_utils";
+import {config} from "../config/config";
+import GenImage from "../gen_optimizer/gen_image";
+
+export default class ShapeControls extends GenControls {
     constructor(scene) {
         super(scene)
         this.setup()

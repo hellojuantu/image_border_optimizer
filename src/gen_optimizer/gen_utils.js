@@ -1,12 +1,10 @@
-const e = sel => document.querySelector(sel)
+export const e = sel => document.querySelector(sel)
 
-let log = function () {
+export var log = console.log.bind(console)
 
-}
+export const es = sel => document.querySelectorAll(sel)
 
-const es = sel => document.querySelectorAll(sel)
-
-const bindAll = function (sel, eventName, callback, useCapture = false) {
+export const bindAll = function (sel, eventName, callback, useCapture = false) {
     let l = es(sel)
     for (let i = 0; i < l.length; i++) {
         let input = l[i]
@@ -16,21 +14,21 @@ const bindAll = function (sel, eventName, callback, useCapture = false) {
     }
 }
 
-const bind = function (sel, eventName, callback) {
+export const bind = function (sel, eventName, callback) {
     e(sel).addEventListener(eventName, function (event) {
         callback(event)
     })
 }
 
-const parseBoolean = function (booleanString) {
+export const parseBoolean = function (booleanString) {
     return JSON.parse(booleanString)
 }
 
-const appendHtml = function (div, html) {
+export const appendHtml = function (div, html) {
     div.insertAdjacentHTML('beforeend', html)
 }
 
-const uuid = function () {
+export const uuid = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = Math.random() * 16 | 0
         let v = (c == 'x' ? r : (r & 0x3 | 0x8))
@@ -38,15 +36,15 @@ const uuid = function () {
     });
 }
 
-const sel = function (className) {
+export const sel = function (className) {
     return '.' + className
 }
 
-const id = function (idName) {
+export const id = function (idName) {
     return '#' + idName
 }
 
-const toggleClass = function (element, className) {
+export const toggleClass = function (element, className) {
     if (element.classList.contains(className)) {
         element.classList.remove(className)
     } else {
@@ -54,14 +52,14 @@ const toggleClass = function (element, className) {
     }
 }
 
-const addClassAll = function (selector, className) {
+export const addClassAll = function (selector, className) {
     let elements = document.querySelectorAll(selector)
     for (let element of elements) {
         element.classList.add(className)
     }
 }
 
-const removeClassAll = function (className) {
+export const removeClassAll = function (className) {
     let selector = '.' + className
     let elements = document.querySelectorAll(selector)
     for (let i = 0; i < elements.length; i++) {
@@ -70,7 +68,7 @@ const removeClassAll = function (className) {
     }
 }
 
-const removeClassAllWithCallback = function (className, callback) {
+export const removeClassAllWithCallback = function (className, callback) {
     let selector = '.' + className
     let elements = document.querySelectorAll(selector)
     for (let i = 0; i < elements.length; i++) {
@@ -80,7 +78,7 @@ const removeClassAllWithCallback = function (className, callback) {
     }
 }
 
-const removeWithCondition = function (selector, condition) {
+export const removeWithCondition = function (selector, condition) {
     let elements = es(selector)
     for (let e of elements) {
         if (condition(e)) {
@@ -90,18 +88,18 @@ const removeWithCondition = function (selector, condition) {
     }
 }
 
-const removeClassAllWithIndex = function (className, removedIndex) {
+export const removeClassAllWithIndex = function (className, removedIndex) {
     let selector = '.' + className
     let elements = document.querySelectorAll(selector)
     for (let i = 0; i < elements.length; i++) {
         let e = elements[i]
-        if (e.dataset.index === removedIndex) {
+        if (e.dataset.index == removedIndex) {
             e.classList.remove(className)
         }
     }
 }
 
-const calTextWH = function (text, font) {
+export const calTextWH = function (text, font) {
     let canvas = document.createElement("canvas")
     let context = canvas.getContext('2d')
     context.textBaseline = "top"
@@ -115,7 +113,7 @@ const calTextWH = function (text, font) {
     }
 }
 
-const calCols = function (text) {
+export const calCols = function (text) {
     text = text.trim()
     // 一个中文字符占两个长度
     let length = 0
@@ -130,7 +128,7 @@ const calCols = function (text) {
     return length
 }
 
-const selectAll = function (id) {
+export const selectAll = function (id) {
     if (document.selection) {
         var range = document.body.createTextRange()
         range.moveToElementText(document.getElementById(id))
@@ -143,7 +141,7 @@ const selectAll = function (id) {
     }
 }
 
-const calHeightLine = function (value, font, zoom) {
+export const calHeightLine = function (value, font, zoom) {
     let lines = value.split('\n')
     let max = lines[0]
     for (let i = 0; i < lines.length; i++) {
@@ -156,7 +154,7 @@ const calHeightLine = function (value, font, zoom) {
     return p.h * zoom
 }
 
-const getRows = function (text, width, font) {
+export const getRows = function (text, width, font) {
     let chr = text.split("")
     let temp = ""
     let rows = []
@@ -183,7 +181,7 @@ const getRows = function (text, width, font) {
     return rows
 }
 
-const isBlank = function (str) {
+export const isBlank = function (str) {
     return (!str || /^\s*$/.test(str))
 }
 
@@ -203,11 +201,11 @@ Date.prototype.Format = function (fmt) {
     return fmt;
 }
 
-const now = function () {
+export const now = function () {
     return new Date().Format("yyyy/MM/dd hh:mm:ss");
 }
 
-const scrollToBottom = function (domWrapper) {
+export const scrollToBottom = function (domWrapper) {
     (function smoothscroll() {
         // 已经被卷掉的高度
         const currentScroll = domWrapper.scrollTop
@@ -222,7 +220,7 @@ const scrollToBottom = function (domWrapper) {
     })()
 }
 
-const genRandomString = function (n) {
+export const genRandomString = function (n) {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;
@@ -232,43 +230,8 @@ const genRandomString = function (n) {
     return result;
 }
 
-
-
-async function compressImage(imageFilePath) {
-    // try {
-    //     // 读取图像文件的二进制数据
-    //     // const imageBinary = await readFile(imageFilePath, 'binary');
-    //
-    //     // 构建HTTP请求的配置
-    //     const headers = new Headers();
-    //     headers.append('Authorization', `Basic ${btoa(`api:lxK7FQVrlmm2WbQ5c2nlRMzx9RJ5MYXc`)}`);
-    //     // headers.append('Content-Type', 'image/jpeg'); // 根据实际图像类型进行设置
-    //
-    //     const options = {
-    //         method: 'POST',
-    //         mode: 'no-cors',
-    //         credentials: 'include',
-    //         headers: headers,
-    //         body: 0x1123
-    //     };
-    //
-    //     // 发送HTTP POST请求到TinyPNG API
-    //     const response = await fetch('https://api.tinify.com/shrink', options);
-    //
-    //     // 处理响应数据
-    //     const imageUrl = response.headers.get('location');
-    //     console.log('压缩后的图像URL:', imageUrl);
-    // } catch (error) {
-    //     console.error('压缩图像时发生错误:', error);
-    // }
-    ajax('POST', 'https://api.tinify.com/shrink', 0x123, (r) => {
-        log('hhh', r)
-    })
-}
-
-
-function ajax(method, path, data, reseponseCallback) {
-    var r = new XMLHttpRequest()
+export function ajax(method, path, data, reseponseCallback) {
+    const r = new XMLHttpRequest();
     r.open(method, path, true)
     r.setRequestHeader('Content-Type', 'application/json');
     r.setRequestHeader('Authorization', `Basic ${btoa(`api:lxK7FQVrlmm2WbQ5c2nlRMzx9RJ5MYXc`)}`);

@@ -1,4 +1,9 @@
-class PenControls extends GenControls {
+import GenControls from "../gen_optimizer/gen_controls";
+import {parseBoolean} from "../gen_optimizer/gen_utils";
+import {config} from "../config/config";
+import GenPoint from "../gen_optimizer/gen_point";
+
+export default class PenControls extends GenControls {
     constructor(scene) {
         super(scene)
         this.setup()

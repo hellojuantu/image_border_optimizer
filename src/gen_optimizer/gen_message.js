@@ -1,4 +1,4 @@
-class GenMessage {
+export default class GenMessage {
 	constructor() {
 		// 消息队列
 		this.messageQueue = [];
@@ -12,13 +12,13 @@ class GenMessage {
 	}
 
 	setType(messageDom, type) {
-		if (type === '') {
+		if (type == '') {
 			messageDom.classList.add('ui-message-info');
-		} else if (type === 'success') {
+		} else if (type == 'success') {
 			messageDom.classList.add('ui-message-success');
-		} else if (type === 'warning') {
+		} else if (type == 'warning') {
 			messageDom.classList.add('ui-message-warning');
-		} else if (type === 'error') {
+		} else if (type == 'error') {
 			messageDom.classList.add('ui-message-error');
 		} else {
 			messageDom.classList.add('ui-message-info');// 默认值
@@ -29,11 +29,11 @@ class GenMessage {
 		const i = document.createElement('i')
 		i.classList.add('el-message__icon')
 		let icon = 'el-icon-info'
-		if (type === 'success') {
+		if (type == 'success') {
 			icon = 'el-icon-success'
-		} else if (type === 'warning') {
+		} else if (type == 'warning') {
 			icon = 'el-icon-warning'
-		} else if (type === 'error') {
+		} else if (type == 'error') {
 			icon = 'el-icon-error'
 		}
 		i.classList.add(icon)
@@ -48,7 +48,7 @@ class GenMessage {
 	}
 
 	removeMessageDom(messageDom, targetId) {
-		const startIndex = this.messageQueue.findIndex(message => message.id === targetId);
+		const startIndex = this.messageQueue.findIndex(message => message.id == targetId);
 		this.messageQueue.splice(startIndex, 1);
 		this.updateMessageDom(startIndex);
 		//增加移除动画
@@ -65,7 +65,7 @@ class GenMessage {
 		const messageDom = document.createElement('div');
 		messageDom.classList.add('ui-message');
 		messageDom.classList.add('ui-message-leave');
-		if (options.center === true) {
+		if (options.center == true) {
 			messageDom.classList.add('ui-message-center');
 		}
 		const targetId = this.id;
@@ -83,7 +83,7 @@ class GenMessage {
 			messageDom.classList.remove('ui-message-leave');
 		}, 100);
 		let i = null;
-		if (options.showClose === true) {
+		if (options.showClose == true) {
 			i = document.createElement('i');
 			i.classList.add('close-button');
 			messageDom.appendChild(i);
@@ -96,7 +96,7 @@ class GenMessage {
 				this.removeMessageDom(messageDom, targetId);
 			}, time);
 		}
-		if (options.showClose === true) {
+		if (options.showClose == true) {
 			i.addEventListener('click', () => {
 				this.removeMessageDom(messageDom, targetId);
 				if (targetId !== -1) {

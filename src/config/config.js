@@ -1,4 +1,4 @@
-var config = {
+export var config = {
     preButton: {
         _comment: "pre image",
         type: "button",
@@ -246,7 +246,7 @@ var config = {
     },
 }
 
-var uploadConfig = {
+export var uploadConfig = {
     max_size: 3 * 1024 * 1024,
     max_size_desc: "3MB"
 }

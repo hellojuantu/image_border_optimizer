@@ -1,4 +1,24 @@
-class PageConfigControls extends GenControls {
+import GenControls from "../gen_optimizer/gen_controls";
+import Attribute from "../components/attribute";
+import PanelSelector from "../components/panel_selector";
+import {config, uploadConfig} from "../config/config";
+import {
+    e,
+    es,
+    genRandomString,
+    log,
+    parseBoolean,
+    removeClassAll,
+    removeClassAllWithCallback,
+    scrollToBottom,
+    toggleClass
+} from "../gen_optimizer/gen_utils";
+import GenPoint from "../gen_optimizer/gen_point";
+import GenText from "../gen_optimizer/gen_text";
+import FileSaver from "file-saver"
+import JSZip from "jszip"
+
+export default class PageConfigControls extends GenControls {
     constructor(scene, panelControl, penControl, textControl, shapeControl) {
         super(scene)
         this.panelControl = panelControl
@@ -18,7 +38,7 @@ class PageConfigControls extends GenControls {
     setup() {
         let self = this
         let sc = self.scene
-        
+
         // 注册页面 class, 全局可用
         sc.registerPageClass({
             "button": 'gen-auto-button',
@@ -38,46 +58,46 @@ class PageConfigControls extends GenControls {
         // 右边属性组件
         sc.bindComponent('attribute', Attribute.new(this))
         // 左边图片选择组件
-        let panelWitdh = 188
+        let panelWidth = 188
         let panelHeight = 100
-        sc.bindComponent('panelSelector', PanelSelector.new(this, panelWitdh, panelHeight))
+        sc.bindComponent('panelSelector', PanelSelector.new(this, panelWidth, panelHeight))
 
         // 注册全局场景事件
-        sc.registerGlobalEvents([               
+        sc.registerGlobalEvents([
             // 左上按钮事件
             {
                 eventName: "click",
                 className: sc.pageClass.button,
                 configToEvents: {
-                    "config.preButton": function(target) {
+                    "config.preButton": function (target) {
                         // log("preButton", config.index.value)
                         if (config.index.value > 0) {
                             self.savePanel()
                             let v = config.index.value - 1
-                            self.switchPanel(v)                          
+                            self.switchPanel(v)
                         }
                     },
-                    "config.nextButton": function(target) {
+                    "config.nextButton": function (target) {
                         // log("nextButton", config.index.value, self.images.length)
                         if (config.index.value < self.panels.length - 1) {
                             // 保存当前图片的修改
                             self.savePanel()
                             // 更新画笔和文字
                             let v = config.index.value + 1
-                            self.switchPanel(v)                          
+                            self.switchPanel(v)
                         }
-                    },                  
-                    "config.penClearButton": function(target) {
+                    },
+                    "config.penClearButton": function (target) {
                         // log("penClearButton")
                         self.penControl.resetAndUpdate([])
                         self.textControl.resetAndUpdate([])
                         self.shapeControl.resetAndUpdate([])
                         self.scene.message.success('清空成功')
                     },
-                    "action.copyImageButton": function(target) {
+                    "action.copyImageButton": function (target) {
                         self.copyImage()
                     },
-                    "action.newBlank": function(target) {
+                    "action.newBlank": function (target) {
                         let b = self.optimizer.defaultBlankPanel()
                         self.panels.push(b)
                         let tempPanels = []
@@ -88,14 +108,14 @@ class PageConfigControls extends GenControls {
                         self.shapeControl.removeDraggers()
                         self.savePanel()
                         let v = config.index.max
-                        self.switchPanel(v) 
+                        self.switchPanel(v)
                         scrollToBottom(e('.image-list'))
                         self.scene.message.success('新建成功')
                     },
-                    "action.downloadImagesButton": async function(target) { 
-                        self.createImg()                                                           
+                    "action.downloadImagesButton": async function (target) {
+                        await self.createImg()
                     },
-                    "action.loadFromClipboard": async function(target) {
+                    "action.loadFromClipboard": async function (target) {
                         try {
                             toggleClass(e("#id-loading-area"), "hide")
                             let clipboardItems = await navigator.clipboard.read()
@@ -111,7 +131,7 @@ class PageConfigControls extends GenControls {
                                 return
                             }
                             for (let item of clipboardItems) {
-                                for (let type of item.types.filter(i => i.includes('image'))) {                                    
+                                for (let type of item.types.filter(i => i.includes('image'))) {
                                     let blob = await item.getType(type)
                                     console.log("blob", blob)
                                     if (blob.size > uploadConfig.max_size) {
@@ -119,14 +139,14 @@ class PageConfigControls extends GenControls {
                                         sc.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
                                         break
                                     }
-                                    var reader = new FileReader()
+                                    const reader = new FileReader();
                                     reader.readAsDataURL(blob)
                                     reader.onload = function (event) {
-                                        log(event.target.result)
+                                        console.log(event.target.result)
                                         let img = new Image()
                                         img.src = event.target.result
                                         img.dataset.type = 'user_upload'
-                                        img.onload = function() { 
+                                        img.onload = function () {
                                             self.optimizer.panels.push(img)
                                             sc && sc.refreshConfig([img])
                                             toggleClass(e("#id-loading-area"), "hide")
@@ -134,7 +154,7 @@ class PageConfigControls extends GenControls {
                                             self.scene.message.success('导入成功')
                                         }
                                     }
-                                }   
+                                }
                             }
                         } catch (err) {
                             console.log("err", err)
@@ -143,36 +163,38 @@ class PageConfigControls extends GenControls {
                         }
                     }
                 },
-            },            
+            },
             // 右上角按钮事件
             {
                 eventName: "click",
                 className: sc.pageClass.drawer,
-                before: function(bindVar, target) {
+                before: function (bindVar, target) {
                     log("drawer", bindVar, target)
                     let shapeActive = sc.pageClass.shapeActive
                     removeClassAllWithCallback(shapeActive, (e) => {
                         let bindVar = e.dataset.value
-                        eval(bindVar + '.value=false')
-                    }) 
+                        // eval(bindVar + '.value=false')
+                        config[bindVar.split('.')[1]].value = false
+                    })
                     target.classList.add(shapeActive)
-                    eval(bindVar + '.value=' + parseBoolean(target.classList.contains(shapeActive)))
+                    // eval(bindVar + '.value=' + parseBoolean(target.classList.contains(shapeActive)))
+                    config[bindVar.split('.')[1]].value = parseBoolean(target.classList.contains(shapeActive))
                     self.shapeControl.removeDraggers()
                 },
-                configToEvents: {                    
-                    "config.penEnabled": function(target) {
+                configToEvents: {
+                    "config.penEnabled": function (target) {
                         sc.getComponent('attribute').buildWith(GenPoint.defaultConfigAttribute())
                     },
-                    "config.textInputEnabled": function(target) {
-                        sc.getComponent('attribute').buildWith(GenText.defaultConfigAttribute())                
+                    "config.textInputEnabled": function (target) {
+                        sc.getComponent('attribute').buildWith(GenText.defaultConfigAttribute())
                     },
-                    "config.shapeEnabled": function(target) {
-                        let shape = config.shapeSelect.value = target.dataset.shape                                                         
+                    "config.shapeEnabled": function (target) {
+                        let shape = config.shapeSelect.value = target.dataset.shape
                         // 显示右边属性 
                         let att = self.shapeControl.shapeTypes[shape].defaultConfigAttribute()
                         sc.getComponent('attribute').buildWith(att)
-                    },      
-                    "config.defaultPointerEnable": function(target) {
+                    },
+                    "config.defaultPointerEnable": function (target) {
                         sc.getComponent('attribute').buildWith(self.panelControl.defaultConfigAttribute())
                     }
                 }
@@ -181,7 +203,7 @@ class PageConfigControls extends GenControls {
                 eventName: 'input',
                 className: sc.pageClass.zoom,
                 configToEvents: {
-                    "action-zoom": function(target)  {
+                    "action-zoom": function (target) {
                         config.zoom.value = self.parseValueWithType(target.value, 'number')
                         let zoom = config.zoom.value / 100
                         let wrapper = e("#id-canvas-wrapper")
@@ -197,13 +219,13 @@ class PageConfigControls extends GenControls {
                 eventName: 'input',
                 className: sc.pageClass.canvasHW,
                 configToEvents: {
-                    "action-canvasHW": function(target)  {
+                    "action-canvasHW": function (target) {
                         log("target", target, target.dataset.prop, target.value)
                         let prop = target.dataset.prop
                         if (prop == 'height') {
-                            config.canvasHeight.value = self.parseValueWithType(target.value, 'number') 
+                            config.canvasHeight.value = self.parseValueWithType(target.value, 'number')
                         } else {
-                            config.canvasWidth.value = self.parseValueWithType(target.value, 'number') 
+                            config.canvasWidth.value = self.parseValueWithType(target.value, 'number')
                         }
                     },
                 }
@@ -211,22 +233,22 @@ class PageConfigControls extends GenControls {
         ])
 
         // 更新图片快照
-        sc.updateActivePanelSnapshot = function() {
+        sc.updateActivePanelSnapshot = function () {
             if (this.panels[config.index.value].dataset.type == 'default_blank' && this.canvas.width > 0 && this.canvas.height > 0) {
                 let ps = sc.getComponent('panelSelector')
                 let canvas = e('.image-active > div > canvas')
                 canvas.width = ps.w
                 canvas.height = ps.h
-                let ctx = canvas.getContext('2d')           
+                let ctx = canvas.getContext('2d')
                 ctx.drawImage(this.canvas, 0, 0, ps.w * ps.ratio, ps.h * ps.ratio)
-            }            
+            }
         }
 
         // 上传图片需要刷新的配置
         // 每次上传图片都会调用
-        sc.refreshConfig = function(tempPanels) {
+        sc.refreshConfig = function (tempPanels) {
             log("refreshConfig")
-            sc.getComponent('panelSelector').buildWith(tempPanels)    
+            sc.getComponent('panelSelector').buildWith(tempPanels)
             let max = self.panels.length - 1
             config.index.max = max
             self.savePanel()
@@ -240,26 +262,25 @@ class PageConfigControls extends GenControls {
     async copyImage() {
         let self = this
         try {
-            toggleClass(e("#id-loading-area"), "hide") 
+            toggleClass(e("#id-loading-area"), "hide")
             self.shapeControl.removeDraggers()
-            await self.optimizer.canvas.toBlob(function(blob) { 
-                const item = new ClipboardItem({ "image/png": blob })
+            await self.optimizer.canvas.toBlob(function (blob) {
+                const item = new ClipboardItem({"image/png": blob})
                 navigator.clipboard.write([item])
-                toggleClass(e("#id-loading-area"), "hide") 
+                toggleClass(e("#id-loading-area"), "hide")
                 self.scene.message.success('复制成功')
             })
         } catch (err) {
             console.log("copy err", err)
-            toggleClass(e("#id-loading-area"), "hide") 
+            toggleClass(e("#id-loading-area"), "hide")
             self.scene.message.error('复制失败')
         }
     }
-    
+
     async addToZip(canvas, zip, name) {
         return new Promise((resolve, reject) => {
             canvas.toBlob(function (blob) {
-                compressImg(blob)
-                // zip.file(name, blob)
+                zip.file(name, blob)
                 resolve()
             })
         })
@@ -267,15 +288,15 @@ class PageConfigControls extends GenControls {
 
     async createImg() {
         let self = this
-        toggleClass(e("#id-loading-area"), "hide") 
-        e(".progress").style.width = "0%" 
+        toggleClass(e("#id-loading-area"), "hide")
+        e(".progress").style.width = "0%"
         var zip = new JSZip()
         let cur = config.index.value
         let len = self.panels.length
-        for (let i = 0; i < len; i++) {          
+        for (let i = 0; i < len; i++) {
             self.shapeControl.removeDraggers()
             self.savePanel()
-            self.switchPanel(i)  
+            self.switchPanel(i)
             self.optimizer.updateAndDraw()
             let idx = i + 1
             e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
@@ -283,13 +304,13 @@ class PageConfigControls extends GenControls {
         }
 
         self.savePanel()
-        self.switchPanel(cur)            
-        zip.generateAsync({ type: 'blob' }, (metadata) => {
+        self.switchPanel(cur)
+        zip.generateAsync({type: 'blob'}, (metadata) => {
             e(".progress").style.width = metadata.percent.toFixed(0) + "%"
         }).then(function (content) {
             let name = "archive-" + genRandomString(5) + "-" + new Date().Format("MM-dd")
-            saveAs(content, name)
-            toggleClass(e("#id-loading-area"), "hide")  
+            FileSaver.saveAs(content, name)
+            toggleClass(e("#id-loading-area"), "hide")
             e(".progress").style.width = "0%"
             self.scene.message.success('导出成功')
         })
@@ -298,13 +319,13 @@ class PageConfigControls extends GenControls {
     setupUploadImageEvent() {
         let self = this
         let dp = this.canvas
-    
+
         dp.addEventListener('dragover', function (e) {
             e.stopPropagation()
             e.preventDefault()
             e.dataTransfer.dropEffect = 'copy'
         })
-    
+
         dp.addEventListener("drop", function (event) {
             let x = event.offsetX
             let y = event.offsetY
@@ -313,7 +334,7 @@ class PageConfigControls extends GenControls {
             toggleClass(e("#id-loading-area"), "hide")
             let files = Object.values(event.dataTransfer.files).filter(
                 f => f.type.includes("image")
-            )      
+            )
             let tempFiles = []
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
@@ -337,7 +358,7 @@ class PageConfigControls extends GenControls {
                             toggleClass(e("#id-loading-area"), "hide")
                             self.scene.message.success('导入成功')
                         }
-                    }                    
+                    }
                 }
             }
         })
@@ -346,11 +367,11 @@ class PageConfigControls extends GenControls {
     /**
      * 全局对象移动事件
      */
-     setupMoveEvent() {
-        let self = this       
+    setupMoveEvent() {
+        let self = this
         let draggedShape = null
         let sc = self.scene
-        self.optimizer.resgisterMouse(function(event, action) {     
+        self.optimizer.resgisterMouse(function (event, action) {
             if (parseBoolean(config.penEnabled.value)) {
                 return
             }
@@ -361,12 +382,12 @@ class PageConfigControls extends GenControls {
             if (action == 'down') {
                 log("down", draggedShape)
                 if (targetShape != null && !targetShape.isCreating()) {
-                    draggedShape = targetShape                    
-                    draggedShape.calcalateOffset(x, y)                    
+                    draggedShape = targetShape
+                    draggedShape.calcalateOffset(x, y)
                     let attributeMap = draggedShape.selected()
                     log("attributeMap", attributeMap)
                     sc.getComponent('attribute').buildWith(attributeMap)
-                    
+
                 }
             } else if (action == 'move') {
                 if (draggedShape != null && draggedShape.isSelected()) {
@@ -379,8 +400,8 @@ class PageConfigControls extends GenControls {
             } else if (action == 'up') {
                 if (draggedShape != null) {
                     draggedShape = null
-                }                
-            } 
+                }
+            }
         })
     }
 
@@ -388,9 +409,9 @@ class PageConfigControls extends GenControls {
      * 点击对象显示 dragger 事件
      */
     setupDraggerEvent() {
-        let self = this  
-        let sc = this.scene     
-        self.optimizer.resgisterMouse(function(event, action) {    
+        let self = this
+        let sc = this.scene
+        self.optimizer.resgisterMouse(function (event, action) {
             if (parseBoolean(config.penEnabled.value)) {
                 return
             }
@@ -410,11 +431,11 @@ class PageConfigControls extends GenControls {
                 if (element == null && self.shapeControl.allTextIdled()) {
                     log("点击到空白的地方")
                     sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
-                    self.shapeControl.removeDraggers()  
+                    self.shapeControl.removeDraggers()
                     self.textControl.handleTextEvents(event, x, y)
                 } else {
                     self.shapeControl.removeDraggers()
-                    element.activateDraggers()
+                    element?.activateDraggers()
                 }
             }
         })
@@ -426,7 +447,7 @@ class PageConfigControls extends GenControls {
     setupCorsorEvent() {
         let self = this
         // 遍历所有的元素，设置鼠标样式
-        self.optimizer.resgisterMouse(function(event, action) {
+        self.optimizer.resgisterMouse(function (event, action) {
             if (parseBoolean(config.penEnabled.value)) {
                 return
             }
@@ -459,18 +480,18 @@ class PageConfigControls extends GenControls {
     /**
      * 切换图片, 恢复图片的修改
      */
-    switchPanel(imageIndex) {        
+    switchPanel(imageIndex) {
         let self = this
         let v = imageIndex
         config.index.value = v
         self.penControl.resetAndUpdate(self.panelControl.getChanges(v).points)
         self.textControl.resetAndUpdate(self.panelControl.getChanges(v).texts)
-        self.shapeControl.resetAndUpdate(self.panelControl.getChanges(v).shapes)    
+        self.shapeControl.resetAndUpdate(self.panelControl.getChanges(v).shapes)
         // css
         removeClassAll('image-active')
         for (let block of es('.image-block')) {
             if (block.dataset.index == v) {
-                block.classList.add('image-active')                                
+                block.classList.add('image-active')
             }
         }
 
@@ -511,8 +532,8 @@ class PageConfigControls extends GenControls {
         let inShape = this.shapeControl.pointInShape(x, y)
         if (inShape != null) {
             return inShape
-        }       
-        
+        }
+
         return null
     }
 }

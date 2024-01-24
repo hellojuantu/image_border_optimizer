@@ -1,4 +1,9 @@
-class GenText extends GenShape {
+import GenShape from "./gen_shape";
+import {config} from "../config/config";
+import {calTextWH, getRows, isBlank} from "./gen_utils";
+import Vector from "./gen_vector";
+
+export default class GenText extends GenShape {
     constructor(scene, text, x, y) {
         super(scene)
         this.text = text

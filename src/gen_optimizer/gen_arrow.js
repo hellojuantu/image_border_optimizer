@@ -1,4 +1,10 @@
-class GenArrow extends GenShape {
+import GenShape from "./gen_shape";
+import {config} from "../config/config";
+import {log} from "./gen_utils";
+import Vector from "./gen_vector";
+import GenDragger from "./gen_dragger";
+
+export default class GenArrow extends GenShape {
     constructor(scene, fromX, fromY, toX, toY) {
         super(scene)
         this.fromX = fromX
@@ -53,10 +59,7 @@ class GenArrow extends GenShape {
         let v1 = Vector.new(this.fromX, this.fromY)
         let v2 = Vector.new(this.toX, this.toY)
         let v3 = Vector.new(x, y)
-        if (v1.distance(v3) + v2.distance(v3) < v1.distance(v2) + this.border / 4) {
-            return true
-        }
-        return false
+        return v1.distance(v3) + v2.distance(v3) < v1.distance(v2) + this.border / 4;
     }
 
     creating(x, y) {
@@ -111,7 +114,6 @@ class GenArrow extends GenShape {
         log("deleted", this.distance <= this.minDistance)
         if (this.distance <= this.minDistance) {
             super.deleted()
-            return 
         }
     }
 

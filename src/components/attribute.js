@@ -1,4 +1,7 @@
-class Attribute extends GenComponent {
+import GenComponent from "../gen_optimizer/gen_component";
+import {appendHtml, e, es, log, parseBoolean, toggleClass} from "../gen_optimizer/gen_utils";
+
+export default class Attribute extends GenComponent {
     constructor(control) {
         super(control.scene)
         this.control = control
@@ -205,7 +208,7 @@ class Attribute extends GenComponent {
     }
 
     selectTemplate(bindVar, attribute) {
-        let t = `
+        return `
         <div data-value="read.option.shapeFill" id="id-select-${bindVar.replace(".", "-")}" class="el-select-dropdown el-popper hide" x-placement="bottom-start" style="right: 0px;width: 100%;">
             <div class="el-scrollbar" style="">
                 <div class="el-select-dropdown__wrap el-scrollbar__wrap el-scrollbar__wrap--hidden-default">
@@ -224,7 +227,6 @@ class Attribute extends GenComponent {
             </div>
         </div>                 
         `
-        return t
     }
 
     template(bindVar, attribute) {
@@ -232,7 +234,7 @@ class Attribute extends GenComponent {
             max = ${attribute.max || 1000}
             min = ${attribute.min || 1}
         `
-        let t = `
+        return `
         <div class="el-form-item el-form-item--small">
             <label class="el-form-item__label">${attribute._comment}</label>
             <div class="el-form-item__content ${attribute.options != null ? 'el-select' : ''}">
@@ -250,6 +252,5 @@ class Attribute extends GenComponent {
             </div>
         </div>
         `
-        return t
     }
 }

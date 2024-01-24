@@ -1,4 +1,10 @@
-class GenImage extends GenShape {
+import GenShape from "./gen_shape";
+import {config} from "../config/config";
+import Vector from "./gen_vector";
+import GenDragger from "./gen_dragger";
+import {log} from "./gen_utils";
+
+export default class GenImage extends GenShape {
     constructor(scene, x, y, image) {
         super(scene)
         this.image = image   
@@ -102,7 +108,7 @@ class GenImage extends GenShape {
         let v = this.position[dragger.name]
         v.x = x
         v.y = y
-        if (dragger.name == 'leftTop') {            
+        if (dragger.name == 'leftTop') {
             this.position.rightTop.y = y 
             this.position.leftBottom.x = x
         } else if (dragger.name == 'rightTop') {

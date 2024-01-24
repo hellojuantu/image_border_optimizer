@@ -1,4 +1,7 @@
-class PanelControls extends GenControls {
+import GenControls from "../gen_optimizer/gen_controls";
+import {config} from "../config/config";
+
+export default class PanelControls extends GenControls {
     constructor(scene) {
         super(scene)
         this.imageChanges = []

@@ -1,4 +1,7 @@
-class GenOptimizer {
+import {e, log, scrollToBottom, toggleClass} from "./gen_utils"
+import {config, uploadConfig} from "../config/config"
+
+export default class GenOptimizer {
     constructor(runCallback) {
         this.runCallback = runCallback
         window.fps = 90
@@ -21,7 +24,7 @@ class GenOptimizer {
                 new window.ClipboardItem({
                     [blob.type]: blob
                 })
-            ])        
+            ])
             alert('复制成功')
         } catch (err) {
             alert('复制失败')
@@ -59,7 +62,7 @@ class GenOptimizer {
         let ratio = 1
         if (size > 100) {
             ratio = 100 / size
-        }       
+        }
         return canvas.toDataURL("image/png", ratio)
     }
 
@@ -68,14 +71,14 @@ class GenOptimizer {
         this.setupWrapper()
         //
         let canvas = this.canvas
-        canvas.height = h * this.ratio 
+        canvas.height = h * this.ratio
         canvas.width = w * this.ratio
         canvas.style.width = w + 'px'
         canvas.style.height = h + 'px'
     }
 
     enableDebugMode() {
-        log = console.log.bind(console)
+        // log = console.log.bind(console)
     }
 
     getPixelRatio() {
@@ -86,12 +89,12 @@ class GenOptimizer {
 
         let context = this.context
         let backingStore = context.backingStorePixelRatio ||
-              context.webkitBackingStorePixelRatio ||
-              context.mozBackingStorePixelRatio ||
-              context.msBackingStorePixelRatio ||
-              context.oBackingStorePixelRatio ||
-              context.backingStorePixelRatio || 1
-    
+            context.webkitBackingStorePixelRatio ||
+            context.mozBackingStorePixelRatio ||
+            context.msBackingStorePixelRatio ||
+            context.oBackingStorePixelRatio ||
+            context.backingStorePixelRatio || 1
+
         return (window.devicePixelRatio || 1) / backingStore
     }
 
@@ -164,7 +167,7 @@ class GenOptimizer {
         this.panels.push(blankPanel)
         this.panelSnapshots.push(blankPanel)
     }
-    
+
     setupMouse() {
         let self = this
         let moving = false
@@ -219,10 +222,10 @@ class GenOptimizer {
                 for (const a of self.mouseActions) {
                     a(event, 'clickoutscene')
                 }
-            }           
+            }
         })
     }
-    
+
     registerAction(key, callback) {
         this.actions[key] = callback
     }
@@ -233,7 +236,7 @@ class GenOptimizer {
 
     runWithScene(scene) {
         let self = this
-        this.scene = scene                
+        this.scene = scene
         // 第一次加载需要刷新的配置
         this.scene.refreshConfig(this.panels)
         // 开始运行程序
@@ -255,9 +258,9 @@ class GenOptimizer {
         // update
         g.update()
         // clear
-        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)        
+        g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)
         // draw
-        g.draw()  
+        g.draw()
     }
 
     runloop() {
@@ -275,12 +278,12 @@ class GenOptimizer {
             } else if (status == 'up') {
                 g.actions[key]('up')
                 g.keydowns[key] = null
-            }           
-        }                    
+            }
+        }
         // update
-        g.updateAndDraw()            
+        g.updateAndDraw()
         // next run loop
-        setTimeout(function(){
+        setTimeout(function () {
             g.runloop()
         }, 1000 / window.fps)
     }
@@ -292,14 +295,14 @@ class GenOptimizer {
     bindUploadEvents() {
         let self = this
         let dp = e('.image-list')
-    
+
         dp.addEventListener('dragover', function (e) {
             e.stopPropagation()
             e.preventDefault()
             e.dataTransfer.dropEffect = 'copy'
         })
-    
-        dp.addEventListener("drop", function (event) {            
+
+        dp.addEventListener("drop", function (event) {
             event.stopPropagation()
             event.preventDefault()
             let files = Object.values(event.dataTransfer.files).filter(
@@ -322,7 +325,7 @@ class GenOptimizer {
                     let img = new Image()
                     img.src = event.target.result
                     img.dataset.type = 'user_upload'
-                    img.onload = function() { 
+                    img.onload = function () {
                         tempPanels.push(img)
                         self.panels.push(img)
                         log("tempPanels len, file len", self.panels.length, files.length)
@@ -330,7 +333,7 @@ class GenOptimizer {
                         if (tempPanels.length == files.length) {
                             log("__start")
                             self.scene && self.scene.refreshConfig(tempPanels)
-                            toggleClass(e("#id-loading-area"), "hide")  
+                            toggleClass(e("#id-loading-area"), "hide")
                             scrollToBottom(e('.image-list'))
                             self.scene && self.scene.message.success('导入成功', 1000)
                         }

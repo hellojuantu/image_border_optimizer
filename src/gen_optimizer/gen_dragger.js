@@ -1,4 +1,6 @@
-class GenDragger extends GenShape {
+import GenShape from "./gen_shape";
+
+export default class GenDragger extends GenShape {
     // dragger 的坐标是相对于 ownerShape x, y 
     constructor(ownerShape, offsetX, offsetY, cursor='crosshair', name) {
         super(ownerShape.scene)        

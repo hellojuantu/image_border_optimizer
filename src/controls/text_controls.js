@@ -1,4 +1,9 @@
-class TextControls extends GenControls {
+import GenControls from "../gen_optimizer/gen_controls";
+import {bind, calHeightLine, e, log, parseBoolean, selectAll} from "../gen_optimizer/gen_utils";
+import {config} from "../config/config";
+import GenText from "../gen_optimizer/gen_text";
+
+export default class TextControls extends GenControls {
     constructor(scene, shapeControl) {
         super(scene)
         this.scene = scene
@@ -93,7 +98,6 @@ class TextControls extends GenControls {
                 self.updateControls("config.textColor.value", targetText.color)
                 // 删除文字
                 targetText.deleted()
-                return
             }
         })
     }
@@ -172,8 +176,7 @@ class TextControls extends GenControls {
 
         bind(selector, 'input', function(event) {           
             let target = event.target
-            let text = target.innerText
-            target.dataset.value = text
+            target.dataset.value = target.innerText
         })
 
         bind(selector, 'paste', async function(event) {

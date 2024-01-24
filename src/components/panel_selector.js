@@ -1,4 +1,8 @@
-class PanelSelector extends GenComponent {
+import GenComponent from "../gen_optimizer/gen_component";
+import {appendHtml, e, es, log, removeClassAll, removeWithCondition, sel} from "../gen_optimizer/gen_utils";
+import {config} from "../config/config";
+
+export default class PanelSelector extends GenComponent {
     constructor(control, w, h) {
         super(control.scene)
         this.control = control
@@ -91,7 +95,7 @@ class PanelSelector extends GenComponent {
     template(image) {
         let index = image.dataset.index
         let type = image.dataset.type
-        let t = `
+        return `
         <div class="block image-block" data-value="config.index" data-index="${index}" data-type="${type}">
             <div class="el-image" data-value="config.index" style="width: ${this.w}px; height: ${this.h}px; display: block; margin: auto;">
                 <canvas data-value="config.index" style="margin: ${this.margin}px; object-fit: scale-down;" class="el-image__inner editor edit canvas-area panel-canvas"></canvas>  
@@ -101,6 +105,5 @@ class PanelSelector extends GenComponent {
             </div>
         </div>
         `
-        return t
     }
 }

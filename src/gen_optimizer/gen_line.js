@@ -1,4 +1,7 @@
-class GenLine extends GenArrow {
+import GenArrow from "./gen_arrow";
+import Vector from "./gen_vector";
+
+export default class GenLine extends GenArrow {
     constructor(scene, fromX, fromY, toX, toY) {
         super(scene, fromX, fromY, toX, toY)
         this.isLine = true       
