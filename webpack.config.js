@@ -1,8 +1,7 @@
 const path = require('path')
-
 const webpack = require("webpack")
-
 const htmlWebpackPlugin = require("html-webpack-plugin")
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 module.exports = {
     mode: "development",
@@ -23,8 +22,10 @@ module.exports = {
     plugins: [
         new htmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
-            filename: 'index.html'
+            filename: 'index.html',
+            favicon: path.resolve('./src/favicon.ico')
         }),
+        new CleanWebpackPlugin(),
     ],
     module: {
         rules: [
@@ -32,7 +33,18 @@ module.exports = {
                 test: /\.css$/, use: ['style-loader', 'css-loader']
             },
             {
-                test: /.js$/,
+                test: /\.(htm|html)$/,
+                loader: 'html-withimg-loader'
+            },
+            {
+                test: /\.(png|jpg|gif|jpeg|ico)$/,
+                type: "asset/resource",
+                generator: {
+                    filename: "images/[name]_[hash:8][ext]"
+                }
+            },
+            {
+                test: /\.js$/,
                 use: {
                     loader: 'babel-loader',
                     options: {
