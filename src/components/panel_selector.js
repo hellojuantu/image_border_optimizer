@@ -17,6 +17,7 @@ export default class PanelSelector extends GenComponent {
     }
 
     setupEvents() {
+        super.setupEvents()
         let control = this.control
         let self = this
         let sc = self.scene
@@ -25,8 +26,8 @@ export default class PanelSelector extends GenComponent {
             {
                 eventName: 'click',
                 className: sc.pageClass.images,
-                configToEvents: {                    
-                    "config.index": function(target) {
+                configToEvents: {
+                    "config.index": function (target) {
                         let imageBlock = sel(sc.pageClass.imageBlock)
                         let index = target.closest(imageBlock).dataset.index
                         control.shapeControl.removeDraggers()
@@ -34,12 +35,12 @@ export default class PanelSelector extends GenComponent {
                         let v = parseInt(index)
                         control.switchPanel(v)
                     },
-                    "action.delete": function(target) {
+                    "action.delete": function (target) {
                         let imageBlock = sel(sc.pageClass.imageBlock)
                         let outer = target.closest(imageBlock)
                         let delId = parseInt(outer.dataset.index)
                         // only one can't delete
-                        if (es(imageBlock).length <= 1) {                        
+                        if (es(imageBlock).length <= 1) {
                             sc.message.info('这是最后一个 panel 了, 留下 ta 好吗')
                             return
                         }
@@ -48,10 +49,10 @@ export default class PanelSelector extends GenComponent {
                         })
                         let bs = es(imageBlock)
                         control.panelControl.delete(delId)
-                        config.index.max = self.panels.length - 1                        
+                        config.index.max = self.panels.length - 1
                         // 重新给 image-list 分配 index
                         for (let i = 0; i < bs.length; i++) {
-                            bs[i].dataset.index = i                            
+                            bs[i].dataset.index = i
                         }
                         // 删除自己跳转到上一个
                         if (delId == config.index.value) {
@@ -77,11 +78,11 @@ export default class PanelSelector extends GenComponent {
             appendHtml(list, html)
             // render panel canvas
             let canvas = es('.panel-canvas')[image.dataset.index]
-            canvas.width = this.w 
+            canvas.width = this.w
             canvas.height = this.h
             let ctx = canvas.getContext('2d')
             ctx.drawImage(image, 0, 0, this.w * this.ratio, this.h * this.ratio)
-        }       
+        }
         //
         removeClassAll('image-active')
         for (let block of es('.image-block')) {

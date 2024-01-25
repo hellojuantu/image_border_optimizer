@@ -1,11 +1,14 @@
 import GenControls from "../gen_optimizer/gen_controls";
 import Attribute from "../components/attribute";
 import PanelSelector from "../components/panel_selector";
-import {config, uploadConfig} from "../config/config";
+import {API_SERVER, config, uploadConfig} from "../config/config";
 import {
+    ajax,
+    base64ToBlob,
     e,
     es,
     genRandomString,
+    isBlank,
     log,
     parseBoolean,
     removeClassAll,
@@ -17,6 +20,8 @@ import GenPoint from "../gen_optimizer/gen_point";
 import GenText from "../gen_optimizer/gen_text";
 import FileSaver from "file-saver"
 import JSZip from "jszip"
+import Dialog from "../components/dialog";
+import GenPersistConfigManager from "../gen_optimizer/gen_persisit_config_manager";
 
 export default class PageConfigControls extends GenControls {
     constructor(scene, panelControl, penControl, textControl, shapeControl) {
@@ -61,6 +66,7 @@ export default class PageConfigControls extends GenControls {
         let panelWidth = 188
         let panelHeight = 100
         sc.bindComponent('panelSelector', PanelSelector.new(this, panelWidth, panelHeight))
+        sc.bindComponent('dialog', Dialog.new(sc))
 
         // 注册全局场景事件
         sc.registerGlobalEvents([
@@ -92,7 +98,7 @@ export default class PageConfigControls extends GenControls {
                         self.penControl.resetAndUpdate([])
                         self.textControl.resetAndUpdate([])
                         self.shapeControl.resetAndUpdate([])
-                        self.scene.message.success('清空成功')
+                        self.scene.message.success('Clear successfully.')
                     },
                     "action.copyImageButton": function (target) {
                         self.copyImage()
@@ -113,7 +119,7 @@ export default class PageConfigControls extends GenControls {
                         self.scene.message.success('新建成功')
                     },
                     "action.downloadImagesButton": async function (target) {
-                        await self.createImg()
+                        await self.downloadImages()
                     },
                     "action.loadFromClipboard": async function (target) {
                         try {
@@ -127,7 +133,7 @@ export default class PageConfigControls extends GenControls {
                             })
                             if (!hasImage) {
                                 toggleClass(e("#id-loading-area"), "hide")
-                                sc.message.warning('请重试 剪贴板里没有图片')
+                                sc.message.warning('Please try again There are no pictures in the clipboard.')
                                 return
                             }
                             for (let item of clipboardItems) {
@@ -136,7 +142,7 @@ export default class PageConfigControls extends GenControls {
                                     console.log("blob", blob)
                                     if (blob.size > uploadConfig.max_size) {
                                         toggleClass(e("#id-loading-area"), "hide")
-                                        sc.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
+                                        sc.message.warning(`The size of the picture cannot exceed ${uploadConfig.max_size_desc}`)
                                         break
                                     }
                                     const reader = new FileReader();
@@ -151,17 +157,19 @@ export default class PageConfigControls extends GenControls {
                                             sc && sc.refreshConfig([img])
                                             toggleClass(e("#id-loading-area"), "hide")
                                             setTimeout(scrollToBottom(e('.image-list')), 100)
-                                            self.scene.message.success('导入成功')
+                                            self.scene.message.success('Import successfully.')
                                         }
                                     }
                                 }
                             }
                         } catch (err) {
-                            console.log("err", err)
                             toggleClass(e("#id-loading-area"), "hide")
-                            sc.message.error('从剪贴板导入图片失败')
+                            sc.message.error('Importing picture from clipboard failed.')
                         }
-                    }
+                    },
+                    "action.showCompressApiSetting": function (target) {
+                        sc.getComponent('dialog').buildWith()
+                    },
                 },
             },
             // 右上角按钮事件
@@ -268,29 +276,56 @@ export default class PageConfigControls extends GenControls {
                 const item = new ClipboardItem({"image/png": blob})
                 navigator.clipboard.write([item])
                 toggleClass(e("#id-loading-area"), "hide")
-                self.scene.message.success('复制成功')
+                self.scene.message.success('Copy successfully.')
             })
         } catch (err) {
             console.log("copy err", err)
             toggleClass(e("#id-loading-area"), "hide")
-            self.scene.message.error('复制失败')
+            self.scene.message.error('Failed to copy.')
         }
     }
 
     async addToZip(canvas, zip, name) {
         return new Promise((resolve, reject) => {
             canvas.toBlob(function (blob) {
-                zip.file(name, blob)
-                resolve()
+                const tinyPngKey = GenPersistConfigManager.new().getPersistConfig("API_KEY.tinyPng");
+                if (!tinyPngKey) {
+                    zip.file(name, blob)
+                    resolve()
+                    return
+                }
+
+                const formData = new FormData();
+                formData.append('file', blob, name);
+                formData.append('apiKey', tinyPngKey);
+                const header = {
+                    "Access-Control-Allow-Origin": "*"
+                }
+                ajax('POST', API_SERVER, formData, header, (r) => {
+                    if (isBlank(r)) {
+                        reject(new Error('Response is empty.'));
+                    }
+                    try {
+                        let res = JSON.parse(r);
+                        if (res.data == null) {
+                            reject(new Error(res.error));
+                        }
+                        let imgBlob = base64ToBlob(res.data);
+                        zip.file(name, imgBlob)
+                        resolve()
+                    } catch (error) {
+                        reject(new Error(error));
+                    }
+                })
             })
         })
     }
 
-    async createImg() {
+    async downloadImages() {
         let self = this
         toggleClass(e("#id-loading-area"), "hide")
         e(".progress").style.width = "0%"
-        var zip = new JSZip()
+        let zip = new JSZip()
         let cur = config.index.value
         let len = self.panels.length
         for (let i = 0; i < len; i++) {
@@ -300,7 +335,14 @@ export default class PageConfigControls extends GenControls {
             self.optimizer.updateAndDraw()
             let idx = i + 1
             e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
-            await self.addToZip(self.canvas, zip, idx + '.png')
+            try {
+                await self.addToZip(self.canvas, zip, idx + '.png')
+            } catch (err) {
+                toggleClass(e("#id-loading-area"), "hide")
+                e(".progress").style.width = "0%"
+                self.scene.message.error(err)
+                return
+            }
         }
 
         self.savePanel()
@@ -312,7 +354,7 @@ export default class PageConfigControls extends GenControls {
             FileSaver.saveAs(content, name)
             toggleClass(e("#id-loading-area"), "hide")
             e(".progress").style.width = "0%"
-            self.scene.message.success('导出成功')
+            self.scene.message.success('Export successfully.')
         })
     }
 
@@ -340,7 +382,7 @@ export default class PageConfigControls extends GenControls {
                 let file = files[i]
                 if (file.size > uploadConfig.max_size) {
                     toggleClass(e("#id-loading-area"), "hide")
-                    self.scene.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
+                    self.scene.message.warning(`The size of the picture cannot exceed ${uploadConfig.max_size_desc}`)
                     break
                 }
                 let reader = new FileReader()
@@ -356,7 +398,7 @@ export default class PageConfigControls extends GenControls {
                         if (tempFiles.length == files.length) {
                             log("tempFiles", tempFiles, files)
                             toggleClass(e("#id-loading-area"), "hide")
-                            self.scene.message.success('导入成功')
+                            self.scene.message.success('Import successfully.')
                         }
                     }
                 }

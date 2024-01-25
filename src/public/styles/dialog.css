@@ -1,0 +1,82 @@
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.3);
+    padding: 16px;
+}
+
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999999998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #333;
+    font-size: 12px;
+
+    /*渐近细节*/
+    opacity: 0;
+    transition: all .3s;
+}
+
+.dialog-show {
+    display: block;
+}
+
+.dialog .dialog-main {
+    width: 30%;
+    background-color: #fff;
+    margin: 30px auto;
+    border-radius: 6px;
+    padding: 16px;
+
+    /*渐近细节*/
+    transform: translateY(-100%);
+    transition: all .3s;
+}
+
+.dialog .dialog-header {
+    display: flex;
+    align-items: center;
+}
+
+.dialog .dialog-header > p {
+    margin: 0;
+}
+
+.dialog .dialog-header .dialog-close {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dialog-footer {
+    margin-left: 15px;
+}
+
+.dialog-appear {
+    opacity: 1;
+}
+
+.dialog-appear .dialog-main {
+    transform: translateY(50%);
+}
+
+.dialog-content {
+    margin: 10px 0;
+}
+
+.dialog-error-input {
+    border: 1px solid #f56c6c;
+}

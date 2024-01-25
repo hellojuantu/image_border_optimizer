@@ -12,6 +12,7 @@ export default class Attribute extends GenComponent {
     }
 
     setupEvents() {
+        super.setupEvents()
         let control = this.control
         let self = this
         let sc = self.scene

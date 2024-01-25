@@ -250,3 +250,13 @@ export var uploadConfig = {
     max_size: 3 * 1024 * 1024,
     max_size_desc: "3MB"
 }
+
+export var ENV = "product"
+
+export const persistedConfig = {
+    API_KEY: {
+        tinyPng: ""
+    }
+}
+
+export var API_SERVER = "http://localhost:80/compressImg"

@@ -1,100 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="icon" href="public/img/favicon.ico">
     <title>GenOptimizer</title>
     <link rel="stylesheet" href="public/styles/app.css"/>
     <link rel="stylesheet" href="public/styles/optimzer.css"/>
     <link rel="stylesheet" href="public/styles/message.css"/>
     <link rel="stylesheet" href="public/styles/elementUI.css"/>
+    <link rel="stylesheet" href="public/styles/dialog.css"/>
     <script src="lib/hidpi-canvas.min.js"></script>
 </head>
 <body>
-    <div id="id-loading-area" class="visual-loading-container">   
-        <p class="progress"></p>    
-        <div class="spinner">
-            <div class="double-bounce1"></div>
-            <div class="double-bounce2"></div>
-        </div>
+<div id="id-loading-area" class="visual-loading-container">
+    <p class="progress"></p>
+    <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
     </div>
-    <div class="home">
-        <div class="toolbar">
-            <div>
-                <button type="button" data-type="button" data-value="action.newBlank" class="gen-auto-button el-button el-button--default el-button--small">新建空白</button>
-                <button type="button" data-type="button" data-value="config.preButton" class="gen-auto-button el-button el-button--default el-button--small">上一张</button>
-                <button type="button" data-type="button" data-value="config.nextButton" class="gen-auto-button el-button el-button--default el-button--small">下一张</button>
-                <button type="button" data-type="button" data-value="config.penClearButton" class="gen-auto-button el-button el-button--default el-button--small">清空画布</button>
-                <button type="button" data-type="button" data-value="action.loadFromClipboard" class="gen-auto-button el-button el-button--default el-button--small"><i class="el-icon-s-opportunity" style="color: red;"></i>从剪贴板导入</button>
-                <button type="button" data-type="button" data-value="action.downloadImagesButton" class="gen-auto-button el-button el-button--default el-button--small"><i class="el-icon-s-flag" style="color: red;"></i>全部导出</button>
-                <button type="button" data-type="button" data-value="action.copyImageButton" class="gen-auto-button el-button el-button--default el-button--small">复制</button>
-                <div class="canvas-config canvas-hw">
-                    <span>画布大小</span>
-                    <input value="1000" class="canvas-hw-input" type="number" data-prop="width" data-value="action-canvasHW"> ×
-                    <input value="800" class="canvas-hw-input" type="number" data-prop="height" data-value="action-canvasHW" style="margin-left: 0px;">
-                </div>
-                <div class="canvas-config canvas-zoom">
-                    <span>画布比例</span>
-                    <input value="100" class="zoom-input" type="number" data-value="action-zoom"> % 
-                </div>      
-            </div>                              
-            <div style="margin-left: 20px;">  
-                <span data-value="config.defaultPointerEnable" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yidong_huaban1 shape-active"></span>
-                <span data-value="config.penEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-huabi_huaban1"></span>
-                <span data-value="config.textInputEnabled" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenzi_huaban1"></span>
-                <span data-value="config.shapeEnabled" data-shape="rect" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-juxinggongju_huaban1"></span>
-                <span data-value="config.shapeEnabled" data-shape="arrow" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-jiantou_youshang"></span>
-                <span data-value="config.shapeEnabled" data-shape="circle" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yuanquan_huaban1"></span>
-                <span data-value="config.shapeEnabled" data-shape="line" class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-zhixian_huaban1"></span>
+</div>
+<div class="home">
+    <div class="toolbar">
+        <div>
+            <button type="button" data-type="button" data-value="action.newBlank"
+                    class="gen-auto-button el-button el-button--default el-button--small">新建空白
+            </button>
+            <button type="button" data-type="button" data-value="config.preButton"
+                    class="gen-auto-button el-button el-button--default el-button--small">上一张
+            </button>
+            <button type="button" data-type="button" data-value="config.nextButton"
+                    class="gen-auto-button el-button el-button--default el-button--small">下一张
+            </button>
+            <button type="button" data-type="button" data-value="config.penClearButton"
+                    class="gen-auto-button el-button el-button--default el-button--small">清空画布
+            </button>
+            <button type="button" data-type="button" data-value="action.loadFromClipboard"
+                    class="gen-auto-button el-button el-button--default el-button--small">从剪贴板导入
+            </button>
+            <button type="button" data-type="button" data-value="action.downloadImagesButton"
+                    class="gen-auto-button el-button el-button--default el-button--small">全部导出
+            </button>
+            <!--            <button type="button" data-type="button" data-value="action.copyImageButton"-->
+            <!--                    class="gen-auto-button el-button el-button&#45;&#45;default el-button&#45;&#45;small">复制-->
+            <!--            </button>-->
+            <button type="button" data-type="button" data-value="action.showCompressApiSetting"
+                    class="gen-auto-button el-button el-button--default el-button--small el-badge">图片压缩设置<sup
+                    data-value="action.showCompressApiSetting" class="el-badge__content is-fixed">new</sup>
+            </button>
+            <div class="canvas-config canvas-hw">
+                <span>画布大小</span>
+                <input value="1000" class="canvas-hw-input" type="number" data-prop="width"
+                       data-value="action-canvasHW"> ×
+                <input value="800" class="canvas-hw-input" type="number" data-prop="height" data-value="action-canvasHW"
+                       style="margin-left: 0px;">
+            </div>
+            <div class="canvas-config canvas-zoom">
+                <span>画布比例</span>
+                <input value="100" class="zoom-input" type="number" data-value="action-zoom"> %
             </div>
         </div>
-        <main>
-            <section class="left">              
-                <p class="title">画布列表 (拖拽放入)</p>
-                <div class="image-list">                    
-                </div>
-            </section>
-            <section class="center">  
-                <div class="center-star-area">
-                    <div class="notice" style="width: 300px;">
-                        <img src="public/img/demo.jpeg" class="demo-img">
-                    </div>
-                    <div class="notice">请使用 PC 以便获取完整的体验</div>
-                    <div class="github-icons">
-                        <a href="https://github.com/hellojuantu/image_border_optimizer" target="_blank">
-                            <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/hellojuantu/image_border_optimizer?style=social">                
-                        </a>
-                        <a href="https://gitee.com/sanbuqu/image_border_optimizer" target="_blank">
-                            <img src="https://gitee.com/sanbuqu/image_border_optimizer/badge/star.svg?theme=white" alt="star">
-                        </a>
-                    </div>
-                </div>
-                <div class="content" id="id-canvas-area">
-                    <div id="id-canvas-wrapper">
-                        <canvas class="editor edit canvas-area" id="id-canvas" width="1000" height="800"></canvas>  
-                    </div>
-               </div>      
-            </section>
-            <section class="right">
-                <div class="attr-container">
-                    <p class="title">画布属性</p>
-                    <div class="gen-attribute-list">
-                        <form class="gen-attribute el-form">
-                        </form>  
-                        <div class="github-icons">
-                            <a href='https://github.com/hellojuantu/image_border_optimizer' target="_blank">
-                                <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/hellojuantu/image_border_optimizer?style=social">                
-                            </a>
-                            <a href='https://gitee.com/sanbuqu/image_border_optimizer' target="_blank">
-                                <img src='https://gitee.com/sanbuqu/image_border_optimizer/badge/star.svg?theme=white' alt='star'></img>
-                            </a>
-                        </div>
-                    </div>                                                                     
-                </div>
-            </section>
-        </main>
+        <div style="margin-left: 20px;">
+            <span data-value="config.defaultPointerEnable"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yidong_huaban1 shape-active"></span>
+            <span data-value="config.penEnabled"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-huabi_huaban1"></span>
+            <span data-value="config.textInputEnabled"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-wenzi_huaban1"></span>
+            <span data-value="config.shapeEnabled" data-shape="rect"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-juxinggongju_huaban1"></span>
+            <span data-value="config.shapeEnabled" data-shape="arrow"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-jiantou_youshang"></span>
+            <span data-value="config.shapeEnabled" data-shape="circle"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-yuanquan_huaban1"></span>
+            <span data-value="config.shapeEnabled" data-shape="line"
+                  class="gen-switch-drawer el-button el-button--default el-button--small iconfont icon-zhixian_huaban1"></span>
+        </div>
     </div>
+    <main>
+        <section class="left">
+            <p class="title">画布列表 (拖拽放入)</p>
+            <div class="image-list">
+            </div>
+        </section>
+        <section class="center">
+            <div class="center-star-area">
+                <div class="notice" style="width: 300px;">
+                    <img src="public/img/demo.jpeg" class="demo-img">
+                </div>
+                <div class="notice">请使用 PC 以便获取完整的体验</div>
+                <div class="github-icons">
+                    <a href="https://github.com/hellojuantu/image_border_optimizer" target="_blank">
+                        <img alt="GitHub Repo stars"
+                             src="https://img.shields.io/github/stars/hellojuantu/image_border_optimizer?style=social">
+                    </a>
+                    <a href="https://gitee.com/sanbuqu/image_border_optimizer" target="_blank">
+                        <img src="https://gitee.com/sanbuqu/image_border_optimizer/badge/star.svg?theme=white"
+                             alt="star">
+                    </a>
+                </div>
+            </div>
+            <div class="content" id="id-canvas-area">
+                <div id="id-canvas-wrapper">
+                    <canvas class="editor edit canvas-area" id="id-canvas" width="1000" height="800"></canvas>
+                </div>
+            </div>
+        </section>
+        <section class="right">
+            <div class="attr-container">
+                <p class="title">画布属性</p>
+                <div class="gen-attribute-list">
+                    <form class="gen-attribute el-form">
+                    </form>
+                    <div class="github-icons">
+                        <a href='https://github.com/hellojuantu/image_border_optimizer' target="_blank">
+                            <img alt="GitHub Repo stars"
+                                 src="https://img.shields.io/github/stars/hellojuantu/image_border_optimizer?style=social">
+                        </a>
+                        <a href='https://gitee.com/sanbuqu/image_border_optimizer' target="_blank">
+                            <img src='https://gitee.com/sanbuqu/image_border_optimizer/badge/star.svg?theme=white'
+                                 alt='star'></img>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

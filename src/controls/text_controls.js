@@ -22,7 +22,7 @@ export default class TextControls extends GenControls {
     }
 
     setupScrollEvent() {
-        this.optimizer.canvasArea.addEventListener('scroll', event => {            
+        this.optimizer.canvasArea.addEventListener('scroll', event => {
             // 更新文字的位置
             let selector = "#id-text"
             let input = e(selector)
@@ -62,14 +62,14 @@ export default class TextControls extends GenControls {
         } else {
             if (parseBoolean(config.textInputEnabled.value)) {
                 self.addFloatInput(x, y)
-                sc.getComponent('attribute').buildWith(GenText.configAttribute())                
+                sc.getComponent('attribute').buildWith(GenText.configAttribute())
             }
-        } 
+        }
     }
 
     setupChangeText() {
         let self = this
-        self.optimizer.resgisterMouse(function(event, action) {
+        self.optimizer.resgisterMouse(function (event, action) {
             if (parseBoolean(config.penEnabled.value)) {
                 return
             }
@@ -147,8 +147,8 @@ export default class TextControls extends GenControls {
         div.innerHTML = `<span contenteditable="true" id="${this.inputId}" class="float-input-text"></span>`
         self.optimizer.canvasWrapper.append(div)
         // 添加数据
-        let input = e(selector)   
-        input.innerText = value     
+        let input = e(selector)
+        input.innerText = value
         input.dataset.value = value
         input.dataset.x = text.x
         input.dataset.y = text.y
@@ -163,29 +163,29 @@ export default class TextControls extends GenControls {
         input.style.lineHeight = calHeightLine(value, font, zoom) + "px"
         // focus
         input.focus()
-        selectAll(self.inputId)        
-    
+        selectAll(self.inputId)
+
         // 绑定事件
-        input.addEventListener('keypress', function(event) {
+        input.addEventListener('keypress', function (event) {
             // enter keycode is 13
             if (event.keyCode == 13 && event.shiftKey == false) {
                 event.preventDefault()
                 document.execCommand("insertLineBreak")
-            } 
+            }
         })
 
-        bind(selector, 'input', function(event) {           
+        bind(selector, 'input', function (event) {
             let target = event.target
             target.dataset.value = target.innerText
         })
 
-        bind(selector, 'paste', async function(event) {
+        bind(selector, 'paste', async function (event) {
             // 过滤 html 标签
             event.preventDefault()
             let text = (event.originalEvent || event).clipboardData.getData('text/plain')
             const lines = text.split('\n')
             const len = lines.length
-            for (let i = 0; i < len; i++) {  
+            for (let i = 0; i < len; i++) {
                 console.log(lines[i])
                 document.execCommand('insertText', false, lines[i])
                 if (i < len - 1) {
@@ -194,7 +194,7 @@ export default class TextControls extends GenControls {
             }
         })
     }
-    
+
     closeInputAndAddText() {
         let self = this
         let closeInput = self.closeInput()
@@ -225,7 +225,7 @@ export default class TextControls extends GenControls {
         }
         return inputFloat
     }
-    
+
     pointInText(x, y) {
         for (let text of this.texts) {
             if (text.pointInFrame(x, y) && !text.isDeleted()) {
@@ -237,7 +237,7 @@ export default class TextControls extends GenControls {
 
     addText(content, x, y) {
         let text = GenText.new(this.scene, content, x, y)
-        text.idle()                
+        text.idle()
         this.shapeControl.shapes.unshift(text)
         this.texts.unshift(text)
     }

@@ -1,6 +1,9 @@
+import {ENV} from "../config/config";
+
 export const e = sel => document.querySelector(sel)
 
-export var log = console.log.bind(console)
+export var log = ENV === 'dev' ? console.log.bind(console) : () => {
+};
 
 export const es = sel => document.querySelectorAll(sel)
 
@@ -230,16 +233,28 @@ export const genRandomString = function (n) {
     return result;
 }
 
-export function ajax(method, path, data, reseponseCallback) {
+export function ajax(method, path, data, header, callback) {
     const r = new XMLHttpRequest();
     r.open(method, path, true)
-    r.setRequestHeader('Content-Type', 'application/json');
-    r.setRequestHeader('Authorization', `Basic ${btoa(`api:lxK7FQVrlmm2WbQ5c2nlRMzx9RJ5MYXc`)}`);
-    r.setRequestHeader("Access-Control-Allow-Origin", "*")
+
+    for (let key in header) {
+        r.setRequestHeader(key, header[key])
+    }
+
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
-            reseponseCallback(r)
+            callback(r.response)
         }
     }
+
     r.send(data)
+}
+
+export function base64ToBlob(base64) {
+    let binary = atob(base64);
+    let array = [];
+    for (let i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+    }
+    return new Blob([new Uint8Array(array)], {type: "image/png"});
 }

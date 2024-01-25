@@ -1,5 +1,6 @@
 import {e, log, scrollToBottom, toggleClass} from "./gen_utils"
 import {config, uploadConfig} from "../config/config"
+import GenPersistConfigManager from "./gen_persisit_config_manager";
 
 export default class GenOptimizer {
     constructor(runCallback) {
@@ -77,10 +78,6 @@ export default class GenOptimizer {
         canvas.style.height = h + 'px'
     }
 
-    enableDebugMode() {
-        // log = console.log.bind(console)
-    }
-
     getPixelRatio() {
         const urlParams = new URLSearchParams(window.location.search)
         if (!urlParams.has('hidpi') || urlParams.get('hidpi') !== 'true') {
@@ -115,6 +112,7 @@ export default class GenOptimizer {
     }
 
     setup() {
+        GenPersistConfigManager.new().loadPersistConfig();
         // canvas
         this.canvasArea = e("#id-canvas-area")
         this.canvasWrapper = e("#id-canvas-wrapper")

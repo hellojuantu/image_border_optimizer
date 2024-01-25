@@ -7,7 +7,7 @@ export default class GenScene {
         this.canvas = optimizer.canvas
         this.context = optimizer.context
         this.panels = optimizer.panels
-        this.ratio = this.optimizer.ratio
+        this.ratio = optimizer.ratio
         this.elements = []
         this.events = {}
         this.pageClass = {}
@@ -26,7 +26,7 @@ export default class GenScene {
 
     // 上传图片需要刷新的配置
     refreshConfig(tempImages) {
-        
+
     }
 
     // 更新左边的图片快照
@@ -43,7 +43,7 @@ export default class GenScene {
      * 注册鼠标是否在场景事件
      */
     setupMouseleave() {
-        this.optimizer.resgisterMouse((event, action) => {     
+        this.optimizer.resgisterMouse((event, action) => {
             if (action == 'mouseleave') {
                 this.pointInScene = false
                 log('mouseleave canvas', this.pointInScene)
@@ -60,22 +60,27 @@ export default class GenScene {
 
     registerPageClass(prop) {
         for (let c of Object.keys(prop)) {
+            if (this.pageClass.c !== undefined) {
+                throw new Error(`duplicated page class ${c}.`)
+            }
             this.pageClass[c] = prop[c]
         }
         return this
     }
-    
+
     bindComponent(name, component) {
+        if (this.components[name] != null) {
+            throw new Error(`duplicated component ${name}`)
+        }
         this.components[name] = component
     }
 
     getComponent(name) {
-        if (!this.inUsedComponentNames.includes(name)) {
-            this.inUsedComponentNames.push(name)
-            // 初始化组件的事件
-            this.components[name].setupEvents()
-        }
-        // log("inUsedComponentNames", this.inUsedComponentNames)
+        // if (!this.inUsedComponentNames.includes(name)) {
+        //     this.inUsedComponentNames.push(name)
+        //     // 初始化组件的事件
+        //     this.components[name].setupEvents()
+        // }
         return this.components[name]
     }
 
@@ -92,7 +97,7 @@ export default class GenScene {
             let configToEvents = event.configToEvents || {}
             self.bindConfigEvents(className, eventName, configToEvents)
             log("selector, eventName, configToEvents", selector, eventName, configToEvents)
-            bindAll(selector, eventName, function(event) {
+            bindAll(selector, eventName, function (event) {
                 let target = event.target
                 let bindVar = target.dataset.value
                 // log("eventName, events, bindVar: ", eventName, self.events, bindVar)
@@ -104,17 +109,17 @@ export default class GenScene {
                 eventFunc && eventFunc(target)
                 after && after(bindVar, target)
             }, useCapture)
-        }        
+        }
     }
 
     bindConfigEvents(className, eventName, configToEvents) {
         /**
-            eventName -> "input",
-            configToEvents -> {
-                "config.textFont": function(target) {},
-                "config.textColor": function(target) {},
-            }
-        */
+         eventName -> "input",
+         configToEvents -> {
+         "config.textFont": function(target) {},
+         "config.textColor": function(target) {},
+         }
+         */
         let self = this
         for (let bindVar of Object.keys(configToEvents)) {
             let eventFun = configToEvents[bindVar]

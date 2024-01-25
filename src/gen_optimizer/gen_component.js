@@ -4,12 +4,14 @@ export default class GenComponent extends GenControls {
     constructor(scene) {
         super(scene)
         this.scene = scene
+        this.eventInited = false
     }
-    
+
     /**
      * 初始化组件的事件
      */
     setupEvents() {
+        this.eventInited = true
     }
 
     /**
@@ -28,13 +30,9 @@ export default class GenComponent extends GenControls {
      * 外部使用组件
      */
     buildWith(...datas) {
-        return this.builder(...datas)
-    }
-
-    /**
-     * 外部获取模板
-     */
-    getTemplate() {
-        return this.template
+        this.builder(...datas)
+        if (!this.eventInited) {
+            this.setupEvents()
+        }
     }
 }
