@@ -2,7 +2,7 @@ import GenComponent from "../gen_optimizer/gen_component";
 import {appendHtml, e, isBlank} from "../gen_optimizer/gen_utils";
 import GenPersistConfigManager from "../gen_optimizer/gen_persisit_config_manager";
 
-export default class Dialog extends GenComponent {
+export default class SettingDialog extends GenComponent {
     constructor(scene) {
         super(scene);
         scene.registerPageClass({

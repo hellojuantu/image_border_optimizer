@@ -10,6 +10,7 @@ specifiers:
   html-webpack-plugin: ^5.6.0
   html-withimg-loader: ^0.1.16
   jszip: ^3.10.1
+  sortablejs: ^1.15.2
   style-loader: ^3.3.4
   url-loader: ^4.1.1
   webpack: ^5.89.0
@@ -26,6 +27,7 @@ dependencies:
   html-webpack-plugin: registry.npmmirror.com/html-webpack-plugin/5.6.0_webpack@5.89.0
   html-withimg-loader: registry.npmmirror.com/html-withimg-loader/0.1.16
   jszip: registry.npmmirror.com/jszip/3.10.1
+  sortablejs: registry.npmmirror.com/sortablejs/1.15.2
   style-loader: registry.npmmirror.com/style-loader/3.3.4_webpack@5.89.0
   url-loader: registry.npmmirror.com/url-loader/4.1.1_webpack@5.89.0
   webpack: registry.npmmirror.com/webpack/5.89.0_webpack-cli@5.1.4
@@ -4800,6 +4802,12 @@ packages:
       faye-websocket: registry.npmmirror.com/faye-websocket/0.11.4
       uuid: registry.npmmirror.com/uuid/8.3.2
       websocket-driver: registry.npmmirror.com/websocket-driver/0.7.4
+    dev: false
+
+  registry.npmmirror.com/sortablejs/1.15.2:
+    resolution: {integrity: sha512-FJF5jgdfvoKn1MAKSdGs33bIqLi3LmsgVTliuX6iITj834F+JRQZN90Z93yql8h0K2t0RwDPBmxwlbZfDcxNZA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/sortablejs/-/sortablejs-1.15.2.tgz}
+    name: sortablejs
+    version: 1.15.2
     dev: false
 
   registry.npmmirror.com/source-map-js/1.0.2:

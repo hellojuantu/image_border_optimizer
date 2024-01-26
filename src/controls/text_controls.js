@@ -186,7 +186,6 @@ export default class TextControls extends GenControls {
             const lines = text.split('\n')
             const len = lines.length
             for (let i = 0; i < len; i++) {
-                console.log(lines[i])
                 document.execCommand('insertText', false, lines[i])
                 if (i < len - 1) {
                     document.execCommand("insertLineBreak")

@@ -14,13 +14,14 @@ import {
     removeClassAll,
     removeClassAllWithCallback,
     scrollToBottom,
+    sel,
     toggleClass
 } from "../gen_optimizer/gen_utils";
 import GenPoint from "../gen_optimizer/gen_point";
 import GenText from "../gen_optimizer/gen_text";
 import FileSaver from "file-saver"
 import JSZip from "jszip"
-import Dialog from "../components/dialog";
+import SettingDialog from "../components/setting_dialog";
 import GenPersistConfigManager from "../gen_optimizer/gen_persisit_config_manager";
 
 export default class PageConfigControls extends GenControls {
@@ -66,7 +67,7 @@ export default class PageConfigControls extends GenControls {
         let panelWidth = 188
         let panelHeight = 100
         sc.bindComponent('panelSelector', PanelSelector.new(this, panelWidth, panelHeight))
-        sc.bindComponent('dialog', Dialog.new(sc))
+        sc.bindComponent('settingDialog', SettingDialog.new(sc))
 
         // 注册全局场景事件
         sc.registerGlobalEvents([
@@ -100,9 +101,6 @@ export default class PageConfigControls extends GenControls {
                         self.shapeControl.resetAndUpdate([])
                         self.scene.message.success('Clear successfully.')
                     },
-                    "action.copyImageButton": function (target) {
-                        self.copyImage()
-                    },
                     "action.newBlank": function (target) {
                         let b = self.optimizer.defaultBlankPanel()
                         self.panels.push(b)
@@ -115,7 +113,7 @@ export default class PageConfigControls extends GenControls {
                         self.savePanel()
                         let v = config.index.max
                         self.switchPanel(v)
-                        scrollToBottom(e('.image-list'))
+                        scrollToBottom(e(sel(sc.pageClass.images)))
                         self.scene.message.success('新建成功')
                     },
                     "action.downloadImagesButton": async function (target) {
@@ -125,10 +123,8 @@ export default class PageConfigControls extends GenControls {
                         try {
                             toggleClass(e("#id-loading-area"), "hide")
                             let clipboardItems = await navigator.clipboard.read()
-                            console.log("clipboardItems", clipboardItems)
                             let hasImage = false
                             clipboardItems.forEach(item => {
-                                console.log("tiem", item)
                                 hasImage = item.types.filter(i => i.includes('image')).length > 0
                             })
                             if (!hasImage) {
@@ -139,7 +135,6 @@ export default class PageConfigControls extends GenControls {
                             for (let item of clipboardItems) {
                                 for (let type of item.types.filter(i => i.includes('image'))) {
                                     let blob = await item.getType(type)
-                                    console.log("blob", blob)
                                     if (blob.size > uploadConfig.max_size) {
                                         toggleClass(e("#id-loading-area"), "hide")
                                         sc.message.warning(`The size of the picture cannot exceed ${uploadConfig.max_size_desc}`)
@@ -148,7 +143,6 @@ export default class PageConfigControls extends GenControls {
                                     const reader = new FileReader();
                                     reader.readAsDataURL(blob)
                                     reader.onload = function (event) {
-                                        console.log(event.target.result)
                                         let img = new Image()
                                         img.src = event.target.result
                                         img.dataset.type = 'user_upload'
@@ -156,7 +150,7 @@ export default class PageConfigControls extends GenControls {
                                             self.optimizer.panels.push(img)
                                             sc && sc.refreshConfig([img])
                                             toggleClass(e("#id-loading-area"), "hide")
-                                            setTimeout(scrollToBottom(e('.image-list')), 100)
+                                            setTimeout(scrollToBottom(e(sel(sc.pageClass.images))), 100)
                                             self.scene.message.success('Import successfully.')
                                         }
                                     }
@@ -168,7 +162,7 @@ export default class PageConfigControls extends GenControls {
                         }
                     },
                     "action.showCompressApiSetting": function (target) {
-                        sc.getComponent('dialog').buildWith()
+                        sc.getComponent('settingDialog').buildWith()
                     },
                 },
             },
@@ -244,10 +238,11 @@ export default class PageConfigControls extends GenControls {
         sc.updateActivePanelSnapshot = function () {
             if (this.panels[config.index.value].dataset.type == 'default_blank' && this.canvas.width > 0 && this.canvas.height > 0) {
                 let ps = sc.getComponent('panelSelector')
-                let canvas = e('.image-active > div > canvas')
-                canvas.width = ps.w
-                canvas.height = ps.h
-                let ctx = canvas.getContext('2d')
+                let snapshot = e(`[data-index="${config.index.value}"] > div > canvas`)
+                // let snapshot = e('.image-active > div > canvas')
+                snapshot.width = ps.w
+                snapshot.height = ps.h
+                let ctx = snapshot.getContext('2d')
                 ctx.drawImage(this.canvas, 0, 0, ps.w * ps.ratio, ps.h * ps.ratio)
             }
         }
@@ -275,13 +270,14 @@ export default class PageConfigControls extends GenControls {
             await self.optimizer.canvas.toBlob(function (blob) {
                 const item = new ClipboardItem({"image/png": blob})
                 navigator.clipboard.write([item])
-                toggleClass(e("#id-loading-area"), "hide")
-                self.scene.message.success('Copy successfully.')
+                setTimeout(() => {
+                    toggleClass(e("#id-loading-area"), "hide")
+                    self.scene.message.success('Copy successfully.')
+                }, 200)
             })
         } catch (err) {
-            console.log("copy err", err)
             toggleClass(e("#id-loading-area"), "hide")
-            self.scene.message.error('Failed to copy.')
+            self.scene.message.error(err)
         }
     }
 
@@ -301,6 +297,7 @@ export default class PageConfigControls extends GenControls {
                 const header = {
                     "Access-Control-Allow-Origin": "*"
                 }
+
                 ajax('POST', API_SERVER, formData, header, (r) => {
                     if (isBlank(r)) {
                         reject(new Error('Response is empty.'));
@@ -329,15 +326,17 @@ export default class PageConfigControls extends GenControls {
         let cur = config.index.value
         let len = self.panels.length
         for (let i = 0; i < len; i++) {
-            self.shapeControl.removeDraggers()
-            self.savePanel()
-            self.switchPanel(i)
-            self.optimizer.updateAndDraw()
-            let idx = i + 1
-            e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
             try {
+                self.shapeControl.removeDraggers()
+                self.savePanel()
+                self.switchPanel(i)
+                self.optimizer.updateAndDraw()
+                let idx = i + 1
                 await self.addToZip(self.canvas, zip, idx + '.png')
+                e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
             } catch (err) {
+                self.savePanel()
+                self.switchPanel(cur)
                 toggleClass(e("#id-loading-area"), "hide")
                 e(".progress").style.width = "0%"
                 self.scene.message.error(err)
@@ -554,6 +553,21 @@ export default class PageConfigControls extends GenControls {
                 config.canvasHeight.value = img.height / ratio
             }
         }
+    }
+
+    movePanel(from, to) {
+        if (from === to) {
+            return
+        }
+
+        let self = this
+        let temp = self.optimizer.panels[from];
+        self.optimizer.panels.splice(from, 1)
+        self.optimizer.panels.splice(to, 0, temp)
+
+        let tempSnapshot = self.optimizer.panelSnapshots[from];
+        self.optimizer.panelSnapshots.splice(from, 1)
+        self.optimizer.panelSnapshots.splice(to, 0, temp)
     }
 
     // -------- 鼠标点击对象范围函数 --------
