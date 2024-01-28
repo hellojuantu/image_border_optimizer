@@ -27,11 +27,11 @@ export default class MainScene extends GenScene {
 
     pageLoading() {
         document.onreadystatechange = () => {
-            if (document.readyState == "complete") {
+            if (document.readyState === "complete") {
                 log('____ complete')
                 // e('#id-loading-area').remove()
-                toggleClass(e("#id-loading-area"), "hide")
                 e('body').classList.remove('hide')
+                toggleClass(e("#id-loading-area"), "hide")
             }
         }
     }

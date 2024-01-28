@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --env MODE_ENV=development --env API_SERVER=http://localhost:80 --static src ",
-    "build": "webpack"
+    "build": "webpack --env MODE_ENV=product"
   },
   "keywords": [],
   "author": "",
