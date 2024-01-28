@@ -251,7 +251,7 @@ export var uploadConfig = {
     max_size_desc: "3MB"
 }
 
-export var ENV = process.env.NODE_ENV
+export var ENV = process.env.MODE_ENV
 
 export const persistedConfig = {
     API_TYPE: {
