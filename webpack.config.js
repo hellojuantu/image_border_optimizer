@@ -7,6 +7,9 @@ module.exports = (env) => {
     let modeEnv = JSON.stringify(env.MODE_ENV)
     let apiServer = JSON.stringify(env.API_SERVER)
 
+    console.log('modeEnv', modeEnv)
+    console.log('apiServer', apiServer)
+
     return {
         mode: "development",
         entry: './src/main.js',
