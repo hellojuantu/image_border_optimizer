@@ -1,7 +1,9 @@
 const path = require('path')
 const webpack = require("webpack")
-const htmlWebpackPlugin = require("html-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 const {CleanWebpackPlugin} = require("clean-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlCriticalWebpackPlugin = require("html-critical-webpack-plugin");
 
 module.exports = (env) => {
     let modeEnv = JSON.stringify(env.MODE_ENV)
@@ -11,7 +13,7 @@ module.exports = (env) => {
     console.log('apiServer', apiServer)
 
     return {
-        mode: "development",
+        mode: 'development',
         entry: './src/main.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -27,7 +29,7 @@ module.exports = (env) => {
             },
         },
         plugins: [
-            new htmlWebpackPlugin({
+            new HtmlWebpackPlugin({
                 template: path.resolve(__dirname, './src/index.html'),
                 filename: 'index.html',
                 favicon: path.resolve('./src/favicon.ico')
@@ -39,11 +41,12 @@ module.exports = (env) => {
                     API_SERVER: apiServer,
                 }
             }),
+            new MiniCssExtractPlugin({})
         ],
         module: {
             rules: [
                 {
-                    test: /\.css$/, use: ['style-loader', 'css-loader']
+                    test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader']
                 },
                 {
                     test: /\.(htm|html)$/,
