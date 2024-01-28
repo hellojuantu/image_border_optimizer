@@ -3,7 +3,6 @@ const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const {CleanWebpackPlugin} = require("clean-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlCriticalWebpackPlugin = require("html-critical-webpack-plugin");
 
 module.exports = (env) => {
     let modeEnv = JSON.stringify(env.MODE_ENV)
