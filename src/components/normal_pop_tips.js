@@ -33,7 +33,7 @@ export default class NormalPopTips extends GenComponent {
 
     template() {
         return `
-        <div id="normal-pop-tips" class="gen-pop-tips el-popover el-popper">
+        <div data-value="poptips.area" class="gen-pop-tips el-popover el-popper">
             <div class="el-popconfirm">
                 <p class="el-popconfirm__main" style="margin-bottom: 10px">
                     <i class="el-popconfirm__icon el-icon-question" style="color: rgb(255, 153, 0);"></i>

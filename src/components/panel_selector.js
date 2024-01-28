@@ -73,7 +73,7 @@ export default class PanelSelector extends GenComponent {
                                 FileSaver.saveAs(content, name)
                                 toggleClass(e("#id-loading-area"), "hide")
                                 e(".progress").style.width = "0%"
-                                self.scene.message.success('Export successfully.')
+                                self.scene.message.success('导出成功')
                             })
                         } catch (err) {
                             toggleClass(e("#id-loading-area"), "hide")
@@ -156,14 +156,12 @@ export default class PanelSelector extends GenComponent {
                 sc.message.success('删除成功')
             }
         }, () => {
-
         })
     }
 
     handleGlobalClickEvent(event) {
         let target = event.target
         if (target.dataset.value !== 'action.delete' && this.popTips.show === true) {
-            console.log("close close")
             this.popTips.close()
         }
     }

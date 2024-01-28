@@ -127,7 +127,7 @@ export default class SettingDialog extends GenComponent {
                     },
                     "action.restore": function (target) {
                         let param = target.dataset.param
-                        console.log("restore", param, settingTable.row(param))
+                        log("restore", param, settingTable.row(param))
                         let row = settingTable.row(param);
                         settingTable.updateRow(param, {value: row.originValue, updated: false})
                     }

@@ -33,7 +33,7 @@ export default class SettingPopTips extends GenComponent {
     template() {
         return `
         <div class="gen-pop-tips el-popover el-popper">            
-            <p style="font-size: 12px; margin-bottom: 10px;">修改参数为:</p>
+            <p style="font-size: 12px; margin-bottom: 10px;">修改设置为:</p>
             <div style="font-size: 12px; margin-bottom: 10px;" class="el-input el-input--mini">
                 <input id="pop-tips-input" class="gen-input el-input__inner">
             </div>
@@ -56,8 +56,8 @@ export default class SettingPopTips extends GenComponent {
         let targetHeight = target.offsetHeight;
 
         let tipToolHeight = tipTool.offsetHeight;
-        let left = targetRect.right + 10; // 距离目标元素右侧的距离
-        let top = targetRect.top + (targetHeight / 2) - (tipToolHeight / 2); // 使 tipTool 在目标元素的中间水平线上对齐
+        let left = targetRect.right + 10
+        let top = targetRect.top + (targetHeight / 2) - (tipToolHeight / 2)
 
         tipTool.style.left = left + 'px';
         tipTool.style.top = top + 'px';

@@ -1,3 +1,7 @@
+body {
+    font-family: 'iconfont', serif;
+}
+
 @media (max-width: 700px) {
     .right {
         display: none;

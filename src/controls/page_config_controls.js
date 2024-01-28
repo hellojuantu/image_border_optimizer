@@ -69,8 +69,7 @@ export default class PageConfigControls extends GenControls {
         sc.bindComponent('settingDialog', SettingDialog.new(sc))
 
         // global document
-        bind('body', 'click', function (event) {
-            log('global ', event)
+        bind('#app', 'click', function (event) {
             sc.getComponent('panelSelector').handleGlobalClickEvent(event)
         })
 
@@ -104,7 +103,7 @@ export default class PageConfigControls extends GenControls {
                         self.penControl.resetAndUpdate([])
                         self.textControl.resetAndUpdate([])
                         self.shapeControl.resetAndUpdate([])
-                        self.scene.message.success('Clear successfully.')
+                        self.scene.message.success('清理成功')
                     },
                     "action.newBlank": function () {
                         let b = self.optimizer.defaultBlankPanel()
@@ -134,7 +133,7 @@ export default class PageConfigControls extends GenControls {
                             })
                             if (!hasImage) {
                                 toggleClass(e("#id-loading-area"), "hide")
-                                sc.message.warning('Please try again There are no pictures in the clipboard.')
+                                sc.message.warning('请重试 剪贴板里没有图片')
                                 return
                             }
                             for (let item of clipboardItems) {
@@ -142,7 +141,7 @@ export default class PageConfigControls extends GenControls {
                                     let blob = await item.getType(type)
                                     if (blob.size > uploadConfig.max_size) {
                                         toggleClass(e("#id-loading-area"), "hide")
-                                        sc.message.warning(`The size of the picture cannot exceed ${uploadConfig.max_size_desc}`)
+                                        sc.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
                                         break
                                     }
                                     const reader = new FileReader();
@@ -158,14 +157,14 @@ export default class PageConfigControls extends GenControls {
                                             setTimeout(() => {
                                                 scrollToBottom(e(sel(sc.pageClass.images)))
                                             }, 100)
-                                            self.scene.message.success('Import successfully.')
+                                            self.scene.message.success('导入成功')
                                         }
                                     }
                                 }
                             }
                         } catch (err) {
                             toggleClass(e("#id-loading-area"), "hide")
-                            sc.message.error('Importing picture from clipboard failed.')
+                            sc.message.error('从剪贴板导入图片失败')
                         }
                     },
                     "action.showCompressApiSetting": function () {
@@ -279,12 +278,12 @@ export default class PageConfigControls extends GenControls {
                 navigator.clipboard.write([item])
                 setTimeout(() => {
                     toggleClass(e("#id-loading-area"), "hide")
-                    self.scene.message.success('Copy successfully.')
+                    self.scene.message.success('复制成功')
                 }, 200)
             })
         } catch (err) {
             toggleClass(e("#id-loading-area"), "hide")
-            self.scene.message.error(err)
+            self.scene.message.error('复制失败' + err)
         }
     }
 
@@ -361,7 +360,7 @@ export default class PageConfigControls extends GenControls {
             FileSaver.saveAs(content, name)
             toggleClass(e("#id-loading-area"), "hide")
             e(".progress").style.width = "0%"
-            self.scene.message.success('Export successfully.')
+            self.scene.message.success('导出成功')
         })
     }
 
@@ -389,7 +388,7 @@ export default class PageConfigControls extends GenControls {
                 let file = files[i]
                 if (file.size > uploadConfig.max_size) {
                     toggleClass(e("#id-loading-area"), "hide")
-                    self.scene.message.warning(`The size of the picture cannot exceed ${uploadConfig.max_size_desc}`)
+                    self.scene.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`)
                     break
                 }
                 let reader = new FileReader()
@@ -405,7 +404,7 @@ export default class PageConfigControls extends GenControls {
                         if (tempFiles.length == files.length) {
                             log("tempFiles", tempFiles, files)
                             toggleClass(e("#id-loading-area"), "hide")
-                            self.scene.message.success('Import successfully.')
+                            self.scene.message.success('导入成功')
                         }
                     }
                 }
