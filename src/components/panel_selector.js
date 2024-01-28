@@ -14,7 +14,7 @@ import {config} from "../config/config";
 import Sortable from "sortablejs";
 import JSZip from "jszip";
 import FileSaver from 'file-saver'
-import GenDialog from "../gen_optimizer/gen_dialog";
+import NormalPopTips from "./normal_pop_tips";
 
 export default class PanelSelector extends GenComponent {
     constructor(control, w, h) {
@@ -24,6 +24,7 @@ export default class PanelSelector extends GenComponent {
         this.h = h
         this.margin = 1
         this.ratio = this.scene.optimizer.ratio
+        this.popTips = NormalPopTips.new(this.scene)
     }
 
     static new(...args) {
@@ -53,7 +54,7 @@ export default class PanelSelector extends GenComponent {
                         let imageBlock = sel(sc.pageClass.imageBlock)
                         let outer = target.closest(imageBlock)
                         let delId = parseInt(outer.dataset.index)
-                        self.deleteImageWithDialog(imageBlock, delId)
+                        self.deleteImageWithDialog(target, imageBlock, delId)
                     },
                     "action.download": async function (target) {
                         let imageBlock = sel(sc.pageClass.imageBlock)
@@ -130,52 +131,41 @@ export default class PanelSelector extends GenComponent {
         })
     }
 
-    deleteImageWithDialog(imageBlock, delId) {
+    deleteImageWithDialog(target, imageBlock, delId) {
         let self = this
         let sc = self.scene
-        let actionHtml = `
-                        <button data-value="action.cancel" class="dialog-button el-button el-button--default is-plain el-button--small">取消</button>
-                        <button data-value="action.confirm" class="dialog-button el-button el-button--primary el-button--small">确定</button>`
-
-        let callback = function (dialog) {
-            let events = [{
-                eventName: 'click',
-                className: sc.pageClass.dialogFooter,
-                configToEvents: {
-                    "action.cancel": function (target) {
-                        dialog.close()
-                    },
-                    "action.confirm": function (target) {
-                        // only one can't delete
-                        if (es(imageBlock).length <= 1) {
-                            sc.message.info('这是最后一个 panel 了, 留下 ta 好吗')
-                            dialog.close()
-                            return
-                        }
-                        removeWithCondition(imageBlock, (e) => {
-                            return e.dataset.index == delId
-                        })
-                        let bs = es(imageBlock)
-                        self.control.panelControl.delete(delId)
-                        config.index.max = self.panels.length - 1
-                        for (let i = 0; i < bs.length; i++) {
-                            bs[i].dataset.index = i
-                        }
-                        if (delId == config.index.value) {
-                            self.control.switchPanel(delId - 1 <= 0 ? 0 : delId - 1)
-                        } else if (delId < config.index.value) {
-                            config.index.value -= 1
-                        }
-                        sc.message.success('删除成功')
-                        dialog.close()
-                    }
+        this.popTips.buildWith(target, () => {
+            // only one can't delete
+            if (es(imageBlock).length <= 1) {
+                sc.message.info('这是最后一个 panel 了, 留下 ta 好吗')
+            } else {
+                removeWithCondition(imageBlock, (e) => {
+                    return e.dataset.index == delId
+                })
+                let bs = es(imageBlock)
+                self.control.panelControl.delete(delId)
+                config.index.max = self.panels.length - 1
+                for (let i = 0; i < bs.length; i++) {
+                    bs[i].dataset.index = i
                 }
-            }]
-            sc.registerGlobalEvents(events)
+                if (delId == config.index.value) {
+                    self.control.switchPanel(delId - 1 <= 0 ? 0 : delId - 1)
+                } else if (delId < config.index.value) {
+                    config.index.value -= 1
+                }
+                sc.message.success('删除成功')
+            }
+        }, () => {
+
+        })
+    }
+
+    handleGlobalClickEvent(event) {
+        let target = event.target
+        if (target.dataset.value !== 'action.delete' && this.popTips.show === true) {
+            console.log("close close")
+            this.popTips.close()
         }
-
-
-        GenDialog.new(sc, '删除操作', '是否要删除当前画布', actionHtml, callback).buildWith()
     }
 
     builder(panelSnapshots) {

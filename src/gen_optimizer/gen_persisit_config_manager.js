@@ -11,11 +11,13 @@ export default class GenPersistConfigManager {
     loadPersistConfig() {
         for (let key in persistedConfig) {
             let item = localStorage.getItem(key);
-            if (item != null) {
+            if (item == null) {
+                delete localStorage[key]
+            } else {
                 try {
-                    persistedConfig[key] = JSON.parse(item);
+                    persistedConfig[key].value = JSON.parse(item).value
                 } catch (e) {
-                    delete localStorage[key];
+                    delete localStorage[key]
                 }
             }
         }

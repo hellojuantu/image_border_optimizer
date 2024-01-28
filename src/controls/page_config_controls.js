@@ -1,10 +1,10 @@
 import GenControls from "../gen_optimizer/gen_controls";
 import Attribute from "../components/attribute";
 import PanelSelector from "../components/panel_selector";
-import {API_SERVER, config, uploadConfig} from "../config/config";
+import {API_SERVER, config, persistedConfig, uploadConfig} from "../config/config";
 import {
     ajax,
-    base64ToBlob,
+    base64ToBlob, bind,
     e,
     es,
     genRandomString,
@@ -22,7 +22,6 @@ import GenText from "../gen_optimizer/gen_text";
 import FileSaver from "file-saver"
 import JSZip from "jszip"
 import SettingDialog from "../components/setting_dialog";
-import GenPersistConfigManager from "../gen_optimizer/gen_persisit_config_manager";
 
 export default class PageConfigControls extends GenControls {
     constructor(scene, panelControl, penControl, textControl, shapeControl) {
@@ -68,6 +67,12 @@ export default class PageConfigControls extends GenControls {
         let panelHeight = 100
         sc.bindComponent('panelSelector', PanelSelector.new(this, panelWidth, panelHeight))
         sc.bindComponent('settingDialog', SettingDialog.new(sc))
+
+        // global document
+        bind('body', 'click', function (event) {
+            log('global ', event)
+            sc.getComponent('panelSelector').handleGlobalClickEvent(event)
+        })
 
         // 注册全局场景事件
         sc.registerGlobalEvents([
@@ -284,8 +289,9 @@ export default class PageConfigControls extends GenControls {
     async addToZip(canvas, zip, name) {
         return new Promise((resolve, reject) => {
             canvas.toBlob(function (blob) {
-                const tinyPngKey = GenPersistConfigManager.new().getPersistConfig("API_KEY.tinyPng");
-                if (!tinyPngKey) {
+                let apiType = persistedConfig.API_TYPE.value
+                let apiValue = persistedConfig.API_VALUE.value;
+                if (apiType === 'default' || apiValue.length === 0) {
                     zip.file(name, blob)
                     resolve()
                     return
@@ -293,7 +299,7 @@ export default class PageConfigControls extends GenControls {
 
                 const formData = new FormData();
                 formData.append('file', blob, name);
-                formData.append('apiKey', tinyPngKey);
+                formData.append('apiKey', apiValue);
                 const header = {
                     "Access-Control-Allow-Origin": "*"
                 }

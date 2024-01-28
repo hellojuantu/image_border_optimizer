@@ -251,12 +251,27 @@ export var uploadConfig = {
     max_size_desc: "3MB"
 }
 
-export var ENV = "product"
+export var ENV = "dev"
 
 export const persistedConfig = {
-    API_KEY: {
-        tinyPng: ""
-    }
+    API_TYPE: {
+        defaultValue: "tinyPng",
+        value: "tinyPng",
+        desc: "tinyPng / default",
+        range: [],
+    },
+    API_VALUE: {
+        defaultValue: "",
+        value: "",
+        desc: `获取密钥：<a class="gen-table-config-desc" href="https://tinypng.com/" target="_blank">tinyPng</a>`,
+        range: []
+    },
+    // LOCALE_LAN: {
+    //     defaultValue: "zh",
+    //     value: "zh",
+    //     desc: "zh / en",
+    //     range: ['zh', 'en'],
+    // }
 }
 
 export var API_SERVER = "http://localhost:80/compressImg"

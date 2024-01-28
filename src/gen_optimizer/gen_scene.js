@@ -104,10 +104,10 @@ export default class GenScene {
                 let eventId = self.eventId(className, eventName, bindVar)
                 log("eventId", eventId)
                 let eventFunc = self.events[eventId]
-                before && before(bindVar, target)
+                before && before(bindVar, target, event)
                 // 某个配置区域独有的事件
-                eventFunc && eventFunc(target)
-                after && after(bindVar, target)
+                eventFunc && eventFunc(target, event)
+                after && after(bindVar, target, event)
             }, useCapture)
         }
     }

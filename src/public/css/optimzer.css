@@ -744,3 +744,31 @@
     -moz-animation: progressing 2s ease-out;
     -webkit-animation: progressing 2s ease-out;
 }
+
+.gen-pop-tips {
+    width: 60px;
+    transition: all .3s;
+}
+
+.gen-table-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    box-sizing: border-box;
+}
+
+.gen-table-action-icon {
+    font-size: 15px;
+}
+
+.gen-table-config-desc {
+    text-decoration: none;
+    color: #5cb6ff;
+}
+
+
+/*!* CSS *!*/
+/*::selection {*/
+/*    background-color: transparent;*/
+/*}*/
