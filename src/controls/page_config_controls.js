@@ -81,7 +81,7 @@ export default class PageConfigControls extends GenControls {
                 eventName: "click",
                 className: sc.pageClass.button,
                 configToEvents: {
-                    "config.preButton": function (target) {
+                    "config.preButton": function () {
                         // log("preButton", config.index.value)
                         if (config.index.value > 0) {
                             self.savePanel()
@@ -89,7 +89,7 @@ export default class PageConfigControls extends GenControls {
                             self.switchPanel(v)
                         }
                     },
-                    "config.nextButton": function (target) {
+                    "config.nextButton": function () {
                         // log("nextButton", config.index.value, self.images.length)
                         if (config.index.value < self.panels.length - 1) {
                             // 保存当前图片的修改
@@ -99,14 +99,14 @@ export default class PageConfigControls extends GenControls {
                             self.switchPanel(v)
                         }
                     },
-                    "config.penClearButton": function (target) {
+                    "config.penClearButton": function () {
                         // log("penClearButton")
                         self.penControl.resetAndUpdate([])
                         self.textControl.resetAndUpdate([])
                         self.shapeControl.resetAndUpdate([])
                         self.scene.message.success('Clear successfully.')
                     },
-                    "action.newBlank": function (target) {
+                    "action.newBlank": function () {
                         let b = self.optimizer.defaultBlankPanel()
                         self.panels.push(b)
                         let tempPanels = []
@@ -121,10 +121,10 @@ export default class PageConfigControls extends GenControls {
                         scrollToBottom(e(sel(sc.pageClass.images)))
                         self.scene.message.success('新建成功')
                     },
-                    "action.downloadImagesButton": async function (target) {
+                    "action.downloadImagesButton": async function () {
                         await self.downloadImages()
                     },
-                    "action.loadFromClipboard": async function (target) {
+                    "action.loadFromClipboard": async function () {
                         try {
                             toggleClass(e("#id-loading-area"), "hide")
                             let clipboardItems = await navigator.clipboard.read()
@@ -155,7 +155,9 @@ export default class PageConfigControls extends GenControls {
                                             self.optimizer.panels.push(img)
                                             sc && sc.refreshConfig([img])
                                             toggleClass(e("#id-loading-area"), "hide")
-                                            setTimeout(scrollToBottom(e(sel(sc.pageClass.images))), 100)
+                                            setTimeout(() => {
+                                                scrollToBottom(e(sel(sc.pageClass.images)))
+                                            }, 100)
                                             self.scene.message.success('Import successfully.')
                                         }
                                     }
@@ -166,7 +168,7 @@ export default class PageConfigControls extends GenControls {
                             sc.message.error('Importing picture from clipboard failed.')
                         }
                     },
-                    "action.showCompressApiSetting": function (target) {
+                    "action.showCompressApiSetting": function () {
                         sc.getComponent('settingDialog').buildWith()
                     },
                 },
@@ -304,7 +306,7 @@ export default class PageConfigControls extends GenControls {
                     "Access-Control-Allow-Origin": "*"
                 }
 
-                ajax('POST', API_SERVER, formData, header, (r) => {
+                ajax('POST', API_SERVER + '/compressImg', formData, header, (r) => {
                     if (isBlank(r)) {
                         reject(new Error('Response is empty.'));
                     }

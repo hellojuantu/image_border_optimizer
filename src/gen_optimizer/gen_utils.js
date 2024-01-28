@@ -2,7 +2,7 @@ import {ENV} from "../config/config";
 
 export const e = sel => document.querySelector(sel)
 
-export var log = ENV === 'dev' ? console.log.bind(console) : () => {
+export var log = ENV === 'development' ? console.log.bind(console) : () => {
 };
 
 export const es = sel => document.querySelectorAll(sel)
@@ -34,7 +34,7 @@ export const appendHtml = function (div, html) {
 export const uuid = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = Math.random() * 16 | 0
-        let v = (c == 'x' ? r : (r & 0x3 | 0x8))
+        let v = (c === 'x' ? r : (r & 0x3 | 0x8))
         return v.toString(16)
     });
 }

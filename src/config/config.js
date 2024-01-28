@@ -251,7 +251,7 @@ export var uploadConfig = {
     max_size_desc: "3MB"
 }
 
-export var ENV = "dev"
+export var ENV = process.env.NODE_ENV
 
 export const persistedConfig = {
     API_TYPE: {
@@ -274,4 +274,4 @@ export const persistedConfig = {
     // }
 }
 
-export var API_SERVER = "http://localhost:80/compressImg"
+export var API_SERVER = process.env.API_SERVER

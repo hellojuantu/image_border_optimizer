@@ -26,6 +26,12 @@ module.exports = {
             favicon: path.resolve('./src/favicon.ico')
         }),
         new CleanWebpackPlugin(),
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("development"),
+                API_SERVER: JSON.stringify("http://localhost:80"),
+            }
+        }),
     ],
     module: {
         rules: [
