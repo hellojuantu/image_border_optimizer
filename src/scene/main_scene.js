@@ -31,6 +31,7 @@ export default class MainScene extends GenScene {
                 log('____ complete')
                 // e('#id-loading-area').remove()
                 toggleClass(e("#id-loading-area"), "hide")
+                e('body').classList.remove('hide')
             }
         }
     }
