@@ -3,7 +3,7 @@
 
 ![GenOptimizer Demo](https://github.com/hellojuantu/image_border_optimizer/blob/compress_image/src/public/img/use_demo.gif?raw=true)
 
-- [GenOptimizer 在线演示地址](https://genoptimizer.cn)
+- [GenOptimizer 在线演示地址](https://genoptimizer.cn/?hidpi=true)
 
 ## 项目介绍
 - 支持多图操作
@@ -19,8 +19,9 @@
 ## TODO
 有问题欢迎提 Issue
 - [ ] 支持画布组件层级 [Issue 4](https://github.com/hellojuantu/image_border_optimizer/issues/4)
-- [ ] 支持图片不压缩为 ZIP 直接导出
+- [ ] 支持单张图片不压缩为 ZIP 直接导出
 - [ ] 支持图片导出设置图片名称和后缀
+- [ ] 支持设置切换高清画布
 - [ ] ...
 
 ## 更新日志
