@@ -18,7 +18,7 @@
 
 ## TODO
 有问题欢迎提 Issue
-- [ ] 支持画布组件层级 [Issue 4](https://github.com/hellojuantu/image_border_optimizer/issues/4)
+- [ ] 支持画布组件层级 [Issue #4](https://github.com/hellojuantu/image_border_optimizer/issues/4)
 - [ ] 支持单张图片不压缩为 ZIP 直接导出
 - [ ] 支持图片导出设置图片名称和后缀
 - [ ] 支持设置切换高清画布
