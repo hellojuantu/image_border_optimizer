@@ -6,9 +6,6 @@
 - [GenOptimizer 在线演示地址](https://genoptimizer.cn)
 
 ## 项目介绍
-
-![GenOptimizer Demo](https://raw.githubusercontent.com/hellojuantu/image_border_optimizer/compress_image/src/public/img/demo.jpeg)
-
 - 支持多图操作
 - 支持图片拖拽添加
 - 支持所有属性的动态配置
@@ -24,7 +21,7 @@
 - [ ] 支持画布组件层级 [Issue 4](https://github.com/hellojuantu/image_border_optimizer/issues/4)
 - [ ] 支持图片不压缩为 ZIP 直接导出
 - [ ] 支持图片导出设置图片名称和后缀
-
+- [ ] ...
 
 ## 更新日志
 ### GenOptimizer v2.5.1
