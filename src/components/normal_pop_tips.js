@@ -33,7 +33,7 @@ export default class NormalPopTips extends GenComponent {
 
     template() {
         return `
-        <div data-value="poptips.area" class="gen-pop-tips el-popover el-popper">
+        <div data-value="poptips.area" class="gen-pop-tips el-popover el-popper" x-placement="right">
             <div class="el-popconfirm">
                 <p class="el-popconfirm__main" style="margin-bottom: 10px">
                     <i class="el-popconfirm__icon el-icon-question" style="color: rgb(255, 153, 0);"></i>
@@ -43,7 +43,7 @@ export default class NormalPopTips extends GenComponent {
                     <button data-value="action.cancel" type="button" class="el-button el-button--text el-button--mini">取消</button>
                     <button data-value="action.confirm" type="button" class="el-button el-button--primary el-button--mini">确定</button>
                 </div>
-                <div x-arrow="" class="popper__arrow" style="left: 100.5px;"></div>   
+                <div x-arrow="" class="popper__arrow" style="transform: translateY(-50%);"></div>   
             </div>
         </div>
         `
@@ -58,7 +58,7 @@ export default class NormalPopTips extends GenComponent {
         let targetHeight = target.offsetHeight
 
         let tipToolHeight = tipTool.offsetHeight
-        let left = targetRect.right + 5
+        let left = targetRect.right
         let top = targetRect.top + (targetHeight / 2) - (tipToolHeight / 2)
 
         tipTool.style.left = left + 'px'

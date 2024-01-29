@@ -32,7 +32,7 @@ export default class SettingPopTips extends GenComponent {
 
     template() {
         return `
-        <div class="gen-pop-tips el-popover el-popper">            
+        <div class="gen-pop-tips el-popover el-popper" x-placement="right">            
             <p style="font-size: 12px; margin-bottom: 10px;">修改设置为:</p>
             <div style="font-size: 12px; margin-bottom: 10px;" class="el-input el-input--mini">
                 <input id="pop-tips-input" class="gen-input el-input__inner">
@@ -42,7 +42,7 @@ export default class SettingPopTips extends GenComponent {
                     确定
                 </button>
             </div>
-            <div x-arrow="" class="popper__arrow" style="left: 100.5px;"></div>   
+            <div x-arrow="" class="popper__arrow" style="transform: translateY(-50%);"></div>   
         </div>
         `
     }
@@ -50,18 +50,18 @@ export default class SettingPopTips extends GenComponent {
     builder(target) {
         e('.gen-pop-tips')?.remove()
         this.show = true
-        appendHtml(e('body'), this.template());
-        let tipTool = e('.gen-pop-tips');
-        let targetRect = target.getBoundingClientRect();
-        let targetHeight = target.offsetHeight;
+        appendHtml(e('body'), this.template())
+        let tipTool = e('.gen-pop-tips')
+        let targetRect = target.getBoundingClientRect()
+        let targetHeight = target.offsetHeight
 
-        let tipToolHeight = tipTool.offsetHeight;
-        let left = targetRect.right + 10
+        let tipToolHeight = tipTool.offsetHeight
+        let left = targetRect.right
         let top = targetRect.top + (targetHeight / 2) - (tipToolHeight / 2)
 
-        tipTool.style.left = left + 'px';
-        tipTool.style.top = top + 'px';
-        tipTool.style.display = "block";
+        tipTool.style.left = left + 'px'
+        tipTool.style.top = top + 'px'
+        tipTool.style.display = "block"
     }
 
     buildWith(target, callback) {
