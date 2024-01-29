@@ -263,8 +263,8 @@ export const persistedConfig = {
     API_VALUE: {
         defaultValue: "",
         value: "",
-        desc: `获取密钥：<a class="gen-table-config-desc" href="https://tinypng.com/" target="_blank">tinyPng</a>`,
-        range: []
+        desc: `获取密钥：<a class="gen-table-config-desc" href="https://tinypng.com/developers" target="_blank">tinyPng</a>`,
+        range: [],
     },
     // LOCALE_LAN: {
     //     defaultValue: "zh",

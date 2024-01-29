@@ -574,7 +574,11 @@ export default class PageConfigControls extends GenControls {
 
         let tempSnapshot = self.optimizer.panelSnapshots[from];
         self.optimizer.panelSnapshots.splice(from, 1)
-        self.optimizer.panelSnapshots.splice(to, 0, temp)
+        self.optimizer.panelSnapshots.splice(to, 0, tempSnapshot)
+
+        let tempImageChanges = self.panelControl.imageChanges[from]
+        self.panelControl.imageChanges.splice(from, 1)
+        self.panelControl.imageChanges.splice(to, 0, tempImageChanges)
     }
 
     // -------- 鼠标点击对象范围函数 --------
