@@ -1,8 +1,8 @@
-import "./public/css/datatable.min.css"
+import "./public/css/datatable.css"
 import "./public/css/app.css"
 import "./public/css/optimzer.css"
 import "./public/css/message.css"
-import "./public/css/elementUI.css"
+import "./public/css/element-ui.css"
 import "./public/css/dialog.css"
 import "./public/js/hidpi-canvas.min"
 import GenOptimizer from "./gen_optimizer/gen_optimizer";

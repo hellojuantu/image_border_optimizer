@@ -14,7 +14,7 @@
 
 .pagination li.active a {
     cursor: default;
-    color: gray
+    color: rgb(128, 128, 128)
 }
 
 .sorting {
@@ -35,7 +35,7 @@
 .datatable-load-bar {
     width: 100%;
     margin: 8px 0;
-    border: 1px solid gray;
+    border: 1px solid rgb(128, 128, 128);
     height: 10px
 }
 
@@ -44,11 +44,6 @@
     background-color: #AEF
 }
 
-/*!
-* Bootstrap v3.3.4 (http://getbootstrap.com)
-* Copyright 2011-2015 Twitter, Inc.
-* Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-*//*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 table {
     border-spacing: 0;
     border-collapse: collapse
@@ -58,7 +53,6 @@ td, th {
     padding: 0
 }
 
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 .table {
     border-collapse: collapse !important
 }
@@ -231,7 +225,7 @@ table td[class*=col-], table th[class*=col-] {
     }
 }
 
-,
+
 .panel > .panel-collapse > .table, .panel > .table, .panel > .table-responsive > .table {
     margin-bottom: 0
 }

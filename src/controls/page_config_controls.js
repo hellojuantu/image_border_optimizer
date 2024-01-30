@@ -307,18 +307,18 @@ export default class PageConfigControls extends GenControls {
 
                 ajax('POST', API_SERVER + '/compressImg', formData, header, (r) => {
                     if (isBlank(r)) {
-                        reject(new Error('Response is empty.'));
+                        reject('Request Error.');
                     }
                     try {
                         let res = JSON.parse(r);
                         if (res.data == null) {
-                            reject(new Error(res.error));
+                            reject(res.error);
                         }
                         let imgBlob = base64ToBlob(res.data);
                         zip.file(name, imgBlob)
                         resolve()
                     } catch (error) {
-                        reject(new Error(error));
+                        reject('Request Error.');
                     }
                 })
             })

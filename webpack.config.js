@@ -3,6 +3,8 @@ const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const {CleanWebpackPlugin} = require("clean-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
     let modeEnv = JSON.stringify(env.MODE_ENV)
@@ -12,11 +14,53 @@ module.exports = (env) => {
     console.log('apiServer', apiServer)
 
     return {
-        mode: 'development',
-        entry: './src/main.js',
+        mode: 'production',
+        entry: {
+            shared: [
+                'jszip',
+                'file-saver',
+                'sortablejs',
+            ],
+            main: {
+                import: './src/main.js',
+                dependOn: 'shared',
+            },
+        },
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: 'bundle.js'
+            filename: '[name].bundle.js'
+        },
+        optimization: {
+            minimize: true,
+            minimizer: [
+                new TerserJSPlugin({
+                    extractComments: false
+                }),
+                new CssMinimizerPlugin({
+                    minimizerOptions: {
+                        parallel: true,
+                        preset: [
+                            "default",
+                            {
+                                discardComments: {removeAll: true},
+                            },
+                        ],
+                    },
+                }),
+            ],
+            splitChunks: {
+                chunks: "all",
+                minSize: 1024 * 300,
+                maxSize: 1024 * 600,
+                cacheGroups: {
+                    styles: {
+                        name: 'styles',
+                        test: /\.css$/,
+                        chunks: 'all',
+                        enforce: true,
+                    },
+                }
+            }
         },
         devServer: {
             open: true,
@@ -40,12 +84,17 @@ module.exports = (env) => {
                     API_SERVER: apiServer,
                 }
             }),
-            new MiniCssExtractPlugin({})
+            new MiniCssExtractPlugin({
+                filename: '[name].bundle.css',
+                chunkFilename: '[name].chunk.css'
+            }),
+            new CssMinimizerPlugin(),
         ],
         module: {
             rules: [
                 {
-                    test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader']
+                    test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                    exclude: /node_modules/,
                 },
                 {
                     test: /\.(htm|html)$/,
@@ -82,6 +131,9 @@ module.exports = (env) => {
                 buffer: false,
                 process: false,
             }
+        },
+        performance: {
+            hints: false,
         },
     }
 }
