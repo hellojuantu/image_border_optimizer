@@ -31,7 +31,7 @@
 }
 
 .dialog .dialog-main {
-    width: 30%;
+    width: 680px;
     background-color: #fff;
     margin: 30px auto;
     border-radius: 6px;
@@ -76,7 +76,7 @@
 }
 
 .dialog-appear .dialog-main {
-    transform: translateY(50%);
+    transform: translateY(30%);
 }
 
 .dialog-content {
