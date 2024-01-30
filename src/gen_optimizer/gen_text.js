@@ -1,6 +1,6 @@
 import GenShape from "./gen_shape";
 import {config} from "../config/config";
-import {calTextWH, getRows, isBlank} from "./gen_utils";
+import {calTextWH, getRows, isNotBlank} from "./gen_utils";
 import Vector from "./gen_vector";
 
 export default class GenText extends GenShape {
@@ -97,7 +97,7 @@ export default class GenText extends GenShape {
         let max = lines[0]
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
-            if (!isBlank(line) && calTextWH(line, this.font).w > calTextWH(max, this.font).w) {
+            if (isNotBlank(line) && calTextWH(line, this.font).w > calTextWH(max, this.font).w) {
                 max = line
             }
         }

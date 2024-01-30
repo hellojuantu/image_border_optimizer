@@ -1,4 +1,4 @@
-import {e, log, scrollToBottom, toggleClass} from "./gen_utils"
+import {e, genRandomString, log, scrollToBottom, toggleClass} from "./gen_utils"
 import {config, uploadConfig} from "../config/config"
 import GenPersistConfigManager from "./gen_persisit_config_manager";
 
@@ -157,6 +157,7 @@ export default class GenOptimizer {
         image.width = this.blankPanel.w
         image.height = this.blankPanel.h
         image.dataset.type = 'default_blank'
+        image.dataset.name = 'default_blank_' + genRandomString(5)
         return image
     }
 
@@ -323,6 +324,7 @@ export default class GenOptimizer {
                     let img = new Image()
                     img.src = event.target.result
                     img.dataset.type = 'user_upload'
+                    img.dataset.name = file.name
                     img.onload = function () {
                         tempPanels.push(img)
                         self.panels.push(img)

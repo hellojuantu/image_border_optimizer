@@ -257,15 +257,21 @@ export const persistedConfig = {
     API_TYPE: {
         defaultValue: "tinyPng",
         value: "tinyPng",
-        desc: "tinyPng / default",
-        range: [],
+        desc: "<div>tinyPng（TinyPng API 压缩）</div> <div>default（不压缩导出）</div>",
+        range: ['tinyPng', 'default'],
     },
     API_VALUE: {
         defaultValue: "",
         value: "",
-        desc: `获取密钥：<a class="gen-table-config-desc" href="https://tinypng.com/developers" target="_blank">tinyPng</a>`,
+        desc: `获取密钥：<a class="gen-table-config-desc" href="https://tinypng.com/developers" target="_blank">TinyPng API</a>`,
         range: [],
     },
+    EXPORT_IMAGE_RULE: {
+        defaultValue: "number",
+        value: "number",
+        desc: "<div>original（原文件名导出）</div> <div>number（数字递增导出）</div>",
+        range: ['number', 'original'],
+    }
     // LOCALE_LAN: {
     //     defaultValue: "zh",
     //     value: "zh",

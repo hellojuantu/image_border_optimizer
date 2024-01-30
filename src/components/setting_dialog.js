@@ -32,6 +32,7 @@ export default class SettingDialog extends GenComponent {
                 originValue: config.value || '',
                 updated: false,
                 desc: config.desc || '',
+                range: config.range || [],
             })
         }
         let settingTable = new DataTable(e("#my-table"), {
@@ -40,7 +41,7 @@ export default class SettingDialog extends GenComponent {
             lineFormat: function (id, data) {
                 let res = document.createElement('tr')
                 for (let key in data) {
-                    if (key === 'updated' || key === 'originValue') {
+                    if (key === 'updated' || key === 'originValue' || key === 'range') {
                         continue
                     }
                     let td = document.createElement('td')
@@ -120,7 +121,12 @@ export default class SettingDialog extends GenComponent {
                         let param = target.dataset.param
                         self.popTips.buildWith(target, function (updatedVal) {
                             updatedVal = updatedVal.trim()
-                            if (settingTable.row(param).value !== updatedVal) {
+                            let row = settingTable.row(param)
+                            if (row.range.length > 0 && !row.range.includes(updatedVal)) {
+                                sc.message.error(`修改的值必须在 ${row.range} 之间`, 4000)
+                                return
+                            }
+                            if (row.value !== updatedVal) {
                                 settingTable.updateRow(param, {value: updatedVal, updated: true})
                             }
                         })

@@ -30,5 +30,9 @@ export const i18n = {
     "LOCALE_LAN": {
         zh: "语言",
         en: "Language"
+    },
+    "EXPORT_IMAGE_RULE": {
+        zh: "图片导出规则",
+        en: "Image Export Rules"
     }
 }

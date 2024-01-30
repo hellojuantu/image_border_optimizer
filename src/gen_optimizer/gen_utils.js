@@ -149,7 +149,7 @@ export const calHeightLine = function (value, font, zoom) {
     let max = lines[0]
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i]
-        if (!isBlank(line) && line.length > max.length) {
+        if (isNotBlank(line) && line.length > max.length) {
             max = line
         }
     }
@@ -186,6 +186,10 @@ export const getRows = function (text, width, font) {
 
 export const isBlank = function (str) {
     return (!str || /^\s*$/.test(str))
+}
+
+export const isNotBlank = function (str) {
+    return !isBlank(str)
 }
 
 Date.prototype.Format = function (fmt) {

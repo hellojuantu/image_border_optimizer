@@ -4,11 +4,13 @@ import PanelSelector from "../components/panel_selector";
 import {API_SERVER, config, persistedConfig, uploadConfig} from "../config/config";
 import {
     ajax,
-    base64ToBlob, bind,
+    base64ToBlob,
+    bind,
     e,
     es,
     genRandomString,
     isBlank,
+    isNotBlank,
     log,
     parseBoolean,
     removeClassAll,
@@ -276,30 +278,35 @@ export default class PageConfigControls extends GenControls {
             await self.optimizer.canvas.toBlob(function (blob) {
                 const item = new ClipboardItem({"image/png": blob})
                 navigator.clipboard.write([item])
-                setTimeout(() => {
-                    toggleClass(e("#id-loading-area"), "hide")
-                    self.scene.message.success('复制成功')
-                }, 200)
             })
+            toggleClass(e("#id-loading-area"), "hide")
+            self.scene.message.success('复制成功')
         } catch (err) {
             toggleClass(e("#id-loading-area"), "hide")
             self.scene.message.error('复制失败' + err)
         }
     }
 
-    async addToZip(canvas, zip, name) {
+    async compressImage(index, callback) {
+        let self = this
+        self.shapeControl.removeDraggers()
+        self.savePanel()
+        let img = self.switchPanel(index)
+        self.optimizer.updateAndDraw()
+        let exportRule = persistedConfig.EXPORT_IMAGE_RULE.value
+        let imgName = isNotBlank(img.dataset.name) && exportRule === 'original' ? img.dataset.name : `${index + 1}.png`
         return new Promise((resolve, reject) => {
-            canvas.toBlob(function (blob) {
+            self.canvas.toBlob(function (blob) {
                 let apiType = persistedConfig.API_TYPE.value
                 let apiValue = persistedConfig.API_VALUE.value;
                 if (apiType === 'default' || apiValue.length === 0) {
-                    zip.file(name, blob)
+                    callback(blob, imgName)
                     resolve()
                     return
                 }
 
                 const formData = new FormData();
-                formData.append('file', blob, name);
+                formData.append('file', blob, imgName);
                 formData.append('apiKey', apiValue);
                 const header = {
                     "Access-Control-Allow-Origin": "*"
@@ -314,8 +321,7 @@ export default class PageConfigControls extends GenControls {
                         if (res.data == null) {
                             reject(res.error);
                         }
-                        let imgBlob = base64ToBlob(res.data);
-                        zip.file(name, imgBlob)
+                        callback(base64ToBlob(res.data), imgName)
                         resolve()
                     } catch (error) {
                         reject('Request Error.');
@@ -334,13 +340,10 @@ export default class PageConfigControls extends GenControls {
         let len = self.panels.length
         for (let i = 0; i < len; i++) {
             try {
-                self.shapeControl.removeDraggers()
-                self.savePanel()
-                self.switchPanel(i)
-                self.optimizer.updateAndDraw()
-                let idx = i + 1
-                await self.addToZip(self.canvas, zip, idx + '.png')
-                e(".progress").style.width = ((idx / len) * 100).toFixed(0) + "%"
+                await self.compressImage(i, function (blob, imgName) {
+                    zip.file(imgName, blob)
+                    e(".progress").style.width = ((i + 1 / len) * 100).toFixed(0) + "%"
+                })
             } catch (err) {
                 self.savePanel()
                 self.switchPanel(cur)
@@ -560,6 +563,8 @@ export default class PageConfigControls extends GenControls {
                 config.canvasHeight.value = img.height / ratio
             }
         }
+
+        return img
     }
 
     movePanel(from, to) {

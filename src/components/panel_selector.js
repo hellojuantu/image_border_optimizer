@@ -3,7 +3,6 @@ import {
     appendHtml,
     e,
     es,
-    genRandomString,
     log,
     removeClassAll,
     removeWithCondition,
@@ -12,7 +11,6 @@ import {
 } from "../gen_optimizer/gen_utils";
 import {config} from "../config/config";
 import Sortable from "sortablejs";
-import JSZip from "jszip";
 import FileSaver from 'file-saver'
 import NormalPopTips from "./normal_pop_tips";
 
@@ -57,22 +55,14 @@ export default class PanelSelector extends GenComponent {
                         self.deleteImageWithDialog(target, imageBlock, delId)
                     },
                     "action.download": async function (target) {
-                        let imageBlock = sel(sc.pageClass.imageBlock)
-                        let outer = target.closest(imageBlock)
-                        let downloadId = parseInt(outer.dataset.index)
-                        toggleClass(e("#id-loading-area"), "hide")
-                        e(".progress").style.width = "99%"
                         try {
-                            let zip = new JSZip()
-                            let idx = downloadId + 1
-                            await self.control.addToZip(self.canvas, zip, idx + '.png')
-                            zip.generateAsync({type: 'blob'}, (metadata) => {
-                                e(".progress").style.width = metadata.percent.toFixed(0) + "%"
-                            }).then(function (content) {
-                                let name = "single-archive-" + genRandomString(5) + "-" + new Date().Format("MM-dd")
-                                FileSaver.saveAs(content, name)
+                            toggleClass(e("#id-loading-area"), "hide")
+                            e(".progress").style.width = "100%"
+                            let imageBlock = sel(sc.pageClass.imageBlock)
+                            let outer = target.closest(imageBlock)
+                            await self.control.compressImage(parseInt(outer.dataset.index), function (blob, imgName) {
+                                FileSaver.saveAs(blob, imgName)
                                 toggleClass(e("#id-loading-area"), "hide")
-                                e(".progress").style.width = "0%"
                                 self.scene.message.success('导出成功')
                             })
                         } catch (err) {
@@ -80,8 +70,14 @@ export default class PanelSelector extends GenComponent {
                             self.scene.message.error(err)
                         }
                     },
-                    "action.copyImage": function () {
-                        self.control.copyImage()
+                    "action.copyImage": async function (target) {
+                        let imageBlock = sel(sc.pageClass.imageBlock)
+                        let index = target.closest(imageBlock).dataset.index
+                        control.shapeControl.removeDraggers()
+                        control.savePanel()
+                        let v = parseInt(index)
+                        control.switchPanel(v)
+                        await self.control.copyImage()
                     }
                 }
             },
