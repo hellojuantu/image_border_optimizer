@@ -26,6 +26,14 @@ export default class MainScene extends GenScene {
     }
 
     pageLoading() {
+        window.addEventListener('beforeunload', function (event) {
+            event.preventDefault();
+            event.returnValue = '';
+            let confirmationMessage = '确定要离开吗';
+            (event || window.event).returnValue = confirmationMessage;
+            return confirmationMessage;
+        })
+
         document.onreadystatechange = () => {
             if (document.readyState === "complete") {
                 log('____ complete')

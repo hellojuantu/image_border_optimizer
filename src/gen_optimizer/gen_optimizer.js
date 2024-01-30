@@ -1,6 +1,7 @@
 import {e, genRandomString, log, scrollToBottom, toggleClass} from "./gen_utils"
-import {config, uploadConfig} from "../config/config"
+import {config, persistedConfig, uploadConfig} from "../config/config"
 import GenPersistConfigManager from "./gen_persisit_config_manager";
+import {canvasRenderToHiDpi, htmlCanvasToHiDpi2} from '../public/js/hidpi-canvas.min'
 
 export default class GenOptimizer {
     constructor(runCallback) {
@@ -12,59 +13,6 @@ export default class GenOptimizer {
     static instance(runCallback) {
         this.i = this.i || new this(runCallback)
         return this.i
-    }
-
-    // @Deprecated
-    async loadImageToClipboard() {
-        try {
-            this.updateAndDraw()
-            let url = this.canvas.toDataURL("image/png")
-            const data = await fetch(url)
-            const blob = await data.blob()
-            await navigator.clipboard.write([
-                new window.ClipboardItem({
-                    [blob.type]: blob
-                })
-            ])
-            alert('复制成功')
-        } catch (err) {
-            alert('复制失败')
-        }
-    }
-
-    // @Deprecated
-    compressImage(img) {
-        let canvas = document.createElement('canvas')
-        let context = canvas.getContext('2d')
-        // 压缩图片
-        let originWidth = img.width
-        let originHeight = img.height
-        let maxWidth = this.canvasWrapper.clientWidth
-        let maxHeight = this.canvasWrapper.clientHeight
-        let targetWidth = originWidth, targetHeight = originHeight
-        if (originWidth > maxWidth || originHeight > maxHeight) {
-            if (originWidth / originHeight > maxWidth / maxHeight) {
-                targetWidth = maxWidth
-                targetHeight = Math.round(maxWidth * (originHeight / originWidth))
-            } else {
-                targetHeight = maxHeight
-                targetWidth = Math.round(maxHeight * (originWidth / originHeight))
-            }
-        }
-
-        canvas.width = targetWidth
-        canvas.height = targetHeight
-
-        context.clearRect(0, 0, targetWidth, targetHeight)
-        context.drawImage(img, 0, 0, targetWidth, targetHeight)
-        // 计算压缩比
-        let base64 = canvas.toDataURL('image/jpeg')
-        let size = base64.length / 1024
-        let ratio = 1
-        if (size > 100) {
-            ratio = 100 / size
-        }
-        return canvas.toDataURL("image/png", ratio)
     }
 
     updateCanvasHW(h, w) {
@@ -79,8 +27,7 @@ export default class GenOptimizer {
     }
 
     getPixelRatio() {
-        const urlParams = new URLSearchParams(window.location.search)
-        if (!urlParams.has('hidpi') || urlParams.get('hidpi') !== 'true') {
+        if (persistedConfig.HIDPI_CANVAS_ENABLED.value === 'false') {
             return 1
         }
 
@@ -112,7 +59,11 @@ export default class GenOptimizer {
     }
 
     setup() {
-        GenPersistConfigManager.new().loadPersistConfig();
+        GenPersistConfigManager.new().loadPersistConfig()
+        if (persistedConfig.HIDPI_CANVAS_ENABLED.value === 'true') {
+            canvasRenderToHiDpi(CanvasRenderingContext2D.prototype)
+            htmlCanvasToHiDpi2(HTMLCanvasElement.prototype)
+        }
         // canvas
         this.canvasArea = e("#id-canvas-area")
         this.canvasWrapper = e("#id-canvas-wrapper")
@@ -157,7 +108,7 @@ export default class GenOptimizer {
         image.width = this.blankPanel.w
         image.height = this.blankPanel.h
         image.dataset.type = 'default_blank'
-        image.dataset.name = 'default_blank_' + genRandomString(5)
+        image.dataset.name = `default_blank_${genRandomString(5)}.png`
         return image
     }
 

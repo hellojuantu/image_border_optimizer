@@ -271,6 +271,12 @@ export const persistedConfig = {
         value: "number",
         desc: "<div>original（原文件名导出）</div> <div>number（数字递增导出）</div>",
         range: ['number', 'original'],
+    },
+    HIDPI_CANVAS_ENABLED: {
+        defaultValue: "false",
+        value: "false",
+        desc: "<div>true（开启高清画布）</div> <div>false（关闭高清画布）</div>",
+        range: ['true', 'false'],
     }
     // LOCALE_LAN: {
     //     defaultValue: "zh",

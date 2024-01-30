@@ -191,20 +191,24 @@ export default class PanelSelector extends GenComponent {
     template(image) {
         let index = image.dataset.index
         let type = image.dataset.type
+        let name = image.dataset.name
         return `
         <div class="block image-block" data-value="config.index" data-index="${index}" data-type="${type}">
             <div class="el-image" data-value="config.index" style="width: ${this.w}px; height: ${this.h}px; display: block; margin: auto;">
                 <canvas data-value="config.index" style="margin: ${this.margin}px; object-fit: scale-down;" class="el-image__inner editor edit canvas-area panel-canvas"></canvas>  
             </div>
-            <div class="image-single-action">
-                <div class="image-delete" data-value="action.delete">
-                    <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
-                </div>
-                <div class="image-download" data-value="action.download">
-                    <i class="el-icon-download" data-value="action.download" style="margin: 5px;"></i>
-                </div>                
-                <div class="image-copy" data-value="action.copyImage">
-                    <i class="el-icon-document-copy" data-value="action.copyImage" style="margin: 5px;"></i>
+            <div class="image-action-wrap">
+                <div class="image-name-wrap"><span class="image-name">${name}</span></div>
+                <div class="image-single-action">
+                    <div class="image-delete" data-value="action.delete">
+                        <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
+                    </div>
+                    <div class="image-download" data-value="action.download">
+                        <i class="el-icon-download" data-value="action.download" style="margin: 5px;"></i>
+                    </div>                
+                    <div class="image-copy" data-value="action.copyImage">
+                        <i class="el-icon-document-copy" data-value="action.copyImage" style="margin: 5px;"></i>
+                    </div>
                 </div>
             </div>
         </div>

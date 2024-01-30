@@ -34,5 +34,9 @@ export const i18n = {
     "EXPORT_IMAGE_RULE": {
         zh: "图片导出规则",
         en: "Image Export Rules"
+    },
+    "HIDPI_CANVAS_ENABLED": {
+        zh: "是否开启高清画布",
+        en: "Enable HiDPI Canvas"
     }
 }

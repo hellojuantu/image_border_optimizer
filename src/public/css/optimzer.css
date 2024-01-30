@@ -620,6 +620,35 @@ body {
     padding: 10px
 }
 
+.image-action-wrap {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.image-name-wrap {
+    font-size: 11px;
+    display: flex;
+    flex-direction: column-reverse;
+    margin: 0 5px;
+    width: 50%;
+    overflow: hidden;
+    max-width: 50%;
+    justify-content: center;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    cursor:hand;
+}
+
+.image-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: -moz-inline-box;
+    display: inline-block;
+}
+
 .image-single-action {
     display: flex;
     justify-content: flex-end;
