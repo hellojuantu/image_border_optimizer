@@ -7,10 +7,8 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
-    let modeEnv = JSON.stringify(env.MODE_ENV)
     let apiServer = JSON.stringify(env.API_SERVER)
 
-    console.log('modeEnv', modeEnv)
     console.log('apiServer', apiServer)
 
     return {
@@ -80,7 +78,7 @@ module.exports = (env) => {
             new CleanWebpackPlugin(),
             new webpack.DefinePlugin({
                 "process.env": {
-                    MODE_ENV: modeEnv,
+                    MODE_ENV: JSON.stringify('production'),
                     API_SERVER: apiServer,
                 }
             }),

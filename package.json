@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --env MODE_ENV=development --env API_SERVER=http://localhost:8222 --static src ",
-    "build": "webpack --env MODE_ENV=product"
+    "dev": "webpack-dev-server --config ./webpack.dev.js --env API_SERVER=http://localhost:8222 --static src",
+    "build": "webpack --config ./webpack.prod.js"
   },
   "keywords": [],
   "author": "",
