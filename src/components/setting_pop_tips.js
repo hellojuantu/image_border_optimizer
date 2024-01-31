@@ -2,9 +2,11 @@ import GenComponent from "../gen_optimizer/gen_component";
 import {appendHtml, e} from "../gen_optimizer/gen_utils";
 
 export default class SettingPopTips extends GenComponent {
-    constructor(scene) {
+    constructor(scene, title, style) {
         super(scene)
         this.show = false
+        this.title = title
+        this.style = style
     }
 
     setupEvents(callback) {
@@ -30,12 +32,12 @@ export default class SettingPopTips extends GenComponent {
         sc.registerGlobalEvents(events)
     }
 
-    template() {
+    template(input) {
         return `
-        <div class="gen-pop-tips el-popover el-popper" x-placement="right">            
-            <p style="font-size: 12px; margin-bottom: 10px;">修改设置为:</p>
+        <div class="gen-pop-tips el-popover el-popper" x-placement="right" style="${this.style == null ? '' : this.style}">            
+            <p style="font-size: 12px; margin-bottom: 10px;">${this.title}</p>
             <div style="font-size: 12px; margin-bottom: 10px;" class="el-input el-input--mini">
-                <input id="pop-tips-input" class="gen-input el-input__inner">
+                <input id="pop-tips-input" class="gen-input el-input__inner" value="${input == null ? '' : input}">
             </div>
             <div style="font-size: 12px;width: max-content;">
                 <button data-value="action.updateConfig" class="el-button el-button--primary el-button--mini">
@@ -50,7 +52,7 @@ export default class SettingPopTips extends GenComponent {
     builder(target) {
         e('.gen-pop-tips')?.remove()
         this.show = true
-        appendHtml(e('body'), this.template())
+        appendHtml(e('body'), this.template(target.innerText))
         let tipTool = e('.gen-pop-tips')
         let targetRect = target.getBoundingClientRect()
         let targetHeight = target.offsetHeight

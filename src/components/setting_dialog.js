@@ -16,7 +16,7 @@ export default class SettingDialog extends GenComponent {
             "dialogContent": "dialog-content",
         })
 
-        this.popTips = SettingPopTips.new(scene)
+        this.popTips = SettingPopTips.new(scene, '修改设置为:')
     }
 
     setupEvents() {

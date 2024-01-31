@@ -13,6 +13,7 @@ import {config} from "../config/config";
 import Sortable from "sortablejs";
 import FileSaver from 'file-saver'
 import NormalPopTips from "./normal_pop_tips";
+import SettingPopTips from "./setting_pop_tips";
 
 export default class PanelSelector extends GenComponent {
     constructor(control, w, h) {
@@ -23,6 +24,7 @@ export default class PanelSelector extends GenComponent {
         this.margin = 1
         this.ratio = this.scene.optimizer.ratio
         this.popTips = NormalPopTips.new(this.scene)
+        this.inputPopTips = SettingPopTips.new(this.scene, '修改图片名为：', 'width:200px;')
     }
 
     static new(...args) {
@@ -81,6 +83,28 @@ export default class PanelSelector extends GenComponent {
                     }
                 }
             },
+            {
+                eventName: 'dblclick',
+                className: sc.pageClass.images,
+                configToEvents: {
+                    "action.edit": function (target) {
+                        let imageBlock = sel(sc.pageClass.imageBlock)
+                        let index = target.closest(imageBlock).dataset.index
+                        control.shapeControl.removeDraggers()
+                        control.savePanel()
+                        let v = parseInt(index)
+                        let img = control.switchPanel(v)
+                        self.inputPopTips.buildWith(target, function (updatedVal) {
+                            updatedVal = updatedVal.trim()
+                            if (!updatedVal.endsWith(".png")) {
+                                updatedVal += '.png'
+                            }
+                            img.dataset.name = updatedVal
+                            target.innerText = updatedVal
+                        })
+                    },
+                }
+            }
         ])
 
         this.setupSortable()
@@ -160,6 +184,9 @@ export default class PanelSelector extends GenComponent {
         if (target.dataset.value !== 'action.delete' && this.popTips.show === true) {
             this.popTips.close()
         }
+        if (target.dataset.value !== 'action.edit' && this.inputPopTips.show === true) {
+            this.inputPopTips.close()
+        }
     }
 
     builder(panelSnapshots) {
@@ -198,7 +225,7 @@ export default class PanelSelector extends GenComponent {
                 <canvas data-value="config.index" style="margin: ${this.margin}px; object-fit: scale-down;" class="el-image__inner editor edit canvas-area panel-canvas"></canvas>  
             </div>
             <div class="image-action-wrap">
-                <div class="image-name-wrap"><span class="image-name">${name}</span></div>
+                <div class="image-name-wrap" data-value="action.edit"><span data-value="action.edit" class="image-name">${name}</span></div>
                 <div class="image-single-action">
                     <div class="image-delete" data-value="action.delete">
                         <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
