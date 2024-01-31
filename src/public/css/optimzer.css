@@ -638,7 +638,6 @@ body {
     justify-content: center;
     text-overflow:ellipsis;
     white-space:nowrap;
-    cursor:hand;
 }
 
 .image-name {
@@ -647,6 +646,7 @@ body {
     white-space: nowrap;
     display: -moz-inline-box;
     display: inline-block;
+    text-align: left;
 }
 
 .image-single-action {

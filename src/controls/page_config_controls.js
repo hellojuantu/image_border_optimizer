@@ -152,6 +152,7 @@ export default class PageConfigControls extends GenControls {
                                         let img = new Image()
                                         img.src = event.target.result
                                         img.dataset.type = 'user_upload'
+                                        img.dataset.name = `clipboard_${genRandomString(5)}.png`
                                         img.onload = function () {
                                             self.optimizer.panels.push(img)
                                             sc && sc.refreshConfig([img])
@@ -317,12 +318,13 @@ export default class PageConfigControls extends GenControls {
                         reject('Request Error.');
                     }
                     try {
-                        let res = JSON.parse(r);
-                        if (res.data == null) {
-                            reject(res.error);
+                        let res = JSON.parse(r)
+                        if (res.fail === true) {
+                            reject(res.msg)
+                        } else {
+                            callback(base64ToBlob(res.data), imgName)
+                            resolve()
                         }
-                        callback(base64ToBlob(res.data), imgName)
-                        resolve()
                     } catch (error) {
                         reject('Request Error.');
                     }
