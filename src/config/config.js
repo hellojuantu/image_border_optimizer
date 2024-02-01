@@ -143,15 +143,15 @@ export var config = {
     },
     shapeColor: {
         _comment: "shape color",
-        value: "#000000",
-        default: '#000000',
+        value: "#ff0000",
+        default: '#ff0000',
         valueType: "string",
         type: "color",
     },
     shapeBorder: {
         _comment: "shape border",
-        value: 3,
-        default: 3,
+        value: 8,
+        default: 8,
         valueType: 'number',
         min: 3,
         max: 20,
@@ -267,10 +267,10 @@ export const persistedConfig = {
         range: [],
     },
     EXPORT_IMAGE_RULE: {
-        defaultValue: "number",
-        value: "number",
+        defaultValue: "original",
+        value: "original",
         desc: "<div>original（原文件名导出）</div> <div>number（数字递增导出）</div>",
-        range: ['number', 'original'],
+        range: ['original', 'number'],
     },
     HIDPI_CANVAS_ENABLED: {
         defaultValue: "false",
