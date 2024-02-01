@@ -647,6 +647,7 @@ body {
     display: -moz-inline-box;
     display: inline-block;
     text-align: left;
+    user-select: none;
 }
 
 .image-single-action {

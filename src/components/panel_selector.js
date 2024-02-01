@@ -225,7 +225,7 @@ export default class PanelSelector extends GenComponent {
                 <canvas data-value="config.index" style="margin: ${this.margin}px; object-fit: scale-down;" class="el-image__inner editor edit canvas-area panel-canvas"></canvas>  
             </div>
             <div class="image-action-wrap">
-                <div class="image-name-wrap" data-value="action.edit"><span data-value="action.edit" class="image-name">${name}</span></div>
+                <div class="image-name-wrap"><span data-value="action.edit" class="image-name">${name}</span></div>
                 <div class="image-single-action">
                     <div class="image-delete" data-value="action.delete">
                         <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>

@@ -37,7 +37,7 @@ export default class SettingPopTips extends GenComponent {
         <div class="gen-pop-tips el-popover el-popper" x-placement="right" style="${this.style == null ? '' : this.style}">            
             <p style="font-size: 12px; margin-bottom: 10px;">${this.title}</p>
             <div style="font-size: 12px; margin-bottom: 10px;" class="el-input el-input--mini">
-                <input id="pop-tips-input" class="gen-input el-input__inner" value="${input == null ? '' : input}">
+                <input id="pop-tips-input" class="gen-input el-input__inner" onfocus="this.select()" value="${input == null ? '' : input}">
             </div>
             <div style="font-size: 12px;width: max-content;">
                 <button data-value="action.updateConfig" class="el-button el-button--primary el-button--mini">
