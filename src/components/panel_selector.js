@@ -226,15 +226,15 @@ export default class PanelSelector extends GenComponent {
             </div>
             <div class="image-action-wrap">
                 <div class="image-name-wrap"><span data-value="action.edit" class="image-name">${name}</span></div>
-                <div class="image-single-action">
-                    <div class="image-delete" data-value="action.delete">
-                        <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
-                    </div>
+                <div class="image-single-action">                   
                     <div class="image-download" data-value="action.download">
                         <i class="el-icon-download" data-value="action.download" style="margin: 5px;"></i>
                     </div>                
                     <div class="image-copy" data-value="action.copyImage">
                         <i class="el-icon-document-copy" data-value="action.copyImage" style="margin: 5px;"></i>
+                    </div>
+                     <div class="image-delete" data-value="action.delete">
+                        <i class="el-icon-delete" data-value="action.delete" style="margin: 5px;"></i>
                     </div>
                 </div>
             </div>
