@@ -255,8 +255,8 @@ export var ENV = process.env.MODE_ENV
 
 export const persistedConfig = {
     API_TYPE: {
-        defaultValue: "tinyPng",
-        value: "tinyPng",
+        defaultValue: "default",
+        value: "default",
         desc: "<div>tinyPng（TinyPng API 压缩）</div> <div>default（不压缩导出）</div>",
         range: ['tinyPng', 'default'],
     },
@@ -273,8 +273,8 @@ export const persistedConfig = {
         range: ['original', 'number'],
     },
     HIDPI_CANVAS_ENABLED: {
-        defaultValue: "false",
-        value: "false",
+        defaultValue: "true",
+        value: "true",
         desc: "<div>true（开启高清画布）</div> <div>false（关闭高清画布）</div>",
         range: ['true', 'false'],
     }
