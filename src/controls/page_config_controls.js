@@ -75,6 +75,20 @@ export default class PageConfigControls extends GenControls {
             sc.getComponent('panelSelector').handleGlobalClickEvent(event)
         })
 
+        // Bind image upload button click to trigger file input
+        bind('[data-value="action.uploadImageButton"]', 'click', function () {
+            e("#image-upload-input").click();
+        });
+
+        // Handle image upload input change event
+        bind('#image-upload-input', 'change', function (event) {
+            let files = event.target.files;
+            if (files.length > 0) {
+                self.handleImageUpload(files);
+            }
+            event.target.value = ''; // Reset input value to allow re-uploading the same file
+        });
+
         // 注册全局场景事件
         sc.registerGlobalEvents([
             // 左上按钮事件
@@ -269,6 +283,37 @@ export default class PageConfigControls extends GenControls {
 
         // 使用组件构建属性
         sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
+    }
+
+    handleImageUpload(files) {
+        let self = this;
+        let sc = self.scene;
+        let tempFiles = [];
+
+        toggleClass(e("#id-loading-area"), "hide");
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            if (file.size > uploadConfig.max_size) {
+                toggleClass(e("#id-loading-area"), "hide");
+                sc.message.warning(`图片大小不能超过 ${uploadConfig.max_size_desc}`);
+                continue;
+            }
+
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (event) {
+                let img = new Image();
+                img.src = event.target.result;
+                img.dataset.type = 'user_upload';
+                img.onload = () => {
+                    tempFiles.push(img);
+                    self.optimizer.panels.push(img);
+                    sc.refreshConfig(tempFiles);
+                    toggleClass(e("#id-loading-area"), "hide");
+                    sc.message.success('图片上传成功');
+                };
+            };
+        }
     }
 
     async copyImage() {
