@@ -75,6 +75,20 @@ export default class PageConfigControls extends GenControls {
             sc.getComponent('panelSelector').handleGlobalClickEvent(event)
         })
 
+        // Bind image upload button click to trigger file input
+        bind('[data-value="action.uploadImageButton"]', 'click', function () {
+            e("#image-upload-input").click();
+        });
+
+        // Handle image upload input change event
+        bind('#image-upload-input', 'change', function (event) {
+            let files = event.target.files;
+            if (files.length > 0) {
+                self.handleImageUpload(files);
+            }
+            event.target.value = ''; // Reset input value to allow re-uploading the same file
+        });
+
         // 注册全局场景事件
         sc.registerGlobalEvents([
             // 左上按钮事件
@@ -201,7 +215,7 @@ export default class PageConfigControls extends GenControls {
                     },
                     "config.shapeEnabled": function (target) {
                         let shape = config.shapeSelect.value = target.dataset.shape
-                        // 显示右边属性 
+                        // 显示右边属性
                         let att = self.shapeControl.shapeTypes[shape].defaultConfigAttribute()
                         sc.getComponent('attribute').buildWith(att)
                     },
@@ -269,6 +283,65 @@ export default class PageConfigControls extends GenControls {
 
         // 使用组件构建属性
         sc.getComponent('attribute').buildWith(self.panelControl.configAttribute())
+    }
+
+    handleImageUpload(files) {
+        let self = this;
+        let sc = self.scene;
+        let tempFiles = [];
+
+        toggleClass(e("#id-loading-area"), "hide");
+
+        let total = files.length;
+        let loaded = 0;
+
+        for (let i = 0; i < total; i++) {
+            let file = files[i];
+
+            if (file.size > uploadConfig.max_size) {
+                sc.message.warning(`图片 "${file.name}" 大小不能超过 ${uploadConfig.max_size_desc}`);
+                checkFinish();
+                continue;
+            }
+
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = function (event) {
+                let img = new Image();
+                img.src = event.target.result;
+                img.dataset.type = 'user_upload';
+
+                img.onload = () => {
+                    tempFiles.push(img);
+                    self.optimizer.panels.push(img);
+                    checkFinish();
+                };
+
+                img.onerror = () => {
+                    sc.message.warning(`图片 "${file.name}" 加载失败`);
+                    checkFinish();
+                };
+            };
+
+            reader.onerror = () => {
+                sc.message.warning(`图片 "${file.name}" 读取失败`);
+                checkFinish();
+            };
+        }
+
+        function checkFinish() {
+            loaded++;
+            if (loaded === total) {
+                if (tempFiles.length > 0) {
+                    sc.refreshConfig(tempFiles);
+                    sc.message.success(`成功上传 ${tempFiles.length} 张图片`);
+                } else {
+                    sc.message.warning("没有有效的图片被上传");
+                }
+                toggleClass(e("#id-loading-area"), "hide");
+            }
+        }
     }
 
     async copyImage() {
@@ -507,7 +580,7 @@ export default class PageConfigControls extends GenControls {
             let x = event.offsetX
             let y = event.offsetY
             let element = self.pointInElement(x, y)
-            // log("element", element)      
+            // log("element", element)
             if (action == 'overmove') {
                 if (element != null && !element.isCreating()) {
                     // log("cursor", element.cursor)
