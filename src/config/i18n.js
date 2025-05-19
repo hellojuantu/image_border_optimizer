@@ -38,5 +38,17 @@ export const i18n = {
     "HIDPI_CANVAS_ENABLED": {
         zh: "是否开启高清画布",
         en: "Enable HiDPI Canvas"
-    }
+    },
+    EXPORT_MODE: {
+        zh: "导出模式",
+        en: "Export Mode"
+    },
+    "EXPORT_MODE.zip": {
+        zh: "打包 Zip",
+        en: "Zip Archive"
+    },
+    "EXPORT_MODE.separate": {
+        zh: "单独导出",
+        en: "Separate Files"
+    },
 }

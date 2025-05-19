@@ -177,12 +177,31 @@ export default class SettingDialog extends GenComponent {
 
     builder() {
         appendHtml(e('body'), this.template())
+        this.dialog = e(sel(this.scene.pageClass.dialog))
         this.show()
     }
 
     buildWith(...datas) {
         this.builder(...datas)
         this.setupEvents()
+
+        const container = this.dialog.querySelector('.dialog-content')
+        const modeGroup = document.createElement('div')
+        modeGroup.innerHTML = `
+            <label>导出模式：</label>
+            <label><input type="radio" name="exportMode" value="separate" 
+            ${persistedConfig.EXPORT_MODE.value==='separate'?'checked':''}/> 单独导出</label>
+            <label><input type="radio" name="exportMode" value="zip" 
+            ${persistedConfig.EXPORT_MODE.value==='zip'?'checked':''}/> 打包 Zip</label>
+        `
+        container.appendChild(modeGroup)
+
+        // 监听切换
+        modeGroup.querySelectorAll('input[name="exportMode"]').forEach(radio=>{
+            radio.addEventListener('change', e=>{
+                persistedConfig.EXPORT_MODE.value = e.target.value
+            })
+        })
     }
 
     show() {

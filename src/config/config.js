@@ -286,4 +286,11 @@ export const persistedConfig = {
     // }
 }
 
+export const EXPORT_MODE = {
+  key: 'EXPORT_MODE',
+  value: 'zip',
+  options: ['zip', 'separate']
+}
+persistedConfig.EXPORT_MODE = EXPORT_MODE
+
 export var API_SERVER = process.env.API_SERVER
