@@ -410,36 +410,62 @@ export default class PageConfigControls extends GenControls {
         let self = this
         toggleClass(e("#id-loading-area"), "hide")
         e(".progress").style.width = "0%"
-        let zip = new JSZip()
-        let cur = config.index.value
-        let len = self.panels.length
-        for (let i = 0; i < len; i++) {
+
+        const mode = persistedConfig.EXPORT_MODE.value  // 'separate' 或 'zip'
+        // 如果选单独导出
+        if (mode === 'separate' && window.showDirectoryPicker) {
             try {
-                await self.compressImage(i, function (blob, imgName) {
-                    zip.file(imgName, blob)
-                    e(".progress").style.width = ((i + 1 / len) * 100).toFixed(0) + "%"
-                })
-            } catch (err) {
-                self.savePanel()
-                self.switchPanel(cur)
+                const dir = await window.showDirectoryPicker({ startIn: 'downloads' })
+                const perm = await dir.requestPermission({ mode:'readwrite' })
+                if (perm!=='granted') throw new Error('未获得写入权限')
+                for (let i=0; i<self.panels.length; i++) {
+                    await self.compressImage(i, async (blob, name)=>{
+                        const fh = await dir.getFileHandle(name, {create:true})
+                        const w  = await fh.createWritable()
+                        await w.write(blob)
+                        await w.close()
+                        e(".progress").style.width = (((i+1)/self.panels.length)*100).toFixed(0)+"%"
+                    })
+                }
+                self.scene.message.success('单独导出完成')
+            } catch(err) {
+                self.scene.message.error('导出失败：'+err.message)
+            } finally {
                 toggleClass(e("#id-loading-area"), "hide")
-                e(".progress").style.width = "0%"
-                self.scene.message.error(err)
-                return
+                e(".progress").style.width="0%"
             }
+            return
         }
 
-        self.savePanel()
-        self.switchPanel(cur)
-        zip.generateAsync({type: 'blob'}, (metadata) => {
-            e(".progress").style.width = metadata.percent.toFixed(0) + "%"
-        }).then(function (content) {
-            let name = "archive-" + genRandomString(5) + "-" + new Date().Format("MM-dd")
-            FileSaver.saveAs(content, name)
-            toggleClass(e("#id-loading-area"), "hide")
-            e(".progress").style.width = "0%"
-            self.scene.message.success('导出成功')
-        })
+        // 其余都打包 zip
+        let zip = new JSZip()
+        for (let i=0; i<self.panels.length; i++) {
+            await self.compressImage(i, (blob,name)=>{ zip.file(name, blob) })
+        }
+        // 优先用 save-picker
+        if (window.showSaveFilePicker) {
+            try {
+                const fh = await window.showSaveFilePicker({
+                    suggestedName: `images-${Date.now()}.zip`,
+                    types:[{description:'Zip',accept:{'application/zip':['.zip']}}]
+                })
+                const w  = await fh.createWritable()
+                const content = await zip.generateAsync({type:'blob'})
+                await w.write(content)
+                await w.close()
+                self.scene.message.success('Zip 导出完成')
+            } catch(err) {
+                self.scene.message.error('Zip 导出失败：'+err.message)
+            }
+        } else {
+            // 回退 FileSaver
+            zip.generateAsync({type:'blob'}).then(blob=>{
+                FileSaver.saveAs(blob, `images-${Date.now()}.zip`)
+                self.scene.message.success('Zip 导出完成')
+            })
+        }
+        toggleClass(e("#id-loading-area"), "hide")
+        e(".progress").style.width="0%"
     }
 
     setupUploadImageEvent() {
